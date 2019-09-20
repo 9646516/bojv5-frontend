@@ -10,7 +10,7 @@
           <img v-bind:src="this.$store.getters.gravatar(512)" @click.stop="enlarge" />
         </v-avatar>
         <v-card-text>{{this.$store.getters.username}}</v-card-text>
-        <v-btn icon flat @click.stop="decay">
+        <v-btn icon text @click.stop="decay">
           <v-icon>mdi-windows</v-icon>
         </v-btn>
     </v-toolbar>

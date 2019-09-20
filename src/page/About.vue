@@ -37,7 +37,7 @@
     </v-card>
     <v-card style="margin-block-end: 2em;">
       <v-card-text>
-        <v-card-title class="headline">BOJV4 Develop Team</v-card-title>
+        <v-card-title class="headline">BOJv5 Develop Team</v-card-title>
         <v-container>
           <a href="https://github.com/9646516">
             <v-avatar size="135px" tile>

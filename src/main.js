@@ -5,7 +5,10 @@ import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 import router from '@/plugins/router.js';
 import store from '@/plugins/store.js';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 Vue.config.productionTip = false
+Vue.use(VueAxios, axios)
 router.beforeEach((to, from, next) => {
 	if (to.matched.some(res => res.meta.NeedLogin)||to.matched.some(res => res.meta.NeedStaff)) {
 		if (store.getters.isLogin) {
@@ -45,3 +48,5 @@ new Vue({
 	store,
   render: h => h(App)
 }).$mount('#app')
+Vue.prototype.$axios = axios
+axios.defaults.withCredentials = true;

@@ -4,27 +4,11 @@
       :headers="headers"
       :items="desserts"
       :search="search"
-      hide-actions
-      :rows-per-page-items="text_per_page"
-      :pagination.sync="pagination"
+      :options.sync="options"
       class="elevation-1"
-    >
-      <template v-slot:items="props">
-        <router-link
-          :to="{'name': 'Problem', params: {'id': props.item.uid}}"
-          :style="{cursor: 'pointer',background:props.item.solved?  'peachpuff;':'none'}"
-          tag="tr"
-        >
-          <td>{{ props.item.uid }}</td>
-          <td>{{props.item.name }}</td>
-          <td>{{ props.item.time_limit }}</td>
-          <td>{{ props.item.memory_limit }}</td>
-          <td>{{ props.item.superadmin}}</td>
-        </router-link>
-      </template>
-    </v-data-table>
+    ></v-data-table>
     <div class="text-xs-center pt-2">
-      <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+      <v-pagination v-model="options.page" :length="pages"></v-pagination>
     </div>
   </div>
 </template>
@@ -38,7 +22,7 @@ export default {
       .get("http://10.105.242.94:23333/rinne/GetProblemList/")
       .then(response => {
         vm.desserts = response.data.problem;
-        vm.pagination.totalItems = vm.desserts.length;
+        vm.options.totalItems = vm.desserts.length;
         console.log(response);
       })
       .catch(function(error) {
@@ -49,8 +33,7 @@ export default {
     return {
       done: true,
       search: "",
-      pagination: {},
-      text_per_page: [12],
+      options: {},
       headers: [
         { text: "UID", align: "left", sortable: false, value: "uid" },
         { text: "Name", sortable: false, value: "name" },
@@ -63,15 +46,9 @@ export default {
   },
   computed: {
     pages() {
-      if (
-        this.pagination.rowsPerPage == null ||
-        this.pagination.totalItems == null
-      )
+      if (this.options.rowsPerPage == null || this.options.totalItems == null)
         return 0;
-      else
-        return Math.ceil(
-          this.pagination.totalItems / this.pagination.rowsPerPage
-        );
+      else return Math.ceil(this.options.totalItems / this.options.rowsPerPage);
     }
   },
   methods: {}
