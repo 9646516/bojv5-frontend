@@ -1,28 +1,35 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <v-app>
+      <NBar/>
+      <v-content>
+        <keep-alive>
+          <v-container>
+            <router-view/>
+          </v-container>
+        </keep-alive>
+      </v-content>
+    </v-app>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import NBar from "@/components/NBar";
 export default {
-  name: 'app',
+  name: "App",
   components: {
-    HelloWorld
+    NBar
   }
-}
+};
 </script>
-
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.theme--light.v-sheet {
+  background: rgba(255, 255, 255, 0.85)!important;
+}
+.theme--light.v-card {
+  background: rgba(255, 255, 255, 0.85)!important;
+}
+.theme--light.application {
+  background: rgba(255, 255, 255, 0)!important;
 }
 </style>
