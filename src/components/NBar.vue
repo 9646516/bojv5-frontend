@@ -6,22 +6,58 @@
     app
   >
     <v-toolbar flat class="primary lighten-3">
-        <v-avatar>
-          <img v-bind:src="this.$store.getters.gravatar(512)" @click.stop="enlarge" />
-        </v-avatar>
-        <v-card-text>{{this.$store.getters.username}}</v-card-text>
-        <v-btn icon text @click.stop="decay">
-          <v-icon>mdi-windows</v-icon>
-        </v-btn>
+      <v-avatar>
+        <img v-bind:src="this.$store.getters.gravatar(512)" @click.stop="enlarge" />
+      </v-avatar>
+      <v-card-text>{{this.$store.getters.username}}</v-card-text>
+      <v-btn icon text @click.stop="decay">
+        <v-icon>mdi-windows</v-icon>
+      </v-btn>
     </v-toolbar>
-
     <v-list>
+      <v-dialog v-model="dialog" persistent max-width="500px">
+        <template v-slot:activator="{ on }">
+          <v-list-item v-on="on">
+            <v-layout>
+              <v-list-item-action>
+                <v-icon>mdi-rocket</v-icon>
+              </v-list-item-action>
+              <v-card-text>Login</v-card-text>
+            </v-layout>
+          </v-list-item>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">Login</span>
+          </v-card-title>
+          <v-container>
+            <v-text-field v-model="username" label="Username" prepend-icon="mdi-account" />
+            <v-text-field
+              v-model="password"
+              label="Password"
+              type="password"
+              prepend-icon="mdi-lock"
+            />
+            <v-flex sm12>
+              <v-card-text>
+                <router-link :to="{ name: 'Register' }">Register</router-link>
+                <div style="color:red;">{{error}}</div>
+              </v-card-text>
+            </v-flex>
+          </v-container>
+          <v-card-actions>
+            <div class="flex-grow-1"></div>
+            <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="login">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-list-item v-for="i in Active" :key="i.text" :to="i.router">
         <v-layout>
           <v-list-item-action>
             <v-icon>{{i.image}}</v-icon>
           </v-list-item-action>
-            <v-card-text>{{i.text}}</v-card-text>
+          <v-card-text>{{i.text}}</v-card-text>
         </v-layout>
       </v-list-item>
     </v-list>
@@ -33,16 +69,16 @@
 
 <script>
 import Store from "@/plugins/store.js";
+import router from "@/plugins/router.js";
 export default {
   data() {
     return {
+      dialog: false,
       width: 250,
+      username: "",
+      password: "",
+      error: "",
       contents: [
-        {
-          text: "Login",
-          image: "mdi-rocket",
-          router: "/login"
-        },
         {
           text: "Logout",
           image: "mdi-home",
@@ -77,17 +113,19 @@ export default {
           text: "Add",
           image: "mdi-beta",
           router: "/add"
+        },
+        {
+          text: "Contest",
+          image: "mdi-beta",
+          router: "/contest"
+        },
+        {
+          text: "Ranklist",
+          image: "mdi-beta",
+          router: "/ranklist"
         }
       ]
     };
-  },
-  methods: {
-    enlarge() {
-      this.width = 250;
-    },
-    decay() {
-      this.width = 70;
-    }
   },
   computed: {
     Active: function() {
@@ -99,6 +137,72 @@ export default {
           !(x.text == "Add" && !Store.getters.IsStaff)
         );
       });
+    }
+  },
+
+  mounted() {
+    try {
+      this.error = this.$route.params.text;
+    } catch (e) {
+      this.error = "";
+    }
+  },
+  methods: {
+    enlarge() {
+      this.width = 250;
+    },
+    decay() {
+      this.width = 70;
+    },
+    login() {
+      if (this.check()) {
+        var vm = this;
+        this.axios.defaults.withCredentials = true;
+        if (this.$store.getters.Token == "") {
+          this.axios
+            .get("http://10.105.242.94:23333/rinne/GetCSRF/")
+            .then(res => {
+              Store.dispatch("setToken", res.data.CSRFToken);
+              this.send();
+            });
+        } else {
+          this.send();
+        }
+      }
+    },
+    send() {
+      var form =
+        "csrfmiddlewaretoken=" +
+        escape(this.$store.getters.Token) +
+        "&username=" +
+        escape(this.username) +
+        "&password=" +
+        escape(this.password);
+      console.log(form);
+      console.log(this.$store.getters.Token);
+      this.axios
+        .post("http://10.105.242.94:23333/rinne/Login/", form)
+        .then(res => {
+          console.log(res);
+          if (res.data.status == "OK") {
+            Store.dispatch("initState", res.data.data).then(() => {
+              router.push("/");
+            });
+          } else {
+            this.error = "Login Faied";
+          }
+        });
+    },
+    check() {
+      if (this.username == "") {
+        this.error = "Username cannot be empty";
+        return false;
+      } else if (this.password == "") {
+        this.error = "Password cannot be empty";
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 };

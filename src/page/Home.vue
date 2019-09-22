@@ -6,7 +6,7 @@
         <v-divider color="white" class="mt-4 mb-4" />
         <div class="headline">Welcome to</div>
         <div class="headline">Excited Online Judge</div>
-        <div class="headline">欢迎使用Excited OJ。</div>
+        <div class="headline">欢迎使用Excited OJ</div>
       </div>
     </v-layout>
     <div class="headline">Announcement</div>
