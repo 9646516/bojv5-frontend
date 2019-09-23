@@ -15,7 +15,7 @@
       </v-btn>
     </v-toolbar>
     <v-list>
-      <v-dialog v-model="dialog" persistent max-width="500px">
+      <v-dialog v-if="!this.$store.getters.isLogin" v-model="dialog" persistent max-width="500px">
         <template v-slot:activator="{ on }">
           <v-list-item v-on="on">
             <v-layout>
@@ -191,6 +191,9 @@ export default {
           } else {
             this.error = "Login Faied";
           }
+        })
+        .then(res => {
+          this.dialog = false;
         });
     },
     check() {

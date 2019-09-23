@@ -13,19 +13,24 @@ import Edit from '@/page/Edit'
 import Register from '@/page/Register'
 import Submission from '@/page/Submission'
 import Status from '@/page/Status'
-import Dev from '@/page/Dev'
+import Person from '@/page/Person'
 import Contest from '@/page/Contest'
 import Ranklist from '@/page/Ranklist'
 
 Vue.use(Router)
 
 export default new Router({
-  routes: [{
+  routes: [
+    {
+      path: '/dev',
+      name: 'Dev',
+      component: Person,
+    }, {
       path: '/',
       name: 'Home',
       component: Home
     }, {
-      path: '/setting',
+      path: '/setting/:id',
       name: 'Setting',
       component: Setting,
       meta: {
@@ -95,10 +100,6 @@ export default new Router({
       component: Submission,
     },
     {
-      path: '/dev',
-      name: 'Dev',
-      component: Dev,
-    }, {
       path: '/contest/',
       name: 'Contest',
       component: Contest,
@@ -106,6 +107,10 @@ export default new Router({
       path: '/ranklist/',
       name: 'Ranklist',
       component: Ranklist,
+    }, {
+      path: '/user/:id',
+      name: 'Person',
+      component: Person,
     },
   ]
 })

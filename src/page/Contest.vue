@@ -1,21 +1,31 @@
 <template>
   <v-container>
-    <v-card style="margin-block-end: 1em;">
-      <v-card-text class="text-center headline">{{data.name}}</v-card-text>
-      <v-card-text>
-        begin time:{{data.begin}}
-        <v-divider />
-        end time:{{data.end}}
-        <v-divider />
-      </v-card-text>
-      <v-progress-linear color="light-blue" height="10" :value="calc_time" striped></v-progress-linear>
-    </v-card>
     <v-toolbar light>
       <v-tabs v-model="tabs" centered>
-        <v-tab v-for="n in 4" :key="n">{{TabList[n]}}</v-tab>
+        <v-tab v-for="n in 5" :key="n">{{TabList[n]}}</v-tab>
       </v-tabs>
     </v-toolbar>
     <v-tabs-items v-model="tabs">
+      <v-tab-item>
+        <v-container>
+          <v-card style="margin-block-end: 1em;">
+            <v-card-text class="text-center headline">{{data.name}}</v-card-text>
+            <v-progress-linear color="light-blue" height="10" :value="calc_time" striped></v-progress-linear>
+            <v-card-text>
+              begin time:{{data.begin}}
+              <v-divider />
+              end time:{{data.end}}
+              <v-divider />
+              Length:{{data.length}}
+              <v-divider />
+              Status:{{status}}
+              <v-divider />
+              Info:{{info}}
+              <v-divider />
+            </v-card-text>
+          </v-card>
+        </v-container>
+      </v-tab-item>
       <v-tab-item>
         <v-container>
           <v-card max-width="1000" class="mx-auto">
@@ -76,7 +86,14 @@ export default {
   },
   data: () => ({
     tabs: null,
-    TabList: ["", "Probelm", "My Submissions", "Discuss", "Standing"],
+    TabList: [
+      "",
+      "Information",
+      "Probelm",
+      "My Submissions",
+      "Discuss",
+      "Standing"
+    ],
     data: {},
     items: [
       {

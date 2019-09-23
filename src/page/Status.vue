@@ -3,7 +3,9 @@
     <v-data-table
       :headers="headers"
       :items="desserts"
-      :search="search"
+      loading-text="Loading... Please wait"
+      items-per-page="12"
+      hide-default-footer
       class="elevation-1"
     ></v-data-table>
     <div class="text-xs-center pt-2">

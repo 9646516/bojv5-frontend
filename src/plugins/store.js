@@ -87,41 +87,6 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    setUser({
-      commit
-    }, username) {
-      commit("userStatus", username);
-    },
-    setEmail({
-      commit
-    }, email) {
-      commit("userEmail", email);
-    },
-    setStaff({
-      commit
-    }, IsStaff) {
-      commit("userIsStaff", IsStaff);
-    },
-    setTeacher({
-      commit
-    }, IsTeacher) {
-      commit("userIsTeacher", IsTeacher);
-    },
-    setGender({
-      commit
-    }, gender) {
-      commit("userGender", gender);
-    },
-    setNickname({
-      commit
-    }, nickname) {
-      commit("userNickname", nickname);
-    },
-    setToken({
-      commit
-    }, token) {
-      commit("userToken", token);
-    },
     initState({
       commit
     }, data) {

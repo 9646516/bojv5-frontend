@@ -1,12 +1,27 @@
 <template>
   <div>
+    <v-text-field v-model="search" label="Search"></v-text-field>
     <v-data-table
       :headers="headers"
       :items="desserts"
-      :search="search"
-      :options.sync="options"
-      class="elevation-1"
-    ></v-data-table>
+      loading-text="Loading... Please wait"
+      items-per-page="12"
+      hide-default-footer
+    >
+      <template v-slot:item="{ item }">
+        <router-link
+          :to="{'name': 'Problem', params: {'id': item.uid}}"
+          :style="{cursor: 'pointer',background:item.solved?  'peachpuff;':'none'}"
+          tag="tr"
+        >
+          <td>{{ item.uid }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.time_limit }}</td>
+          <td>{{ item.memory_limit }}</td>
+          <td>{{ item.superadmin}}</td>
+        </router-link>
+      </template>
+    </v-data-table>
     <div class="text-xs-center pt-2">
       <v-pagination v-model="options.page" :length="pages"></v-pagination>
     </div>

@@ -1,35 +1,26 @@
 <template>
   <v-card>
-    <v-form>
-      <v-container>
-        <v-layout row wrap>
-          <v-flex xs12>
-            <v-text-field v-model="title" clearable label="Title" type="text"/>
-            <v-textarea
-              v-model="content"
-              v-if="!preview"
-              auto-grow
-              clearable
-              rows="10"
-              label="Content"
-            />
-            <MdLoader v-if="preview" :text="content"></MdLoader>
-            <v-toolbar height="48" flat>
-              <v-switch v-model="preview" :label="`Preview: ${preview.toString()}`"></v-switch>
-              <v-btn large color="primary" @click="submit">
-                <v-icon left>mdi-target</v-icon>Submit
-              </v-btn>
-            </v-toolbar>
-            <h2 style="color:red;">
-              {{message}}
-              <v-fade-transition>
-                <v-progress-circular v-if="loading" size="24" color="info" indeterminate></v-progress-circular>
-              </v-fade-transition>
-            </h2>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-form>
+    <v-container>
+      <v-text-field v-model="title" clearable label="Title" type="text" />
+      <v-textarea v-model="content" v-if="!preview" auto-grow clearable rows="10" label="Content" />
+      <MdLoader v-if="preview" :text="content"></MdLoader>
+      <v-toolbar height="48" flat>
+        <v-col>
+          <v-switch v-model="preview" :label="`Preview: ${preview.toString()}`"></v-switch>
+        </v-col>
+        <v-col>
+          <v-btn large color="primary" @click="submit">
+            <v-icon left>mdi-target</v-icon>Submit
+          </v-btn>
+        </v-col>
+      </v-toolbar>
+      <h2 style="color:red;">
+        {{message}}
+        <v-fade-transition>
+          <v-progress-circular v-if="loading" size="24" color="info" indeterminate></v-progress-circular>
+        </v-fade-transition>
+      </h2>
+    </v-container>
   </v-card>
 </template>
 <script>
