@@ -16,6 +16,7 @@ import Status from '@/page/Status'
 import Person from '@/page/Person'
 import Contest from '@/page/Contest'
 import Ranklist from '@/page/Ranklist'
+import Magic from '@/page/Magic'
 
 Vue.use(Router)
 
@@ -93,11 +94,17 @@ export default new Router({
       path: '/status',
       name: 'Status',
       component: Status,
+      meta: {
+        NeedLogin: true
+      }
     },
     {
       path: '/submission/:id',
       name: 'Submission',
       component: Submission,
+      meta: {
+        NeedLogin: true
+      }
     },
     {
       path: '/contest/',
@@ -111,6 +118,13 @@ export default new Router({
       path: '/user/:id',
       name: 'Person',
       component: Person,
+    }, {
+      path: '/magic',
+      name: 'Magic',
+      component: Magic,
+      meta: {
+        NeedStaff: true
+      }
     },
   ]
 })

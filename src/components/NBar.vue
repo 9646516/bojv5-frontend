@@ -92,7 +92,7 @@ export default {
         {
           text: "Setting",
           image: "mdi-delta",
-          router: "/setting"
+          router: "/setting/" + this.$store.getters.uid
         },
         {
           text: "Problem",
@@ -123,6 +123,11 @@ export default {
           text: "Ranklist",
           image: "mdi-beta",
           router: "/ranklist"
+        },
+        {
+          text: "Manage",
+          image: "mdi-github-circle",
+          router: "/magic"
         }
       ]
     };
@@ -210,7 +215,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 html,
 *,
 :after,

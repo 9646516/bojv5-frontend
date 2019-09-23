@@ -5,7 +5,13 @@
   >
     <v-row>
       <v-col>
-        <v-img :src="src" height="250px" width="250px"></v-img>
+        <v-img :src="src" height="250px" width="250px">
+          <template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular indeterminate :color="get_color()"></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
       </v-col>
       <v-col>
         <v-card-text class="text-left">Nickname: {{nickname}}</v-card-text>
@@ -39,10 +45,29 @@ export default {
       default: 0
     }
   },
-  data: () => ({}),
+  data: () => ({
+    color: [
+      "red",
+      "pink",
+      "purple",
+      "indigo",
+      "blue",
+      "cyan",
+      "teal",
+      "green",
+      "lime",
+      "yellow darken-4",
+      "amber",
+      "orange"
+    ]
+  }),
   methods: {
     go(e) {
       window.location.href = e;
+    },
+    get_color() {
+      var idx = Math.round(Math.random() * 10);
+      return this.color[idx];
     }
   }
 };

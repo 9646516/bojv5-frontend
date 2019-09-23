@@ -25,6 +25,9 @@
     <v-btn large color="primary" v-if="this.$store.getters.IsStaff" @click="edit">
       <v-icon left>mdi-book</v-icon>Edit
     </v-btn>
+    <v-btn large color="red" v-if="this.$store.getters.IsStaff" @click="Delete">
+      <v-icon left>mdi-delete</v-icon>Delete
+    </v-btn>
     <v-divider />
   </v-flex>
 </template>
@@ -62,7 +65,8 @@ export default {
     };
   },
   methods: {
-    edit() {}
+    edit() {},
+    Delete() {}
   }
 };
 </script>

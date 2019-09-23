@@ -20,9 +20,13 @@
               <v-divider />
               Status:{{status}}
               <v-divider />
-              Info:{{info}}
-              <v-divider />
             </v-card-text>
+          </v-card>
+
+          <v-card>
+            <v-card-title>Info</v-card-title>
+            <v-divider />
+            <MdLoader :text="info" html></MdLoader>
           </v-card>
         </v-container>
       </v-tab-item>
@@ -78,13 +82,18 @@
 <script>
 import Router from "@/plugins/router";
 import Store from "@/plugins/store.js";
+import MdLoader from "@/components/MdLoader";
 export default {
   mounted() {
     this.data.name = "q23";
     this.data.begin = "q23";
     this.data.end = "q23";
   },
+  components: {
+    MdLoader
+  },
   data: () => ({
+    info: "# aduisfbud",
     tabs: null,
     TabList: [
       "",

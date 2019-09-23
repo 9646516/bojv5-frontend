@@ -56,7 +56,7 @@
                     disabled
                     prepend-icon="mdi-emoticon-cool"
                   />
-                  <v-alert :value="true" class="mb-3" type="info" outline>
+                  <v-alert :value="true" class="mb-3" type="info" outlined>
                     <span>You can change your Avatar In</span>
                     <a href="https://cn.gravatar.com/">
                       <strong>
@@ -141,6 +141,12 @@ export default {
     this.SetTeacher = this.isteacher;
     this.SetStaff = this.isstaff;
     this.SetActive = true;
+    if (!this.isstaff && this.$store.getters.uid != this.$route.params.id) {
+      Router.push({
+        name: "Error",
+        params: { text: "You Cannot See this page" }
+      });
+    }
   },
   data: () => ({
     tabs: null,

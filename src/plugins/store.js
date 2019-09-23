@@ -10,7 +10,7 @@ const store = new Vuex.Store({
     email: sessionStorage.getItem("email") ? sessionStorage.getItem("email") : "",
     IsStaff: sessionStorage.getItem("IsStaff") == "true" ? true : false,
     IsTeacher: sessionStorage.getItem("IsTeacher") == "true" ? true : false,
-    gender: sessionStorage.getItem("gender") ? sessionStorage.getItem("gender") : "",
+    uid: sessionStorage.getItem("uid") ? sessionStorage.getItem("uid") : "",
     nickname: sessionStorage.getItem("nickname") ? sessionStorage.getItem("nickname") : "",
     token: sessionStorage.getItem("token") ? sessionStorage.getItem("token") : "",
   },
@@ -18,8 +18,8 @@ const store = new Vuex.Store({
     username: function (state) {
       return state.username;
     },
-    gender: function (state) {
-      return state.gender;
+    uid: function (state) {
+      return state.uid;
     },
     nickname: function (state) {
       return state.nickname;
@@ -55,7 +55,7 @@ const store = new Vuex.Store({
         state.IsStaff = false;
         state.IsTeacher = false;
         state.nickname = "";
-        state.gender = "";
+        state.uid = "";
         state.token = "";
         sessionStorage.setItem("isLogin", "false");
         sessionStorage.setItem("username", "");
@@ -63,7 +63,7 @@ const store = new Vuex.Store({
         sessionStorage.setItem("IsStaff", "false");
         sessionStorage.setItem("IsTeacher", "false");
         sessionStorage.setItem("nickname", "");
-        sessionStorage.setItem("gender", "");
+        sessionStorage.setItem("uid", "");
         sessionStorage.setItem("token", "");
       }
     },
@@ -76,8 +76,8 @@ const store = new Vuex.Store({
     userIsTeacher(state, IsTeacher) {
       state.IsTeacher = IsTeacher;
     },
-    userGender(state, gender) {
-      state.gender = gender == gender ? gender : "";
+    userUid(state, uid) {
+      state.uid = uid == uid ? uid : "";
     },
     userNickname(state, nickname) {
       state.nickname = nickname == nickname ? nickname : "";
@@ -87,6 +87,11 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    setToken({
+      commit
+    }, token) {
+      commit("userToken", token);
+    },
     initState({
       commit
     }, data) {
@@ -94,14 +99,14 @@ const store = new Vuex.Store({
       commit("userStatus", data.username);
       commit("userIsStaff", data.is_staff);
       commit("userIsTeacher", data.is_teacher);
-      commit("userGender", data.gender);
+      commit("userUid", data.uid);
       commit("userNickname", data.nickname);
       sessionStorage.setItem("isLogin", "true");
       sessionStorage.setItem("username", data.username);
       sessionStorage.setItem("email", data.email);
       sessionStorage.setItem("IsTeacher", data.is_teacher ? "true" : "false");
       sessionStorage.setItem("IsStaff", data.is_staff ? "true" : "false");
-      sessionStorage.setItem("gender", data.gender ? data.gender : "");
+      sessionStorage.setItem("uid", data.uid ? data.uid : "");
       sessionStorage.setItem("nickname", data.nickname ? data.nickname : "");
     },
     logout({

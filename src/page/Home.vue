@@ -2,7 +2,18 @@
   <v-card>
     <v-layout class="curtain" align-center justify-center>
       <div class="text-xs-center">
-        <v-img src="https://userpic.codeforces.com/418179/title/417a566cb97fc802.jpg" />
+        <v-img
+          src="https://userpic.codeforces.com/418179/title/417a566cb97fc802.jpg"
+          aspect-ratio="1"
+          max-width="500"
+          max-height="500"
+        >
+          <template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular indeterminate color="blue"></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
         <v-divider color="white" class="mt-4 mb-4" />
         <div class="headline">Welcome to</div>
         <div class="headline">Excited Online Judge</div>

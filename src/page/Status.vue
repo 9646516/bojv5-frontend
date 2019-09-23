@@ -7,7 +7,24 @@
       items-per-page="12"
       hide-default-footer
       class="elevation-1"
-    ></v-data-table>
+    >
+      <template v-slot:item="{ item }">
+        <router-link
+          :to="{'name': 'Submission', params: {'id': item.pk}}"
+          :style="{'cursor': 'pointer'}"
+          tag="tr"
+        >
+          <td>{{ item.pk }}</td>
+          <td>{{ item.problem }}</td>
+          <td>{{ item.status }}</td>
+          <td>{{ item.language }}</td>
+          <td>{{ item.user}}</td>
+          <td>{{ item.create_time }}</td>
+          <td>{{ item.running_memory}}</td>
+          <td>{{ item.running_time}}</td>
+        </router-link>
+      </template>
+    </v-data-table>
     <div class="text-xs-center pt-2">
       <v-pagination v-model="page" :length="max_page"></v-pagination>
     </div>
