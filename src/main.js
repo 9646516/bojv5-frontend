@@ -15,7 +15,7 @@ router.beforeEach((to, from, next) => {
 			next()
 		} else {
 			next({
-				name: 'Login',
+				name: 'Error',
 				params: { text: "Please Login First" }
 			})
 		}

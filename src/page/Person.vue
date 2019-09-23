@@ -16,13 +16,31 @@
             large
             color="primary"
             :to="{'name': 'Setting', params: {'id': data.pk}}"
-            v-if="this.$store.getters.username"
+            v-if="this.$store.getters.isStaff||this.$store.getters.uid==data.pk"
           >
             <v-icon left>mdi-github-circle</v-icon>Edit
           </v-btn>
         </v-flex>
         <v-flex style="margin-top:2em;">
-          <v-img :src="data.avatar" height="256" width="256" />
+          <v-badge color="blue" overlap>
+            <v-img :src="data.avatar" height="256" width="256" />
+            <template v-slot:placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular indeterminate :color="get_color()"></v-progress-circular>
+              </v-row>
+            </template>
+            <template v-slot:badge>
+              <div v-if="data.isStaff">
+                <b>Admin</b>
+                <v-icon dark>mdi-check</v-icon>
+                <v-icon dark>mdi-check</v-icon>
+              </div>
+              <div v-if="data.isTeacher">
+                <b>Teacher</b>
+                <v-icon dark>mdi-check</v-icon>
+              </div>
+            </template>
+          </v-badge>
         </v-flex>
       </v-layout>
     </v-card>
@@ -33,7 +51,14 @@
       <v-divider />
       <v-progress-circular v-if="!done" indeterminate color="blue" />
       <template v-for="(stat,index) in mp">
-        <v-chip :key="index" class="ma-2" :color="stat==0?'orange':'green'" label outlined>{{index}}</v-chip>
+        <v-chip
+          :key="index"
+          class="ma-2"
+          :color="stat==0?'orange':'green'"
+          label
+          outlined
+          :to="'/problem/'+String(index)"
+        >{{index}}</v-chip>
       </template>
     </v-card>
   </v-container>
@@ -51,6 +76,8 @@ export default {
     this.data.email = 1;
     this.data.solved = [];
     this.data.tried = [];
+    this.data.isStaff = true;
+    this.data.isTeacher = true;
     for (var i = 0; i < 999; i++) {
       if (i % 2 == 1) {
         this.data.solved.push(i);

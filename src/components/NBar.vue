@@ -90,9 +90,9 @@ export default {
           router: "/"
         },
         {
-          text: "Setting",
+          text: "Profile",
           image: "mdi-delta",
-          router: "/setting/" + this.$store.getters.uid
+          router: "/user/" + this.$store.getters.uid
         },
         {
           text: "Problem",
@@ -125,9 +125,14 @@ export default {
           router: "/ranklist"
         },
         {
-          text: "Manage",
+          text: "AddUser",
           image: "mdi-github-circle",
-          router: "/magic"
+          router: "/adduser"
+        },
+        {
+          text: "Class",
+          image: "mdi-github-circle",
+          router: "/classlist"
         }
       ]
     };
@@ -138,7 +143,7 @@ export default {
         return (
           !(x.text == "Login" && Store.getters.isLogin) &&
           !(x.text == "Logout" && !Store.getters.isLogin) &&
-          !(x.text == "Setting" && !Store.getters.isLogin) &&
+          !(x.text == "Profile" && !Store.getters.isLogin) &&
           !(x.text == "Add" && !Store.getters.IsStaff)
         );
       });
@@ -161,7 +166,6 @@ export default {
     },
     login() {
       if (this.check()) {
-        var vm = this;
         this.axios.defaults.withCredentials = true;
         if (this.$store.getters.Token == "") {
           this.axios

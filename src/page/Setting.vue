@@ -196,7 +196,6 @@ export default {
     },
     click1() {
       if (this.check1()) {
-        var vm = this;
         this.axios.defaults.withCredentials = true;
         this.axios
           .get(
@@ -234,7 +233,6 @@ export default {
     },
     click2() {
       if (this.check2()) {
-        var vm = this;
         this.axios.defaults.withCredentials = true;
         this.axios
           .get(
@@ -256,7 +254,6 @@ export default {
       }
     },
     click3() {
-      var vm = this;
       this.axios.defaults.withCredentials = true;
       this.axios
         .get(

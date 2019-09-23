@@ -16,13 +16,13 @@ import Status from '@/page/Status'
 import Person from '@/page/Person'
 import Contest from '@/page/Contest'
 import Ranklist from '@/page/Ranklist'
-import Magic from '@/page/Magic'
+import AddUser from '@/page/AddUser'
+import ClassList from '@/page/ClassList'
 
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: '/dev',
       name: 'Dev',
       component: Person,
@@ -119,11 +119,18 @@ export default new Router({
       name: 'Person',
       component: Person,
     }, {
-      path: '/magic',
-      name: 'Magic',
-      component: Magic,
+      path: '/adduser',
+      name: 'AddUser',
+      component: AddUser,
       meta: {
         NeedStaff: true
+      }
+    }, {
+      path: '/classlist',
+      name: 'ClassList',
+      component: ClassList,
+      meta: {
+        NeedLogin: true
       }
     },
   ]
