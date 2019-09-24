@@ -16,7 +16,7 @@
             large
             color="primary"
             :to="{'name': 'Setting', params: {'id': data.pk}}"
-            v-if="this.$store.getters.isStaff||this.$store.getters.uid==data.pk"
+            v-if="(this.$store.getters.IsStaff)||(this.$store.getters.uid==data.pk)"
           >
             <v-icon left>mdi-github-circle</v-icon>Edit
           </v-btn>
@@ -106,6 +106,8 @@ export default {
       mp: {}
     };
   },
-  methods: {}
+  methods: {
+    Delete() {}
+  }
 };
 </script>

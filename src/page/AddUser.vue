@@ -101,6 +101,7 @@ export default {
     shrink() {
       var _data = [];
       for (var i = 0; i < this.data.length; i++) {
+        console.log(this.data[i]);
         if ("username" in this.data[i] && this.data[i].username != "") {
           _data.push(this.data[i]);
         }

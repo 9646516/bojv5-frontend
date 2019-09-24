@@ -64,9 +64,6 @@
   </v-navigation-drawer>
 </template>
 
-
-
-
 <script>
 import Store from "@/plugins/store.js";
 import router from "@/plugins/router.js";
@@ -77,8 +74,22 @@ export default {
       width: 250,
       username: "",
       password: "",
-      error: "",
-      contents: [
+      error: ""
+    };
+  },
+  computed: {
+    Active: function() {
+      return this.contents.filter(function(x) {
+        return (
+          !(x.text == "Login" && Store.getters.isLogin) &&
+          !(x.text == "Logout" && !Store.getters.isLogin) &&
+          !(x.text == "Profile" && !Store.getters.isLogin) &&
+          !(x.text == "Add" && !Store.getters.IsStaff)
+        );
+      });
+    },
+    contents: function() {
+      return [
         {
           text: "Logout",
           image: "mdi-home",
@@ -117,7 +128,7 @@ export default {
         {
           text: "Contest",
           image: "mdi-beta",
-          router: "/contest"
+          router: "/contests"
         },
         {
           text: "Ranklist",
@@ -134,19 +145,7 @@ export default {
           image: "mdi-github-circle",
           router: "/classlist"
         }
-      ]
-    };
-  },
-  computed: {
-    Active: function() {
-      return this.contents.filter(function(x) {
-        return (
-          !(x.text == "Login" && Store.getters.isLogin) &&
-          !(x.text == "Logout" && !Store.getters.isLogin) &&
-          !(x.text == "Profile" && !Store.getters.isLogin) &&
-          !(x.text == "Add" && !Store.getters.IsStaff)
-        );
-      });
+      ];
     }
   },
 
@@ -187,12 +186,9 @@ export default {
         escape(this.username) +
         "&password=" +
         escape(this.password);
-      console.log(form);
-      console.log(this.$store.getters.Token);
       this.axios
         .post("http://10.105.242.94:23333/rinne/Login/", form)
         .then(res => {
-          console.log(res);
           if (res.data.status == "OK") {
             Store.dispatch("initState", res.data.data).then(() => {
               router.push("/");
