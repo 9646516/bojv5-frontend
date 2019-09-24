@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <codemirror v-model="code" :options="defaultOption" class="code" :key="(SelMode,ThemeList)" />
+    <codemirror v-model="code" :options="defaultOption" class="code" :key="(SelMode,SelTheme)" />
     <v-row align="center">
       <v-col>
         <v-subheader>Custom Theme</v-subheader>
@@ -47,6 +47,8 @@ import "codemirror/addon/fold/comment-fold.js";
 import "codemirror/addon/selection/active-line";
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/edit/matchbrackets";
+import "codemirror/keymap/sublime.js";
+
 export default {
   components: {
     codemirror
@@ -64,20 +66,21 @@ export default {
     ],
     SelTheme: "monokai",
     ThemeList: ["monokai", "idea", "eclipse", "neo", "twilight"],
-    code:
-      "#include<bits/stdc++.h>\nusing namespace std;\nvoid main(){\n\treturn 0;\n}"
+    code: ""
   }),
   created() {},
   methods: {},
   computed: {
     defaultOption: function() {
       return {
-        tabSize: 2,
+        tabSize: 4,
+        indentUnit: 4,
         mode: this.SelMode.state,
         theme: this.SelTheme,
         styleActiveLine: true,
         lineNumbers: true,
         line: true,
+        keymap: "sublime",
         foldgutter: true,
         gutters: [
           "CodeMirror-linenumbers",
@@ -94,5 +97,8 @@ export default {
 };
 </script>
 <style>
+.CodeMirror {
+  height: 600px;
+}
 </style>
 
