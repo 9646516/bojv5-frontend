@@ -23,7 +23,7 @@
                   TD.style.background = '#aaffaa';
               else
                   TD.style.background = '#ffaaaa';
-          }
+          };
       }"
         :contextMenu="{items: {
             row_above: {
@@ -43,11 +43,22 @@
             },
           }
         }"
+        ref="table"
       ></hot-table>
       <v-row>
         <v-col>
           <v-btn large color="primary" @click="add">
             <v-icon left>mdi-book</v-icon>Add
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-btn large color="primary" @click="push">
+            <v-icon left>mdi-book</v-icon>New Line
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-btn large color="primary" @click="pop">
+            <v-icon left>mdi-book</v-icon>Remove Last
           </v-btn>
         </v-col>
         <v-col>
@@ -73,8 +84,29 @@ export default {
     HotTable
   },
   methods: {
-    add() {},
-    shrink() {}
+    add() {
+      this.data[0]["status"] = "added";
+      this.refresh();
+    },
+    refresh() {
+      this.push();
+      this.pop();
+    },
+    push() {
+      this.data.push({});
+    },
+    pop() {
+      this.data.pop();
+    },
+    shrink() {
+      var _data = [];
+      for (var i = 0; i < this.data.length; i++) {
+        if ("username" in this.data[i] && this.data[i].username != "") {
+          _data.push(this.data[i]);
+        }
+      }
+      this.data = _data;
+    }
   }
 };
 </script>

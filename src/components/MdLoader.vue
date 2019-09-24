@@ -26,7 +26,9 @@ export default {
 };
 </script>
 <style>
-/* @import "highlight.js/styles/vs2015.css"; */
+/*
+ @import "highlight.js/styles/vs2015.css"; 
+*/
 code {
   font-family: "Fira Code", "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
