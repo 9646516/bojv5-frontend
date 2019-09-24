@@ -19,6 +19,7 @@ import Contests from '@/page/Contest/ContestList'
 import Ranklist from '@/page/Ranklist/Ranklist'
 import AddUser from '@/page/AddUser'
 import ClassList from '@/page/Class/ClassList'
+import Dev from '@/page/Dev'
 
 Vue.use(Router)
 
@@ -26,7 +27,7 @@ export default new Router({
   routes: [{
     path: '/dev',
     name: 'Dev',
-    component: Person,
+    component: Dev,
   }, {
     path: '/',
     name: 'Home',

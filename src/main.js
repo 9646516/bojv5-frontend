@@ -10,7 +10,7 @@ import VueAxios from 'vue-axios';
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 router.beforeEach((to, from, next) => {
-	if (to.matched.some(res => res.meta.NeedLogin)||to.matched.some(res => res.meta.NeedStaff)) {
+	if (to.matched.some(res => res.meta.NeedLogin) || to.matched.some(res => res.meta.NeedStaff)) {
 		if (store.getters.isLogin) {
 			next()
 		} else {
@@ -43,10 +43,11 @@ router.beforeEach((to, from, next) => {
 });
 
 new Vue({
-  vuetify,
-  router,
+	vuetify,
+	router,
 	store,
-  render: h => h(App)
+	render: h => h(App)
 }).$mount('#app')
 Vue.prototype.$axios = axios
 axios.defaults.withCredentials = true;
+import "highlight.js/styles/xcode.css"
