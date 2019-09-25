@@ -1,6 +1,5 @@
 <template>
   <v-container fluid>
-    <codemirror v-model="code" :options="defaultOption" class="code" :key="(SelMode,SelTheme)" />
     <v-row align="center">
       <v-col>
         <v-subheader>Custom Theme</v-subheader>
@@ -21,6 +20,13 @@
         />
       </v-col>
     </v-row>
+    <codemirror
+      ref="editor"
+      v-model="code"
+      :options="defaultOption"
+      class="code"
+      :key="(SelMode,SelTheme)"
+    />
   </v-container>
 </template> 
 
@@ -48,7 +54,9 @@ import "codemirror/addon/selection/active-line";
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/edit/matchbrackets";
 import "codemirror/keymap/sublime.js";
-
+import "codemirror/addon/hint/show-hint.css";
+import "codemirror/addon/hint/show-hint";
+import { myhint } from "@/plugins/hint.js";
 export default {
   components: {
     codemirror
@@ -69,6 +77,12 @@ export default {
     code: ""
   }),
   created() {},
+  mounted() {
+    var editor = this.$refs.editor.codemirror;
+    editor.on("cursorActivity", function() {
+      editor.showHint();
+    });
+  },
   methods: {},
   computed: {
     defaultOption: function() {
@@ -90,7 +104,13 @@ export default {
         lineWrapping: true,
         foldGutter: true,
         matchBrackets: true,
-        autoCloseBrackets: true
+        autoCloseBrackets: true,
+        hintOptions: {
+          hint: myhint,
+          completeSingle: false,
+          closeOnUnfocus: true,
+          alignWithWord: true
+        }
       };
     }
   }
