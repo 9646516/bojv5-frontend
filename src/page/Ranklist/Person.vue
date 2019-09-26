@@ -69,40 +69,64 @@ import Router from "@/plugins/router";
 import md5 from "js-md5";
 import Store from "@/plugins/store.js";
 export default {
-  created() {
-    this.data.pk = 1;
-    this.data.username = 1;
-    this.data.gender = 1;
-    this.data.email = 1;
-    this.data.solved = [];
-    this.data.tried = [];
-    this.data.isStaff = true;
-    this.data.isTeacher = true;
-    for (var i = 0; i < 999; i++) {
-      if (i % 2 == 1) {
-        this.data.solved.push(i);
-      } else {
-        this.data.tried.push(i);
-      }
-    }
-    this.data.nickname = 1;
-    this.data.email = "zyq855@gmail.com";
-    this.data.avatar =
-      "https://secure.gravatar.com/avatar/" +
-      md5(this.data.email.toLowerCase()) +
-      "?s=512";
-    for (var i = 0; i < this.data.solved.length; i++) {
-      this.mp[this.data.solved[i]] = 1;
-    }
-    for (var i = 0; i < this.data.tried.length; i++) {
-      this.mp[this.data.tried[i]] = 0;
-    }
-    this.done = true;
+  mounted() {
+    var self = this;
+    this.axios
+      .get(
+        "http://10.105.242.94:23336/v1/user/" +
+          String(self.$route.params.id) +
+          "/details",
+        {
+          headers: {
+            Authorization: "Bearer " + self.$store.getters.Token
+          }
+        }
+      )
+      .then(res => {
+        var is_staff = false;
+        var is_teacher = false;
+        if (res.data.identity != null) {
+          for (var i of res.data.identity) {
+            if (i === "admin") {
+              is_staff = true;
+            } else if (i === "teacher") {
+              is_teacher = true;
+            }
+          }
+        }
+        console.log(res);
+        self.data.isStaff = is_staff;
+        self.data.isTeacher = is_teacher;
+        self.data.pk = res.data.id;
+        self.data.email = res.data.email;
+        self.data.gender = res.data.gender;
+        self.data.last_login = res.data.last_login;
+        self.data.motto = res.data.motto;
+        self.data.nick_name = res.data.nick_name;
+        self.data.tried = res.data.tried_problems;
+        self.data.solved = res.data.success_problems;
+        self.data.user_name = res.data.user_name;
+        console.log(self.data);
+        self.data.avatar =
+          "https://secure.gravatar.com/avatar/" +
+          md5(self.data.email.toLowerCase()) +
+          "?s=512";
+        for (var i = 0; i < self.data.solved.length; i++) {
+          self.mp[self.data.solved[i]] = 1;
+        }
+        for (var i = 0; i < self.data.tried.length; i++) {
+          self.mp[self.data.tried[i]] = 0;
+        }
+        self.done = true;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   },
   data() {
     return {
       done: false,
-      data: {},
+      data: { solved: [], tried: [] },
       mp: {}
     };
   },

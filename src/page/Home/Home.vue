@@ -25,7 +25,7 @@
     <v-progress-circular v-if="!done" indeterminate />
     <v-card v-for="i in data" :key="i.pk" class="mb-4">
       <router-link
-        :to="{'name': 'Announcement', params: {'id': i.pk}}"
+        :to="{'name': 'Announcement', params: {'id': i.id}}"
         :style="{cursor: 'pointer'}"
         tag="div"
       >
@@ -37,11 +37,11 @@
             </v-layout>
           </v-flex>
           <v-divider />
-          <v-card-text>{{i.brief}}</v-card-text>
+          <v-card-text>{{i.content.slice(0,Math.min(30,i.content.length))}}</v-card-text>
           <v-divider />
           <v-card-text>
             <div>Author:{{i.author}}</div>
-            <div>Update:{{i.update_time}}</div>
+            <div>Update:{{i.updated_at}}</div>
           </v-card-text>
         </v-container>
       </router-link>
@@ -51,12 +51,10 @@
 <script>
 export default {
   mounted() {
-    this.axios.defaults.withCredentials = true;
-    var vm = this;
-    vm.axios
-      .get("http://10.105.242.94:23333/rinne/GetAnnouncementList/")
+    this.axios
+      .get("http://10.105.242.94:23336/v1/announcement-list?page=1&page-size=114514")
       .then(r => {
-        this.data = r.data.data;
+        this.data = r.data.announcements;
         this.done = true;
         console.log(r);
       })

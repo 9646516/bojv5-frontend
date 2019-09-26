@@ -10,7 +10,7 @@
     >
       <template v-slot:item="{ item }">
         <router-link
-          :to="{'name': 'Submission', params: {'id': item.pk}}"
+          :to="{'name': 'Submission', params: {'id': 'item.pk'}}"
           :style="{'cursor': 'pointer'}"
           tag="tr"
         >

@@ -8,13 +8,12 @@
               <v-tab v-for="n in 3" :key="n">{{TabList[n]}}</v-tab>
             </v-tabs>
           </v-toolbar>
-
           <v-tabs-items v-model="tabs">
             <v-tab-item>
               <v-card-text>
                 <div align="center" justify="center">
                   <v-flex xs12>
-                    <img v-bind:src="this.$store.getters.gravatar(256)" class="wpd_gravatar" />
+                    <img v-bind:src="avatar" class="wpd_gravatar" />
                   </v-flex>
                   <v-divider />
                 </div>
@@ -128,20 +127,55 @@
 
 <script>
 import Router from "@/plugins/router";
-import Store from "@/plugins/store.js";
+import md5 from "js-md5";
+
 export default {
   mounted() {
-    this.update();
-    this.username = this.$store.getters.username;
-    this.nickname = this.$store.getters.nickname;
-    this.gender = this.$store.getters.gender;
-    this.email = this.$store.getters.email;
-    this.isstaff = this.$store.getters.IsStaff;
-    this.isteacher = this.$store.getters.IsTeacher;
-    this.SetTeacher = this.isteacher;
-    this.SetStaff = this.isstaff;
-    this.SetActive = true;
-    if (!this.isstaff && this.$store.getters.uid != this.$route.params.id) {
+    var self = this;
+    this.axios
+      .get(
+        "http://10.105.242.94:23336/v1/user/" +
+          String(self.$route.params.id) +
+          "/details",
+        {
+          headers: {
+            Authorization: "Bearer " + self.$store.getters.Token
+          }
+        }
+      )
+      .then(res => {
+        console.log(res);
+        var is_staff = false;
+        var is_teacher = false;
+        if (res.data.identity != null) {
+          for (var i of res.data.identity) {
+            if (i === "admin") {
+              is_staff = true;
+            } else if (i === "teacher") {
+              is_teacher = true;
+            }
+          }
+        }
+        self.isStaff = is_staff;
+        self.isTeacher = is_teacher;
+        self.email = res.data.email;
+        self.gender = res.data.gender;
+        self.motto = res.data.motto;
+        self.nickname = res.data.nick_name;
+        self.username = res.data.user_name;
+        self.avatar =
+          "https://secure.gravatar.com/avatar/" +
+          md5(res.data.email.toLowerCase()) +
+          "?s=256";
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    if (
+      !this.$store.getters.isStaff &&
+      this.$store.getters.uid != this.$route.params.id
+    ) {
       Router.push({
         name: "Error",
         params: { text: "You Cannot See this page" }
@@ -157,6 +191,8 @@ export default {
     email: "",
     isteacher: false,
     isstaff: false,
+    avatar: "123",
+
     SetTeacher: false,
     SetStaff: false,
     SetActive: false,
@@ -166,17 +202,6 @@ export default {
     password2: ""
   }),
   methods: {
-    update() {
-      this.axios.defaults.withCredentials = true;
-      this.axios.get("http://10.105.242.94:23333/rinne/SelfInfo/").then(res => {
-        console.log(res);
-        if (res.data.status == "OK") {
-          Store.dispatch("initState", res.data).then(() => {});
-        } else {
-          this.error = "Get Self.info Failed";
-        }
-      });
-    },
     check1() {
       if (this.email == "") {
         this.error = "email cannot be empty";

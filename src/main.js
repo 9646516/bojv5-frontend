@@ -48,6 +48,7 @@ new Vue({
 	store,
 	render: h => h(App)
 }).$mount('#app')
+// axios.defaults.baseURL="http://10.105.242.94:23336"
+Vue.prototype.$ajax = axios;
 Vue.prototype.$axios = axios
-axios.defaults.withCredentials = true;
 import "highlight.js/styles/xcode.css"

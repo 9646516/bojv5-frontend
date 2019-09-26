@@ -6,15 +6,15 @@
       <v-card-text>
         is_sticky:{{data.is_sticky}}
         <v-divider />
-        update_time:{{data.update_time}}
+        update_time:{{data.updated_time}}
         <v-divider />
         author:{{data.author}}
         <v-divider />
         last_update_user:{{data.last_update_user}}
         <v-divider />
-        create_time:{{data.create_time}}
+        created_at:{{data.created_at}}
         <v-divider />
-        pk:{{data.pk}}
+        id:{{data.id}}
       </v-card-text>
     </v-card>
     <v-card style="margin-block-end: 2em;">
@@ -41,15 +41,22 @@ export default {
     MdLoader
   },
   mounted() {
-    this.axios.defaults.withCredentials = true;
     this.axios
       .get(
-        "http://10.105.242.94:23333/rinne/GetAnnouncementDetails/?index=" +
-          this.$route.params.id
+        "http://10.105.242.94:23336/v1/announcement/" +
+          String(this.$route.params.id) +
+          "/"
       )
       .then(res => {
-        this.data = res.data;
+        console.log(res);
+        this.data = res.data.announcement;
         this.done = true;
+        if (res.data.code != 0) {
+          Router.push({
+            name: "Error",
+            params: { text: "404 Not Found" }
+          });
+        }
       })
       .catch(res => {
         Router.push({

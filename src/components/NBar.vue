@@ -31,13 +31,21 @@
             <span class="headline">Login</span>
           </v-card-title>
           <v-container>
-            <v-text-field v-model="username" label="Username" prepend-icon="mdi-account" />
-            <v-text-field
-              v-model="password"
-              label="Password"
-              type="password"
-              prepend-icon="mdi-lock"
-            />
+            <v-form>
+              <v-text-field
+                v-model="username"
+                label="Username"
+                prepend-icon="mdi-account"
+                autocomplete="username"
+              />
+              <v-text-field
+                v-model="password"
+                label="Password"
+                type="password"
+                prepend-icon="mdi-lock"
+                autocomplete="new-password"
+              />
+            </v-form>
             <v-flex sm12>
               <v-card-text>
                 <router-link :to="{ name: 'Register' }">Register</router-link>
@@ -48,7 +56,7 @@
           <v-card-actions>
             <div class="flex-grow-1"></div>
             <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-            <v-btn color="blue darken-1" text @click="login">Save</v-btn>
+            <v-btn color="blue darken-1" text @click="login">Login</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -165,41 +173,24 @@ export default {
     },
     login() {
       if (this.check()) {
-        this.axios.defaults.withCredentials = true;
-        if (this.$store.getters.Token == "") {
-          this.axios
-            .get("http://10.105.242.94:23333/rinne/GetCSRF/")
-            .then(res => {
-              Store.dispatch("setToken", res.data.CSRFToken);
-              this.send();
-            });
-        } else {
-          this.send();
-        }
+        var form =
+          "user_name=" +
+          escape(this.username) +
+          "&password=" +
+          escape(this.password);
+        this.axios
+          .post("http://10.105.242.94:23336/v1/user/login", form)
+          .then(res => {
+            if (res.data.code == 0) {
+              Store.dispatch("initState", res.data).then(() => {
+                router.push("/");
+                this.dialog = false;
+              });
+            } else {
+              this.error = "Wrong Password or Username";
+            }
+          });
       }
-    },
-    send() {
-      var form =
-        "csrfmiddlewaretoken=" +
-        escape(this.$store.getters.Token) +
-        "&username=" +
-        escape(this.username) +
-        "&password=" +
-        escape(this.password);
-      this.axios
-        .post("http://10.105.242.94:23333/rinne/Login/", form)
-        .then(res => {
-          if (res.data.status == "OK") {
-            Store.dispatch("initState", res.data.data).then(() => {
-              router.push("/");
-            });
-          } else {
-            this.error = "Login Faied";
-          }
-        })
-        .then(res => {
-          this.dialog = false;
-        });
     },
     check() {
       if (this.username == "") {

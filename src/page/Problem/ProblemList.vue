@@ -5,12 +5,12 @@
       :headers="headers"
       :items="desserts"
       loading-text="Loading... Please wait"
-      items-per-page="12"
+      :items-per-page="12"
       hide-default-footer
     >
       <template v-slot:item="{ item }">
         <router-link
-          :to="{'name': 'Problem', params: {'id': item.uid}}"
+          :to="{name: 'Problem', params: {id: 'item.uid'}}"
           :style="{cursor: 'pointer',background:item.solved?  'peachpuff;':'none'}"
           tag="tr"
         >

@@ -87,27 +87,34 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    setToken({
-      commit
-    }, token) {
-      commit("userToken", token);
-    },
     initState({
       commit
     }, data) {
+      console.log(data);
+      var is_staff=false;
+      var is_teacher=false;
+      for(var i of data.identity){
+        if(i==="admin"){
+          is_staff=true;
+        }else if(i==="teacher"){
+          is_teacher=true;
+        }
+      }
       commit("userEmail", data.email);
-      commit("userStatus", data.username);
-      commit("userIsStaff", data.is_staff);
-      commit("userIsTeacher", data.is_teacher);
+      commit("userStatus", data.user_name);
+      commit("userIsStaff", is_staff);
+      commit("userIsTeacher", is_teacher);
       commit("userUid", data.uid);
-      commit("userNickname", data.nickname);
+      commit("userNickname", data.nick_name);
+      commit("userToken",data.token);
       sessionStorage.setItem("isLogin", "true");
-      sessionStorage.setItem("username", data.username);
+      sessionStorage.setItem("username", data.user_name);
       sessionStorage.setItem("email", data.email);
-      sessionStorage.setItem("IsTeacher", data.is_teacher ? "true" : "false");
-      sessionStorage.setItem("IsStaff", data.is_staff ? "true" : "false");
-      sessionStorage.setItem("uid", data.uid ? data.uid : "");
-      sessionStorage.setItem("nickname", data.nickname ? data.nickname : "");
+      sessionStorage.setItem("IsTeacher", is_teacher ? "true" : "false");
+      sessionStorage.setItem("IsStaff", is_staff ? "true" : "false");
+      sessionStorage.setItem("uid", data.id ? data.id : "");
+      sessionStorage.setItem("nickname", data.nick_name ? data.nick_name : "");
+      sessionStorage.setItem("token", data.token ? data.token : "");
     },
     logout({
       commit

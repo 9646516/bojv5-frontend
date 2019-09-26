@@ -14,9 +14,13 @@
         </v-img>
       </v-col>
       <v-col>
-        <v-card-text class="text-left">Nickname: {{nickname}}</v-card-text>
+        <v-card-text class="text-left">Nickname: {{nick_name}}</v-card-text>
         <v-card-text class="text-left">Solved: {{solved}}</v-card-text>
         <v-card-text class="text-left">Tried: {{tried}}</v-card-text>
+        <v-card-text class="text-left">motto: {{motto}}</v-card-text>
+        <v-card-text class="text-left">gender: {{gender}}</v-card-text>
+        <v-card-text class="text-left">email: {{email}}</v-card-text>
+        <v-card-text class="text-left">last_login: {{last_login}}</v-card-text>
       </v-col>
     </v-row>
   </v-card>
@@ -32,7 +36,15 @@ export default {
       type: Number,
       default: 0
     },
-    nickname: {
+    nick_name: {
+      type: String,
+      default: "1"
+    },
+    motto: {
+      type: String,
+      default: "1"
+    },
+    last_login: {
       type: String,
       default: "1"
     },
@@ -43,6 +55,14 @@ export default {
     tried: {
       type: Number,
       default: 0
+    },
+    gender: {
+      type: Number,
+      default: 0
+    },
+    email: {
+      type: String,
+      default: ""
     }
   },
   data: () => ({
@@ -66,7 +86,7 @@ export default {
       window.location.href = e;
     },
     get_color() {
-      var idx = Math.round(Math.random() * 10);
+      var idx = Math.round(Math.random() * 11);
       return this.color[idx];
     }
   }
