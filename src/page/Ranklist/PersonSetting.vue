@@ -23,11 +23,10 @@
                     <v-select
                       v-model="gender"
                       :items="genderList"
+                      item-text="abbr"
+                      item-value="status"
                       prepend-icon="mdi-account-multiple-outline"
-                      class="mt-1"
-                      persistent-hint
                       return-object
-                      single-line
                     />
                   </div>
                   <v-text-field
@@ -42,16 +41,17 @@
                     prepend-icon="mdi-iframe-outline"
                   />
 
-                  <v-text-field v-model="email" label="Email" prepend-icon="mdi-book" />
+                  <v-text-field v-model="email" label="Email" disabled prepend-icon="mdi-book" />
+                  <v-text-field v-model="motto" label="Motto" prepend-icon="mdi-book" />
                   <v-text-field
                     v-model="isstaff"
-                    label="IsStaff"
+                    label="Is Staff"
                     disabled
                     prepend-icon="mdi-emoticon-cool"
                   />
                   <v-text-field
                     v-model="isteacher"
-                    label="IsTeacher"
+                    label="Is Teacher"
                     disabled
                     prepend-icon="mdi-emoticon-cool"
                   />
@@ -103,15 +103,15 @@
               </v-card>
             </v-tab-item>
             <v-tab-item>
-              <v-card flat v-if="this.isstaff">
+              <v-card flat v-if="this.$store.getters.IsStaff">
                 <v-sheet class="pa-5">
-                  <v-switch v-model="SetTeacher" inset :label="`Is Teacher`"></v-switch>
-                  <v-switch v-model="SetStaff" inset :label="`Is Staff`"></v-switch>
-                  <v-switch v-model="SetActive" inset :label="`Is Active`"></v-switch>
+                  <v-switch v-model="isteacher" inset :label="`Is Teacher`"></v-switch>
+                  <v-switch v-model="isstaff" inset :label="`Is Staff`"></v-switch>
+                  <v-switch v-model="isactive" inset :label="`Is Active`"></v-switch>
                   <v-btn block @click="click3">Submit</v-btn>
                 </v-sheet>
               </v-card>
-              <v-card flat v-if="!this.isstaff">
+              <v-card flat v-if="!this.$store.getters.IsStaff">
                 <v-card-text>
                   <v-card-title class="headline">You Cannot See This Page</v-card-title>
                 </v-card-text>
@@ -130,7 +130,7 @@ import Router from "@/plugins/router";
 import md5 from "js-md5";
 
 export default {
-  mounted() {
+  created() {
     var self = this;
     this.axios
       .get(
@@ -147,22 +147,26 @@ export default {
         console.log(res);
         var is_staff = false;
         var is_teacher = false;
+        var is_active = false;
         if (res.data.identity != null) {
           for (var i of res.data.identity) {
             if (i === "admin") {
               is_staff = true;
             } else if (i === "teacher") {
               is_teacher = true;
+            } else if (i === "active") {
+              is_active = true;
             }
           }
         }
-        self.isStaff = is_staff;
-        self.isTeacher = is_teacher;
+        self.isstaff = is_staff;
+        self.isteacher = is_teacher;
         self.email = res.data.email;
-        self.gender = res.data.gender;
+        self.gender = this.genderList[res.data.gender];
         self.motto = res.data.motto;
         self.nickname = res.data.nick_name;
         self.username = res.data.user_name;
+        self.uid = res.data.id;
         self.avatar =
           "https://secure.gravatar.com/avatar/" +
           md5(res.data.email.toLowerCase()) +
@@ -187,16 +191,19 @@ export default {
     TabList: ["", "Setting", "Password", "Manage"],
     username: "",
     nickname: "",
-    gender: "",
+    gender: { state: 0, abbr: "Male" },
     email: "",
     isteacher: false,
     isstaff: false,
+    isactive: false,
     avatar: "123",
-
-    SetTeacher: false,
-    SetStaff: false,
-    SetActive: false,
-    genderList: ["Male", "Female", "Secret"],
+    uid: 1,
+    motto: "",
+    genderList: [
+      { state: 0, abbr: "Secret" },
+      { state: 1, abbr: "Female" },
+      { state: 2, abbr: "Male" }
+    ],
     password0: "",
     password1: "",
     password2: ""
@@ -221,25 +228,30 @@ export default {
     },
     click1() {
       if (this.check1()) {
-        this.axios.defaults.withCredentials = true;
+        var self = this;
         this.axios
-          .get(
-            "http://10.105.242.94:23333/rinne/ChangeUserInfo/" +
-              "?username=" +
-              escape(this.username) +
-              "&gender=" +
-              escape(this.gender) +
-              "&nickname=" +
-              escape(this.nickname) +
-              "&email=" +
-              escape(this.email)
+          .put(
+            "http://10.105.242.94:23336/v1/user/" + String(self.uid) + "/",
+            JSON.stringify({
+              gender: (this.gender.state),
+              nick_name: String(this.nickname),
+              motto: String(this.motto),
+            }),
+            // "gender=" +
+            //   String(this.gender.state) +
+            //   "&nick_name=" +
+            //   String(this.nickname) +
+            //   "&motto=" +
+            //   String(this.motto),
+            {
+              headers: {
+                Authorization: "Bearer " + self.$store.getters.Token
+              }
+            }
           )
           .then(res => {
-            if (res.data.status != "OK") {
-              this.error = res.data.status;
-            }
+            console.log(res);
           });
-        this.update();
       }
     },
     check2() {
@@ -258,48 +270,29 @@ export default {
     },
     click2() {
       if (this.check2()) {
-        this.axios.defaults.withCredentials = true;
+        var self = this;
         this.axios
-          .get(
-            "http://10.105.242.94:23333/rinne/ChangeUserPass/" +
-              "?username=" +
-              escape(this.username) +
-              "&old_pass=" +
-              escape(this.password0) +
-              "&new_pass=" +
-              escape(this.password1)
+          .put(
+            "http://10.105.242.94:23336/v1/user/" +
+              String(self.uid) +
+              "/password",
+            "old-password=" +
+              String(this.password0) +
+              "&new-password=" +
+              String(this.password1),
+            {
+              headers: {
+                Authorization: "Bearer " + self.$store.getters.Token
+              }
+            }
           )
           .then(res => {
             console.log(res);
-            if (res.data.status != "OK") {
-              this.error = res.data.status;
-            }
           });
         Router.push({ name: "Logout" });
       }
     },
-    click3() {
-      this.axios.defaults.withCredentials = true;
-      this.axios
-        .get(
-          "http://10.105.242.94:23333/rinne/ChangeUserPower/" +
-            "?username=" +
-            escape(this.username) +
-            "&is_staff=" +
-            escape(this.SetStaff) +
-            "&is_teacher=" +
-            escape(this.SetTeacher) +
-            "&is_active=" +
-            escape(this.SetActive)
-        )
-        .then(res => {
-          console.log(res);
-          if (res.data.status != "OK") {
-            this.error = res.data.status;
-          }
-        });
-      this.update();
-    },
+    click3() {},
     CheckEmail() {
       var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
       return reg.test(this.email);

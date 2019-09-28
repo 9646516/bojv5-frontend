@@ -7,35 +7,40 @@
       <v-divider />
       <v-layout class="curtain" align-center justify-center>
         <v-flex style="margin-left:5em;margin-top:2em;">
-          <v-card-text>username:{{data.username}}</v-card-text>
-          <v-card-text>nickname:{{data.nickname}}</v-card-text>
-          <v-card-text>gender:{{data.gender}}</v-card-text>
-          <v-card-text>Problems solved:{{data.tried.length}}</v-card-text>
-          <v-card-text>Problems tried:{{data.solved.length}}</v-card-text>
+          <v-card-text>username:{{user_name}}</v-card-text>
+          <v-card-text>nickname:{{nick_name}}</v-card-text>
+          <v-card-text>gender:{{gender}}</v-card-text>
+          <v-card-text>Problems solved:{{tried.length}}</v-card-text>
+          <v-card-text>Problems tried:{{solved.length}}</v-card-text>
+          <v-card-text>motto:{{motto}}</v-card-text>
+          <v-card-text>email:{{email}}</v-card-text>
+          <v-card-text>avatar:{{avatar}}</v-card-text>
+          <v-card-text>last_login:{{last_login}}</v-card-text>
           <v-btn
             large
             color="primary"
-            :to="{'name': 'Setting', params: {'id': data.pk}}"
-            v-if="(this.$store.getters.IsStaff)||(this.$store.getters.uid==data.pk)"
+            :to="{'name': 'Setting', params: {'id': pk}}"
+            v-if="(this.$store.getters.IsStaff)||(this.$store.getters.uid==pk)"
           >
             <v-icon left>mdi-github-circle</v-icon>Edit
           </v-btn>
         </v-flex>
         <v-flex style="margin-top:2em;">
-          <v-badge color="blue" overlap>
-            <v-img :src="data.avatar" height="256" width="256" />
-            <template v-slot:placeholder>
-              <v-row class="fill-height ma-0" align="center" justify="center">
-                <v-progress-circular indeterminate :color="get_color()"></v-progress-circular>
-              </v-row>
-            </template>
+          <v-badge :color="done?'blue':'white'" overlap>
+            <v-img :src="avatar" height="256" width="256">
+              <template v-slot:placeholder>
+                <v-row class="fill-height ma-0" align="center" justify="center">
+                  <v-progress-circular indeterminate color="purple"></v-progress-circular>
+                </v-row>
+              </template>
+            </v-img>
             <template v-slot:badge>
-              <div v-if="data.isStaff">
+              <div v-if="isStaff">
                 <b>Admin</b>
                 <v-icon dark>mdi-check</v-icon>
                 <v-icon dark>mdi-check</v-icon>
               </div>
-              <div v-if="data.isTeacher">
+              <div v-if="isTeacher">
                 <b>Teacher</b>
                 <v-icon dark>mdi-check</v-icon>
               </div>
@@ -69,7 +74,7 @@ import Router from "@/plugins/router";
 import md5 from "js-md5";
 import Store from "@/plugins/store.js";
 export default {
-  mounted() {
+  created() {
     var self = this;
     this.axios
       .get(
@@ -95,27 +100,27 @@ export default {
           }
         }
         console.log(res);
-        self.data.isStaff = is_staff;
-        self.data.isTeacher = is_teacher;
-        self.data.pk = res.data.id;
-        self.data.email = res.data.email;
-        self.data.gender = res.data.gender;
-        self.data.last_login = res.data.last_login;
-        self.data.motto = res.data.motto;
-        self.data.nick_name = res.data.nick_name;
-        self.data.tried = res.data.tried_problems;
-        self.data.solved = res.data.success_problems;
-        self.data.user_name = res.data.user_name;
+        self.isStaff = is_staff;
+        self.isTeacher = is_teacher;
+        self.pk = res.data.id;
+        self.email = res.data.email;
+        self.gender = res.data.gender;
+        self.last_login = res.data.last_login;
+        self.motto = res.data.motto;
+        self.nick_name = res.data.nick_name;
+        self.tried = res.data.tried_problems;
+        self.solved = res.data.success_problems;
+        self.user_name = res.data.user_name;
         console.log(self.data);
-        self.data.avatar =
+        self.avatar =
           "https://secure.gravatar.com/avatar/" +
-          md5(self.data.email.toLowerCase()) +
+          md5(self.email.toLowerCase()) +
           "?s=512";
-        for (var i = 0; i < self.data.solved.length; i++) {
-          self.mp[self.data.solved[i]] = 1;
+        for (var i = 0; i < self.solved.length; i++) {
+          self.mp[self.solved[i]] = 1;
         }
-        for (var i = 0; i < self.data.tried.length; i++) {
-          self.mp[self.data.tried[i]] = 0;
+        for (var i = 0; i < self.tried.length; i++) {
+          self.mp[self.tried[i]] = 0;
         }
         self.done = true;
       })
@@ -126,7 +131,18 @@ export default {
   data() {
     return {
       done: false,
-      data: { solved: [], tried: [] },
+      isStaff: false,
+      isTeacher: false,
+      pk: 114514,
+      avatar: "",
+      email: "asd",
+      gender: "1",
+      last_login: "",
+      motto: "",
+      nick_name: "",
+      user_name: "",
+      solved: [],
+      tried: [],
       mp: {}
     };
   },

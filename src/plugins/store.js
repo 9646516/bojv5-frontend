@@ -104,7 +104,7 @@ const store = new Vuex.Store({
       commit("userStatus", data.user_name);
       commit("userIsStaff", is_staff);
       commit("userIsTeacher", is_teacher);
-      commit("userUid", data.uid);
+      commit("userUid", data.id);
       commit("userNickname", data.nick_name);
       commit("userToken",data.token);
       sessionStorage.setItem("isLogin", "true");

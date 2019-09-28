@@ -22,6 +22,9 @@
     </v-layout>
     <div class="headline">Announcement</div>
     <v-divider />
+    <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addannouncement">
+      <v-icon left>mdi-delete</v-icon>Add
+    </v-btn>
     <v-progress-circular v-if="!done" indeterminate />
     <v-card v-for="i in data" :key="i.pk" class="mb-4">
       <router-link
@@ -52,7 +55,9 @@
 export default {
   mounted() {
     this.axios
-      .get("http://10.105.242.94:23336/v1/announcement-list?page=1&page-size=114514")
+      .get(
+        "http://10.105.242.94:23336/v1/announcement-list?page=1&page-size=114514"
+      )
       .then(r => {
         this.data = r.data.announcements;
         this.done = true;

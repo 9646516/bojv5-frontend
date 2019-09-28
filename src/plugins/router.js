@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Setting from '@/page/Ranklist/PersonSetting'
 import About from '@/page/About'
-import Add from '@/page/Add'
+import AddProblem from '@/page/Problem/Add'
 import Home from '@/page/Home/Home'
 import Problems from '@/page/Problem/ProblemList'
 import Logout from '@/page/Logout'
@@ -20,11 +20,21 @@ import Ranklist from '@/page/Ranklist/Ranklist'
 import AddUser from '@/page/AddUser'
 import ClassList from '@/page/Class/ClassList'
 import Dev from '@/page/Dev'
+import AddAnnouncement from '@/page/Home/Add'
+import EditAnnouncement from '@/page/Home/Edit'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [{
+    path: '/addannouncement',
+    name: 'AddAnnouncement',
+    component: AddAnnouncement,
+  },{
+    path: '/editannouncement/:id',
+    name: 'EditAnnouncement',
+    component: EditAnnouncement,
+  },{
     path: '/dev',
     name: 'Dev',
     component: Dev,
@@ -45,9 +55,9 @@ export default new Router({
     component: About
   },
   {
-    path: '/add',
-    name: 'Add',
-    component: Add,
+    path: '/addproblem',
+    name: 'AddProblem',
+    component: AddProblem,
     meta: {
       NeedStaff: true
     }

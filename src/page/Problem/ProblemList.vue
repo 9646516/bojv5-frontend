@@ -22,6 +22,9 @@
         </router-link>
       </template>
     </v-data-table>
+    <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addproblem">
+      <v-icon left>mdi-delete</v-icon>Add
+    </v-btn>
     <div class="text-xs-center pt-2">
       <v-pagination v-model="options.page" :length="pages"></v-pagination>
     </div>
