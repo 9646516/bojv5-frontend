@@ -85,8 +85,37 @@ export default {
   },
   methods: {
     add() {
-      this.data[0]["status"] = "added";
-      this.refresh();
+      // this.data[0]["status"] = "added";
+      // this.refresh();
+      console.log(this.data);
+      var self = this;
+      var sb = function(i) {
+        self.axios
+          .post(
+            "http://10.105.242.94:23336/v1/user/register",
+            "user_name=" +
+              self.data[i].username +
+              "&password=" +
+              self.data[i].password +
+              "&nick_name=" +
+              self.data[i].nickname +
+              "&email=" +
+              self.data[i].username +
+              "@BUPT.com"
+          )
+          .then(res => {
+            console.log(self.data[i]);
+            if (res.data.code == 0) {
+              self.data[i].status = "added";
+            } else {
+              self.data[i].status = "failed";
+            }
+            self.refresh();
+          });
+      };
+      for (var i in this.data) {
+        sb(i);
+      }
     },
     refresh() {
       this.push();

@@ -9,22 +9,22 @@
             </v-flex>
             <v-divider />
           </div>
-          <v-text-field v-model="username" label="Username" outline />
-          <v-text-field v-model="password" label="Password" type="password" outline />
-          <v-text-field v-model="password2" label="Repeat Password" type="password" outline />
-          <v-text-field v-model="nickname" label="Nickname" outline />
-          <v-text-field v-model="email" label="Email" outline />
+          <v-text-field v-model="username" label="Username" />
+          <v-text-field v-model="password" label="Password" type="password" />
+          <v-text-field v-model="password2" label="Repeat Password" type="password" />
+          <v-text-field v-model="nickname" label="Nickname" />
+          <v-text-field v-model="email" label="Email" />
           <div>
             <v-select
               v-model="gender"
               :items="genderList"
-              persistent-hint
+              item-text="abbr"
+              item-value="status"
+              prepend-icon="mdi-account-multiple-outline"
               return-object
-              outline
-              label="Gender"
             />
           </div>
-          <v-alert :value="true" class="mb-3" type="info" outline>
+          <v-alert :value="true" class="mb-3" type="info" outlined>
             <span>Your Avatar is Bind With Your Email In</span>
             <a href="https://cn.gravatar.com/">
               <strong>
@@ -50,51 +50,41 @@ export default {
     email: "",
     error: "",
     nickname: "",
-    genderList: ["Male", "Female", "Secret"],
-    gender: ""
+    genderList: [
+      { state: 0, abbr: "Secret" },
+      { state: 1, abbr: "Female" },
+      { state: 2, abbr: "Male" }
+    ],
+    gender: { state: 0, abbr: "Male" }
   }),
   methods: {
     submit() {
       if (this.check()) {
-        if (this.$store.getters.Token == "") {
-          this.axios
-            .get("http://10.105.242.94:23333/rinne/GetCSRF/")
-            .then(res => {
-              Store.dispatch("setToken", res.data.CSRFToken);
-              this.send();
-            });
-        } else {
-          this.send();
-        }
+        this.axios
+          .post(
+            "http://10.105.242.94:23336/v1/user/register",
+            "user_name=" +
+              this.username +
+              "&password=" +
+              this.password +
+              "&nick_name=" +
+              this.nickname +
+              "&email=" +
+              this.email +
+              "&gender=" +
+              String(this.gender.state)
+          )
+          .then(res => {
+            if (res.data.status == "OK") {
+              router.push({
+                name: "Login",
+                params: { text: "Register succeed,Please Login First" }
+              });
+            } else {
+              this.error = res.data.status;
+            }
+          });
       }
-    },
-    send() {
-      var form =
-        "csrfmiddlewaretoken=" +
-        escape(this.$store.getters.Token) +
-        "&username=" +
-        escape(this.username) +
-        "&password=" +
-        escape(this.password) +
-        "&email=" +
-        escape(this.email) +
-        "&nickname=" +
-        escape(this.nickname) +
-        "&gender=" +
-        escape(this.gender);
-      console.log(form);
-      this.axios
-        .post("http://10.105.242.94:23333/rinne/Register/", form)
-        .then(res => {
-          if (res.data.status == "OK") {
-            router.push({
-              name: "Login",
-              params: { text: "Register succeed,Please Login First" }
-            });
-          } else {
-            this.error = res.data.status;
-          }
-        });
     },
     check() {
       if (this.username == "") {
@@ -121,7 +111,7 @@ export default {
       } else if (this.gender == "") {
         this.error = "Gender is Empty";
         return false;
-      }else if (this.nickname == "") {
+      } else if (this.nickname == "") {
         this.error = "Nickname is Empty";
         return false;
       } else {

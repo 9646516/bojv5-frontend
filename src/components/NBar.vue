@@ -48,7 +48,9 @@
             </v-form>
             <v-flex sm12>
               <v-card-text>
-                <router-link :to="{ name: 'Register' }">Register</router-link>
+                <router-link :to="{ name: 'Register' }">
+                  <div @click="dialog = false">Register</div>
+                </router-link>
                 <div style="color:red;">{{error}}</div>
               </v-card-text>
             </v-flex>

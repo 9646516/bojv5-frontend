@@ -14,7 +14,7 @@
         </v-img>
       </v-col>
       <v-col>
-        <v-card-text class="text-left">Nickname: {{nick_name}}</v-card-text>
+        <v-card-text class="text-left">Nickname: {{nickname}}</v-card-text>
         <v-card-text class="text-left">Solved: {{solved}}</v-card-text>
         <v-card-text class="text-left">Tried: {{tried}}</v-card-text>
         <v-card-text class="text-left">motto: {{motto}}</v-card-text>
@@ -36,7 +36,7 @@ export default {
       type: Number,
       default: 0
     },
-    nick_name: {
+    nickname: {
       type: String,
       default: "1"
     },

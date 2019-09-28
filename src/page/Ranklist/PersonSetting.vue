@@ -175,9 +175,8 @@ export default {
       .catch(function(error) {
         console.log(error);
       });
-
     if (
-      !this.$store.getters.isStaff &&
+      !this.$store.getters.IsStaff &&
       this.$store.getters.uid != this.$route.params.id
     ) {
       Router.push({
@@ -233,9 +232,9 @@ export default {
           .put(
             "http://10.105.242.94:23336/v1/user/" + String(self.uid) + "/",
             JSON.stringify({
-              gender: (this.gender.state),
+              gender: this.gender.state,
               nick_name: String(this.nickname),
-              motto: String(this.motto),
+              motto: String(this.motto)
             }),
             // "gender=" +
             //   String(this.gender.state) +
