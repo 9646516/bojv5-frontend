@@ -1,51 +1,104 @@
 <template>
-  <div>
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      loading-text="Loading... Please wait"
-      :items-per-page="12"
-      hide-default-footer
-      class="elevation-1"
-    >
-      <template v-slot:item="{ item }">
-        <router-link
-          :to="{'name': 'Submission', params: {'id': 'item.pk'}}"
-          :style="{'cursor': 'pointer'}"
-          tag="tr"
-        >
-          <td>{{ item.uid }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.owner }}</td>
-          <td>{{ item.members }}</td>
-        </router-link>
-      </template>
-    </v-data-table>
-    <div class="text-xs-center pt-2">
-      <v-pagination v-model="page" :length="max_page"></v-pagination>
-    </div>
-  </div>
+  <v-container>
+    <v-card style="margin-bottom:3em;">
+      <v-card-text class="headlines">
+        <h1>Details</h1>
+      </v-card-text>
+      <v-divider />
+      <v-layout class="curtain" align-center justify-center>
+        <v-flex style="margin-left:5em;margin-top:2em;">
+          <v-card-text>CreatedAt:{{data.create_at}}</v-card-text>
+          <v-card-text>Description:{{data.description}}</v-card-text>
+          <v-card-text>ID:{{data.id}}</v-card-text>
+          <v-card-text>UpdatedAt:{{data.updated_at}}</v-card-text>
+          <v-card-text>name:{{data.name}}</v-card-text>
+          <v-card-text>owner:{{data.owner}}</v-card-text>
+          <v-btn
+            large
+            color="primary"
+            :to="{'name': 'EditClass', params: {'id': data.id}}"
+            v-if="(this.$store.getters.IsStaff)||(this.$store.getters.uid==data.owner_id)"
+          >
+            <v-icon left>mdi-github-circle</v-icon>Edit
+          </v-btn>
+
+          <v-btn
+            large
+            color="primary"
+            :to="{'name': 'ClassAddMember', params: {'id': data.id}}"
+            v-if="(this.$store.getters.IsStaff)||(this.$store.getters.uid==data.owner_id)"
+          >
+            <v-icon left>mdi-github-circle</v-icon>Add Members
+          </v-btn>
+        </v-flex>
+      </v-layout>
+    </v-card>
+    <v-card>
+      <v-card-text class="headlines">
+        <h1>Members</h1>
+      </v-card-text>
+      <v-divider />
+      <v-row v-for="i in member" :key="i.id">
+        <v-card-text>{{i}}</v-card-text>
+      </v-row>
+      <div class="text-xs-center pt-2">
+        <v-pagination v-model="page" :length="maxlen"></v-pagination>
+      </div>
+    </v-card>
+  </v-container>
 </template>
+
 <script>
 export default {
-  mounted() {},
+  watch: {
+    page: {
+      handler(val, oldVal) {
+        this.axios
+          .get(
+            "http://10.105.242.94:23336/v1/sugar/class/group/" +
+              String(this.$route.params.id) +
+              "/user-list?page-size=20&page=" +
+              String(this.page),
+            {
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.Token
+              }
+            }
+          )
+          .then(res => {
+            console.log(res.data);
+            this.member = res.data.users;
+          });
+      },
+      immediate: true
+    }
+  },
+  created() {
+    this.axios
+      .get(
+        "http://10.105.242.94:23336/v1/sugar/class/group/" +
+          String(this.$route.params.id) +
+          "/",
+        {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.Token
+          }
+        }
+      )
+      .then(res => {
+        console.log(res.data);
+        this.data = res.data;
+      });
+  },
   data() {
     return {
-      done: true,
-      search: "",
+      data: [],
+      member: [],
       page: 1,
-      max_page: 1,
-      headers: [
-        { text: "UID", align: "left", sortable: false, value: "uid" },
-        { text: "Name", sortable: false, value: "name" },
-        { text: "Owner", sortable: false, value: "owner" },
-        { text: "Members", sortable: false, value: "members" }
-      ],
-      desserts: [{}]
+      maxlen: 10
     };
   },
   computed: {},
-  methods: {},
-  watch: {}
+  methods: {}
 };
 </script>

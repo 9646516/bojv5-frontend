@@ -19,9 +19,13 @@ import Contests from '@/page/Contest/ContestList'
 import Ranklist from '@/page/Ranklist/Ranklist'
 import AddUser from '@/page/AddUser'
 import ClassList from '@/page/Class/ClassList'
+import ClassDetails from '@/page/Class/ClassDetails'
+import EditClass from '@/page/Class/Edit'
+import AddClass from '@/page/Class/Add'
 import Dev from '@/page/Dev'
 import AddAnnouncement from '@/page/Home/Add'
 import EditAnnouncement from '@/page/Home/Edit'
+import ClassAddMember from '@/page/Class/AddMember'
 
 Vue.use(Router)
 
@@ -30,11 +34,27 @@ export default new Router({
     path: '/addannouncement',
     name: 'AddAnnouncement',
     component: AddAnnouncement,
-  },{
+  }, {
+    path: '/addclass',
+    name: 'AddClass',
+    component: AddClass,
+  }, {
+    path: '/classaddmember/:id',
+    name: 'ClassAddMember',
+    component: ClassAddMember,
+  }, {
+    path: '/classdetails/:id',
+    name: 'ClassDetails',
+    component: ClassDetails,
+  }, {
+    path: '/editclass/:id',
+    name: 'EditClass',
+    component: EditClass,
+  }, {
     path: '/editannouncement/:id',
     name: 'EditAnnouncement',
     component: EditAnnouncement,
-  },{
+  }, {
     path: '/dev',
     name: 'Dev',
     component: Dev,

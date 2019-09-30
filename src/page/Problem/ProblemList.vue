@@ -1,6 +1,9 @@
 <template>
   <div>
     <v-text-field v-model="search" label="Search"></v-text-field>
+    <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addproblem">
+      <v-icon left>mdi-delete</v-icon>Add
+    </v-btn>
     <v-data-table
       :headers="headers"
       :items="desserts"
@@ -10,7 +13,7 @@
     >
       <template v-slot:item="{ item }">
         <router-link
-          :to="{name: 'Problem', params: {id: 'item.uid'}}"
+          :to="{name: 'Problem', params: {id: item.uid}}"
           :style="{cursor: 'pointer',background:item.solved?  'peachpuff;':'none'}"
           tag="tr"
         >
@@ -22,9 +25,6 @@
         </router-link>
       </template>
     </v-data-table>
-    <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addproblem">
-      <v-icon left>mdi-delete</v-icon>Add
-    </v-btn>
     <div class="text-xs-center pt-2">
       <v-pagination v-model="options.page" :length="pages"></v-pagination>
     </div>
@@ -36,7 +36,7 @@ export default {
   mounted() {
     this.axios.defaults.withCredentials = true;
     var vm = this;
-    vm.axios
+    this.axios
       .get("http://10.105.242.94:23333/rinne/GetProblemList/")
       .then(response => {
         vm.desserts = response.data.problem;

@@ -2,7 +2,15 @@
   <v-card>
     <v-container>
       <v-text-field v-model="title" clearable label="Title" type="text" />
-      <v-textarea v-model="content" v-if="!preview" auto-grow clearable rows="10" label="Content" />
+      <v-text-field v-model="owner" clearable label="Owner" type="text" />
+      <v-textarea
+        v-model="content"
+        v-if="!preview"
+        auto-grow
+        clearable
+        rows="10"
+        label="Description"
+      />
       <MdLoader v-if="preview" :text="content"></MdLoader>
       <v-toolbar height="48" flat>
         <v-col>
@@ -34,6 +42,7 @@ export default {
     title: "",
     content: "",
     message: "",
+    owner: "",
     loading: false,
     preview: false
   }),
@@ -44,8 +53,13 @@ export default {
         this.message = "Waiting for it...";
         this.axios
           .post(
-            "http://10.105.242.94:23336/v1/announcement/",
-            "title=" + String(this.title) + "&content=" + String(this.content),
+            "http://10.105.242.94:23336/v1/sugar/class/group/",
+            "name=" +
+              String(this.title) +
+              "&description=" +
+              String(this.content) +
+              "&owner_id=" +
+              String(this.owner),
             {
               headers: {
                 Authorization: "Bearer " + this.$store.getters.Token

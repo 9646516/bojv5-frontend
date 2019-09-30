@@ -63,6 +63,18 @@ export default {
       immediate: true
     }
   },
+  created() {
+    var self=this;
+    this.axios
+      .get("http://10.105.242.94:23336/v1/user-count", {
+        headers: {
+          Authorization: "Bearer " + self.$store.getters.Token
+        }
+      })
+      .then(res => {
+        this.maxlen = Math.ceil(res.data.count / 20);
+      });
+  },
   data() {
     return {
       page: 1,

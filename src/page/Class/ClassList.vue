@@ -1,5 +1,8 @@
 <template>
   <div>
+    <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addclass">
+      <v-icon left>mdi-delete</v-icon>Add
+    </v-btn>
     <v-data-table
       :headers="headers"
       :items="desserts"
@@ -10,14 +13,14 @@
     >
       <template v-slot:item="{ item }">
         <router-link
-          :to="{'name': 'Submission', params: {'id': 'item.pk'}}"
+          :to="{'name': 'ClassDetails', params: {'id': item.ID}}"
           :style="{'cursor': 'pointer'}"
           tag="tr"
         >
-          <td>{{ item.uid }}</td>
+          <td>{{ item.ID }}</td>
           <td>{{ item.name }}</td>
-          <td>{{ item.owner }}</td>
-          <td>{{ item.members }}</td>
+          <td>{{ item.Owner.nick_name }}</td>
+          <td>{{ item.CreatedAt }}</td>
         </router-link>
       </template>
     </v-data-table>
@@ -28,7 +31,40 @@
 </template>
 <script>
 export default {
-  mounted() {},
+  watch: {
+    page: {
+      handler(val, oldVal) {
+        this.axios
+          .get(
+            "http://10.105.242.94:23336/v1/sugar/class/class-list?page=" +
+              String(val) +
+              "&page-size=20",
+            {
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.Token
+              }
+            }
+          )
+          .then(res => {
+            console.log(res.data);
+            this.desserts = res.data.group;
+          });
+      },
+      immediate: true
+    }
+  },
+  created() {
+    // var self=this;
+    // this.axios
+    //   .get("http://10.105.242.94:23336/v1/user-count", {
+    //     headers: {
+    //       Authorization: "Bearer " + self.$store.getters.Token
+    //     }
+    //   })
+    //   .then(res => {
+    //     this.maxlen = Math.ceil(res.data.count / 20);
+    //   });
+  },
   data() {
     return {
       done: true,
@@ -39,13 +75,12 @@ export default {
         { text: "UID", align: "left", sortable: false, value: "uid" },
         { text: "Name", sortable: false, value: "name" },
         { text: "Owner", sortable: false, value: "owner" },
-        { text: "Members", sortable: false, value: "members" }
+        { text: "CreatedAt", sortable: false, value: "createdat" }
       ],
-      desserts: [{}]
+      desserts: []
     };
   },
   computed: {},
-  methods: {},
-  watch: {}
+  methods: {}
 };
 </script>
