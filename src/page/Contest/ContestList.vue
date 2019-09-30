@@ -1,5 +1,8 @@
 <template>
   <div>
+    <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addcontest">
+      <v-icon left>mdi-delete</v-icon>Add
+    </v-btn>
     <v-data-table
       :headers="headers"
       :items="desserts"
@@ -10,16 +13,15 @@
     >
       <template v-slot:item="{ item }">
         <router-link
-          :to="{name: 'Submission', params: {id: 'item.pk'}}"
+          :to="{'name': 'Contest', params: {'id': item.id}}"
           :style="{'cursor': 'pointer'}"
           tag="tr"
         >
-          <td>{{ item.uid }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.owner }}</td>
-          <td>{{ item.status }}</td>
-          <td>{{ item.class }}</td>
-          <td>{{ item.type }}</td>
+          <td>{{ item.id }}</td>
+          <td>{{ item.title }}</td>
+          <td>{{ item.author }}</td>
+          <td>{{ item.start_at }}</td>
+          <td>{{ item.end_duration }}</td>
         </router-link>
       </template>
     </v-data-table>
@@ -30,7 +32,40 @@
 </template>
 <script>
 export default {
-  mounted() {},
+  watch: {
+    page: {
+      handler(val, oldVal) {
+        this.axios
+          .get(
+            "http://10.105.242.94:23336/v1/contest-list?page=" +
+              String(val) +
+              "&page-size=20",
+            {
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.Token
+              }
+            }
+          )
+          .then(res => {
+            console.log(res.data);
+            this.desserts = res.data.contests;
+          });
+      },
+      immediate: true
+    }
+  },
+  created() {
+    // var self=this;
+    // this.axios
+    //   .get("http://10.105.242.94:23336/v1/user-count", {
+    //     headers: {
+    //       Authorization: "Bearer " + self.$store.getters.Token
+    //     }
+    //   })
+    //   .then(res => {
+    //     this.maxlen = Math.ceil(res.data.count / 20);
+    //   });
+  },
   data() {
     return {
       done: true,
@@ -39,17 +74,15 @@ export default {
       max_page: 1,
       headers: [
         { text: "UID", align: "left", sortable: false, value: "uid" },
-        { text: "Name", sortable: false, value: "name" },
-        { text: "Owner", sortable: false, value: "owner" },
-        { text: "Status", sortable: false, value: "status" },
-        { text: "Class", sortable: false, value: "class" },
-        { text: "Type", sortable: false, value: "type" }
+        { text: "Title", sortable: false, value: "title" },
+        { text: "Author", sortable: false, value: "author" },
+        { text: "Start", sortable: false, value: "start_at" },
+        { text: "Duration", sortable: false, value: "end_duration" }
       ],
-      desserts: [{}]
+      desserts: []
     };
   },
   computed: {},
-  methods: {},
-  watch: {}
+  methods: {}
 };
 </script>

@@ -2,12 +2,14 @@
   <v-card>
     <v-container>
       <v-text-field v-model="title" clearable label="Title" type="text" />
-      <v-row>
-        <v-col>
-          <v-text-field v-model="title" clearable label="Title" type="text" />
-        </v-col>
-      </v-row>
-      <v-textarea v-model="content" v-if="!preview" auto-grow clearable rows="10" label="Content" />
+      <v-textarea
+        v-model="content"
+        v-if="!preview"
+        auto-grow
+        clearable
+        rows="10"
+        label="Description"
+      />
       <MdLoader v-if="preview" :text="content"></MdLoader>
       <v-toolbar height="48" flat>
         <v-col>
@@ -19,12 +21,7 @@
           </v-btn>
         </v-col>
       </v-toolbar>
-      <h2 style="color:red;">
-        {{message}}
-        <v-fade-transition>
-          <v-progress-circular v-if="loading" size="24" color="info" indeterminate></v-progress-circular>
-        </v-fade-transition>
-      </h2>
+      <h2 style="color:red;">{{message}}</h2>
     </v-container>
   </v-card>
 </template>
@@ -39,11 +36,7 @@ export default {
     title: "",
     content: "",
     message: "",
-    loading: false,
-    preview: false,
-    timelimit:1,
-    memlimit:1,
-    codelimit:1,
+    preview: false
   }),
   methods: {
     submit() {
@@ -53,7 +46,10 @@ export default {
         this.axios
           .post(
             "http://10.105.242.94:23336/v1/problem/",
-            "title=" + String(this.title) + "&content=" + String(this.content),
+            "title=" +
+              String(this.title) +
+              "&description=" +
+              String(this.content),
             {
               headers: {
                 Authorization: "Bearer " + this.$store.getters.Token

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <v-text-field v-model="search" label="Search"></v-text-field>
     <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addproblem">
       <v-icon left>mdi-delete</v-icon>Add
     </v-btn>
@@ -10,65 +9,74 @@
       loading-text="Loading... Please wait"
       :items-per-page="12"
       hide-default-footer
+      class="elevation-1"
     >
       <template v-slot:item="{ item }">
         <router-link
-          :to="{name: 'Problem', params: {id: item.uid}}"
-          :style="{cursor: 'pointer',background:item.solved?  'peachpuff;':'none'}"
+          :to="{'name': 'Problem', params: {'id': item.id}}"
+          :style="{'cursor': 'pointer'}"
           tag="tr"
         >
-          <td>{{ item.uid }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.time_limit }}</td>
-          <td>{{ item.memory_limit }}</td>
-          <td>{{ item.superadmin}}</td>
+          <td>{{ item.id }}</td>
+          <td>{{ item.title }}</td>
         </router-link>
       </template>
     </v-data-table>
     <div class="text-xs-center pt-2">
-      <v-pagination v-model="options.page" :length="pages"></v-pagination>
+      <v-pagination v-model="page" :length="max_page"></v-pagination>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "Problems",
-  mounted() {
-    this.axios.defaults.withCredentials = true;
-    var vm = this;
-    this.axios
-      .get("http://10.105.242.94:23333/rinne/GetProblemList/")
-      .then(response => {
-        vm.desserts = response.data.problem;
-        vm.options.totalItems = vm.desserts.length;
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+  watch: {
+    page: {
+      handler(val, oldVal) {
+        this.axios
+          .get(
+            "http://10.105.242.94:23336/v1/problem-list?page=" +
+              String(val) +
+              "&page-size=20",
+            {
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.Token
+              }
+            }
+          )
+          .then(res => {
+            console.log(res.data);
+            this.desserts = res.data.problems;
+          });
+      },
+      immediate: true
+    }
+  },
+  created() {
+    // var self=this;
+    // this.axios
+    //   .get("http://10.105.242.94:23336/v1/user-count", {
+    //     headers: {
+    //       Authorization: "Bearer " + self.$store.getters.Token
+    //     }
+    //   })
+    //   .then(res => {
+    //     this.maxlen = Math.ceil(res.data.count / 20);
+    //   });
   },
   data() {
     return {
       done: true,
       search: "",
-      options: {},
+      page: 1,
+      max_page: 11,
       headers: [
         { text: "UID", align: "left", sortable: false, value: "uid" },
         { text: "Name", sortable: false, value: "name" },
-        { text: "Time Limit", sortable: false, value: "time_limit" },
-        { text: "Memory Limit", sortable: false, value: "memory_limit" },
-        { text: "Owner", sortable: false, value: "superadmin" }
       ],
-      desserts: [{}]
+      desserts: []
     };
   },
-  computed: {
-    pages() {
-      if (this.options.rowsPerPage == null || this.options.totalItems == null)
-        return 0;
-      else return Math.ceil(this.options.totalItems / this.options.rowsPerPage);
-    }
-  },
+  computed: {},
   methods: {}
 };
 </script>

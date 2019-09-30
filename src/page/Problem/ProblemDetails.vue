@@ -6,33 +6,51 @@
       <v-card-text>
         id:{{data.id}}
         <v-divider />
+        title:{{data.title}}
+        <v-divider />
+        is_spj:{{data.is_spj}}
+        <v-divider />
         time_limit:{{data.time_limit}}
         <v-divider />
         memory_limit:{{data.memory_limit}}
         <v-divider />
         code_length_limit:{{data.code_length_limit}}
         <v-divider />
-        is_checked:{{data.is_checked}}
+        create_at:{{data.create_at}}
         <v-divider />
-        is_spj:{{data.is_spj}}
+        delete_at:{{data.delete_at}}
         <v-divider />
-        superadmin:{{data.superadmin}}
+        author:{{data.author}}
       </v-card-text>
     </v-card>
     <v-card style="margin-block-end: 2em;">
       <v-card-title class="headline">Description</v-card-title>
-      <MdLoader v-if="done" :text="desc.desc" html></MdLoader>
-      <v-card-title class="headline">Sample Input</v-card-title>
-      <MdLoader v-if="done" :text="desc.sample_in" html></MdLoader>
-      <v-card-title class="headline">Sample Output</v-card-title>
-      <MdLoader v-if="done" :text="desc.sample_out" html></MdLoader>
+      <MdLoader v-if="done" :text="data.description" html></MdLoader>
     </v-card>
-    <v-btn large color="primary" v-if="this.$store.getters.IsStaff" @click="edit">
+    <v-btn
+      large
+      color="primary"
+      v-if="this.$store.getters.IsStaff"
+      :to="'/editproblem/'+this.$route.params.id"
+    >
       <v-icon left>mdi-book</v-icon>Edit
     </v-btn>
-    <v-btn large color="red" v-if="this.$store.getters.IsStaff" @click="Delete">
-      <v-icon left>mdi-delete</v-icon>Delete
-    </v-btn>
+    <v-bottom-sheet v-model="sheet" v-if="this.$store.getters.IsStaff">
+      <template v-slot:activator="{ on }">
+        <v-btn color="red" large v-on="on">
+          <v-icon left>mdi-delete</v-icon>Delete
+        </v-btn>
+      </template>
+      <v-sheet class="text-center" height="200px">
+        <v-row align="center" justify="center">
+          <v-card-title class="text-center">Sure to Delete This Problem?</v-card-title>
+        </v-row>
+        <v-row align="center" justify="center">
+          <v-btn class="mt-6" flat color="red" @click="Delete">Yes</v-btn>
+          <v-btn class="mt-6" flat color="blue" @click="sheet=!sheet">No</v-btn>
+        </v-row>
+      </v-sheet>
+    </v-bottom-sheet>
     <v-divider />
   </v-flex>
 </template>
@@ -46,34 +64,52 @@ export default {
     MdLoader
   },
   mounted() {
-    this.axios.defaults.withCredentials = true;
     this.axios
       .get(
-        "http://10.105.242.94:23333/rinne/GetProblemDetails/?index=" +
-          this.$route.params.id
+        "http://10.105.242.94:23336/v1/problem/" +
+          String(this.$route.params.id) +
+          "/",
+        {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.Token
+          }
+        }
       )
       .then(res => {
-        this.data = res.data;
-        this.desc = JSON.parse(this.data.desc);
-        this.done = true;
-      })
-      .catch(res => {
-        Router.push({
-          name: "Error",
-          params: { text: res }
-        });
+        console.log(res.data);
+        this.data = res.data.problem;
+        this.done = 1;
       });
   },
   data() {
     return {
       done: false,
       data: {},
-      desc: {}
+      sheet: false
     };
   },
   methods: {
     edit() {},
-    Delete() {}
+    Delete() {
+      this.axios
+        .delete(
+          "http://10.105.242.94:23336/v1/problem/" +
+            String(this.$route.params.id) +
+            "/",
+          {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
+            }
+          }
+        )
+        .then(res => {
+          if (res.data.code == 0) {
+            Router.push("/");
+          } else {
+            alert("Failed");
+          }
+        });
+    }
   }
 };
 </script>

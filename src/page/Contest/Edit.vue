@@ -40,19 +40,14 @@ export default {
   mounted() {
     this.axios
       .get(
-        "http://10.105.242.94:23336/v1/problem/" +
+        "http://10.105.242.94:23336/v1/announcement/" +
           String(this.$route.params.id) +
-          "/",
-        {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.Token
-          }
-        }
+          "/"
       )
       .then(res => {
         console.log(res);
-        this.title = res.data.problem.title;
-        this.content = res.data.problem.description;
+        this.title = res.data.announcement.title;
+        this.content = res.data.announcement.content;
         this.done = true;
         if (res.data.code != 0) {
           Router.push({
@@ -75,13 +70,10 @@ export default {
         this.message = "Waiting for it...";
         this.axios
           .put(
-            "http://10.105.242.94:23336/v1/problem/" +
+            "http://10.105.242.94:23336/v1/announcement/" +
               String(this.$route.params.id) +
               "/",
-            {
-              title: this.title,
-              description: this.content
-            },
+            "title=" + String(this.title) + "&content=" + String(this.content),
             {
               headers: {
                 Authorization: "Bearer " + this.$store.getters.Token
