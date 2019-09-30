@@ -62,7 +62,7 @@ export default {
     codemirror
   },
   data: () => ({
-    SelMode: { state: "text/x-csrc", abbr: "GNU" },
+    SelMode: { state: "text/x-c++src", abbr: "G++" },
     ModeList: [
       { state: "text/x-csrc", abbr: "GNU" },
       { state: "text/x-c++src", abbr: "G++" },

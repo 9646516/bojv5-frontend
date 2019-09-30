@@ -27,6 +27,7 @@
       <v-card-title class="headline">Description</v-card-title>
       <MdLoader v-if="done" :text="data.description" html></MdLoader>
     </v-card>
+
     <v-btn
       large
       color="primary"
@@ -52,16 +53,30 @@
       </v-sheet>
     </v-bottom-sheet>
     <v-divider />
+    <CodeEditor ref="edit" />
+    <v-row>
+      <v-col>
+        <v-btn large color="primary" @click="submit">
+          <v-icon left>mdi-delete</v-icon>Submit
+        </v-btn>
+      </v-col>
+      <v-col>
+        <v-switch v-model="shared" :label="`Shared Your Solution: ${shared.toString()}`"></v-switch>
+      </v-col>
+    </v-row>
   </v-flex>
 </template>
 
 <script>
 import MdLoader from "@/components/MdLoader";
 import Router from "@/plugins/router";
+import CodeEditor from "@/components/CodeEditor";
+
 export default {
   name: "Problem",
   components: {
-    MdLoader
+    MdLoader,
+    CodeEditor
   },
   mounted() {
     this.axios
@@ -85,11 +100,39 @@ export default {
     return {
       done: false,
       data: {},
-      sheet: false
+      sheet: false,
+      shared: false
     };
   },
   methods: {
-    edit() {},
+    submit() {
+      console.log(this.$refs.edit.code);
+      console.log(this.$refs.edit.SelMode.abbr);
+      this.axios
+        .post(
+          "http://10.105.242.94:23336/v1/problem/" +
+            String(this.$route.params.id) +
+            "/submission/",
+          {
+            language: this.$refs.edit.SelMode.abbr,
+            code: this.$refs.edit.code,
+            info: "",
+            shared: this.shared ? 1 : 0
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
+            }
+          }
+        )
+        .then(res => {
+          if (res.data.code == 0) {
+            Router.push("/status");
+          } else {
+            alert("Failed");
+          }
+        });
+    },
     Delete() {
       this.axios
         .delete(

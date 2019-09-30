@@ -10,18 +10,18 @@
     >
       <template v-slot:item="{ item }">
         <router-link
-          :to="{name: 'Submission', params: {id: 'item.pk'}}"
+          :to="{'name': 'Submission', params: {'id': item.id}}"
           :style="{'cursor': 'pointer'}"
           tag="tr"
         >
-          <td>{{ item.pk }}</td>
-          <td>{{ item.problem }}</td>
+          <td>{{ item.id }}</td>
+          <td>{{ item.problem_id }}</td>
+          <td>{{ item.running_time }}</td>
+          <td>{{ item.running_memory }}</td>
           <td>{{ item.status }}</td>
+          <td>{{ item.user_id }}</td>
           <td>{{ item.language }}</td>
-          <td>{{ item.user}}</td>
-          <td>{{ item.create_time }}</td>
-          <td>{{ item.running_memory}}</td>
-          <td>{{ item.running_time}}</td>
+          <td>{{ item.created_at }}</td>
         </router-link>
       </template>
     </v-data-table>
@@ -32,48 +32,60 @@
 </template>
 <script>
 export default {
-  mounted() {},
+  watch: {
+    page: {
+      handler(val, oldVal) {
+        this.axios
+          .get(
+            "http://10.105.242.94:23336/v1/submission-list?page=" +
+              String(val) +
+              "&page-size=20",
+            {
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.Token
+              }
+            }
+          )
+          .then(res => {
+            console.log(res.data);
+            this.desserts = res.data.submissions;
+          });
+      },
+      immediate: true
+    }
+  },
+  created() {
+    // var self=this;
+    // this.axios
+    //   .get("http://10.105.242.94:23336/v1/user-count", {
+    //     headers: {
+    //       Authorization: "Bearer " + self.$store.getters.Token
+    //     }
+    //   })
+    //   .then(res => {
+    //     this.maxlen = Math.ceil(res.data.count / 20);
+    //   });
+  },
   data() {
     return {
       done: true,
       search: "",
       page: 1,
-      max_page: 1,
+      max_page: 11,
       headers: [
-        { text: "UID", align: "left", sortable: false, value: "pk" },
+        { text: "UID", align: "left", sortable: false, value: "uid" },
         { text: "Problem", sortable: false, value: "problem" },
+        { text: "Time", sortable: false, value: "time" },
+        { text: "Memory", sortable: false, value: "memory" },
         { text: "Status", sortable: false, value: "status" },
-        { text: "Lang", sortable: false, value: "language" },
         { text: "User", sortable: false, value: "user" },
-        { text: "Submit Time", sortable: false, value: "create_time" },
-        { text: "running_memory", sortable: false, value: "running_memory" },
-        { text: "running_time", sortable: false, value: "running_time" }
+        { text: "Lang", sortable: false, value: "language" },
+        { text: "Submit Time", sortable: false, value: "submittime" },
       ],
-      desserts: [{}]
+      desserts: []
     };
   },
   computed: {},
-  methods: {},
-  watch: {
-    page: {
-      handler(val, oldVal) {
-        this.axios.defaults.withCredentials = true;
-        this.axios
-          .get(
-            "http://10.105.242.94:23333/rinne/GetSubmissionList/?page=" +
-              String(val)
-          )
-          .then(response => {
-            this.desserts = response.data.data;
-            this.max_page = response.data.len;
-            console.log(response);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      },
-      immediate: true
-    }
-  }
+  methods: {}
 };
 </script>
