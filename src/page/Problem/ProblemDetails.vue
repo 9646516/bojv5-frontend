@@ -36,6 +36,14 @@
     >
       <v-icon left>mdi-book</v-icon>Edit
     </v-btn>
+    <v-btn
+      large
+      color="primary"
+      v-if="this.$store.getters.IsStaff"
+      :to="'/files/'+this.$route.params.id"
+    >
+      <v-icon left>mdi-book</v-icon>Change Test Case
+    </v-btn>
     <v-bottom-sheet v-model="sheet" v-if="this.$store.getters.IsStaff">
       <template v-slot:activator="{ on }">
         <v-btn color="red" large v-on="on">

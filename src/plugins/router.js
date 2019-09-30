@@ -7,6 +7,7 @@ import Home from '@/page/Home/Home'
 import Problems from '@/page/Problem/ProblemList'
 import Logout from '@/page/Logout'
 import Problem from '@/page/Problem/ProblemDetails'
+import Files from '@/page/Problem/Files'
 import Announcement from '@/page/Home/AnnouncementDetails'
 import Error from '@/page/Error'
 import EditProblem from '@/page/Problem/Edit'
@@ -37,11 +38,14 @@ export default new Router({
       name: 'AddContest',
       component: AddContest,
     },
-
     {
       path: '/editcontest/:id',
       name: 'EditContest',
       component: EditContest,
+    }, {
+      path: '/files/:id',
+      name: 'Files',
+      component: Files,
     },
     {
       path: '/addannouncement',
