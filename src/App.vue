@@ -15,6 +15,8 @@
 
 <script>
 import NBar from "@/components/NBar";
+import "highlight.js/styles/vs.css";
+
 export default {
   name: "App",
   components: {

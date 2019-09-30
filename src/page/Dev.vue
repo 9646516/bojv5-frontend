@@ -1,12 +1,12 @@
 <template>
-  <CodeEditor />
+  <CodeViewer code="123" />
 </template>
 
 <script>
-import CodeEditor from "@/components/CodeEditor";
+import CodeViewer from "@/components/CodeViewer";
 export default {
   components: {
-    CodeEditor
+    CodeViewer
   },
   mounted() {},
   data: () => ({})

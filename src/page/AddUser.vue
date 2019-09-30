@@ -84,25 +84,31 @@ export default {
     HotTable
   },
   methods: {
+    rand_text() {
+      var ret = "";
+      for (var i = 0; i < 6; i++) {
+        ret += "qwertyuiopasdfghjklzxcvbnm123456789"[
+          Math.round(Math.random() * 35)
+        ];
+      }
+      return ret;
+    },
     add() {
       // this.data[0]["status"] = "added";
       // this.refresh();
       console.log(this.data);
       var self = this;
       var sb = function(i) {
+        if (self.data[i].password == null || self.data[i].password == "") {
+          self.data[i].password = self.rand_text();
+        }
         self.axios
-          .post(
-            "http://10.105.242.94:23336/v1/user/register",
-            "user_name=" +
-              self.data[i].username +
-              "&password=" +
-              self.data[i].password +
-              "&nick_name=" +
-              self.data[i].nickname +
-              "&email=" +
-              self.data[i].username +
-              "@BUPT.com"
-          )
+          .post("http://10.105.242.94:23336/v1/user/register", {
+            user_name: self.data[i].username,
+            password: self.data[i].password,
+            nick_name: self.data[i].username,
+            email: self.data[i].username + "@BUPT.com"
+          })
           .then(res => {
             console.log(self.data[i]);
             if (res.data.code == 0) {

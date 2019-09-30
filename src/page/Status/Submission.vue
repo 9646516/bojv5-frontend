@@ -29,18 +29,19 @@
     </v-card>
     <v-card style="margin-block-end: 2em;">
       <v-card-title class="headline">Code</v-card-title>
-      <MdLoader :text="code"></MdLoader>
+      <v-divider/>
+      <CodeViewer :code="code"></CodeViewer>
     </v-card>
   </v-flex>
 </template>
 
 <script>
-import MdLoader from "@/components/MdLoader";
+import CodeViewer from "@/components/CodeViewer";
 import Router from "@/plugins/router";
 export default {
   name: "Problem",
   components: {
-    MdLoader
+    CodeViewer
   },
   mounted() {
     this.axios
@@ -56,7 +57,7 @@ export default {
       )
       .then(res => {
         console.log(res.data);
-        this.code = "```\n" + res.data + "\n```";
+        this.code = String(res.data);
       });
 
     this.axios

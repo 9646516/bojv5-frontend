@@ -11,6 +11,23 @@
           <v-col>
             <v-text-field v-model="mem" clearable label="Memory Limit" type="number" />
           </v-col>
+        </v-row>
+        <v-btn large color="primary" @click="save">
+          <v-icon left>mdi-book</v-icon>Save
+        </v-btn>
+      </v-container>
+    </v-card>
+    <v-card style="margin-bottom:2em;">
+      <v-card-title class="headline">Special Judge</v-card-title>
+      <v-divider />
+      <v-card-text
+        style="color:red; font-size:larger;"
+      >Attention!! If you do not Know What does SPJ Mean,Keep it as Default</v-card-text>
+      <v-container>
+        <v-row>
+          <v-col>
+            <v-text-field v-model="spj" clearable label="Special Judge Name" type="text" />
+          </v-col>
           <v-col>
             <v-switch
               v-model="interactive"
@@ -18,9 +35,6 @@
             ></v-switch>
           </v-col>
         </v-row>
-        <v-btn large color="primary" @click="save">
-          <v-icon left>mdi-book</v-icon>Save
-        </v-btn>
       </v-container>
     </v-card>
     <v-card style="margin-bottom:2em;">
@@ -74,6 +88,7 @@ export default {
     time: 1,
     mem: 1,
     interactive: false,
+    spj: "Default",
     files: [],
     has: []
   }),
@@ -137,6 +152,7 @@ export default {
         )
         .then(res => {
           console.log(res.data);
+          this.update();
         });
     }
   }

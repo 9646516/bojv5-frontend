@@ -73,7 +73,10 @@ export default {
             "http://10.105.242.94:23336/v1/announcement/" +
               String(this.$route.params.id) +
               "/",
-            "title=" + String(this.title) + "&content=" + String(this.content),
+            {
+              title: String(this.title),
+              content: String(this.content)
+            },
             {
               headers: {
                 Authorization: "Bearer " + this.$store.getters.Token

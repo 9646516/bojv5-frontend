@@ -37,7 +37,7 @@ code:after,
 code:before,
 kbd:after,
 kbd:before {
-  content: none;
+  content: none !important;
 }
 pre {
   width: 65em;

@@ -61,19 +61,13 @@ export default {
     submit() {
       if (this.check()) {
         this.axios
-          .post(
-            "http://10.105.242.94:23336/v1/user/register",
-            "user_name=" +
-              this.username +
-              "&password=" +
-              this.password +
-              "&nick_name=" +
-              this.nickname +
-              "&email=" +
-              this.email +
-              "&gender=" +
-              String(this.gender.state)
-          )
+          .post("http://10.105.242.94:23336/v1/user/register", {
+            user_name: this.username,
+            password: this.password,
+            nick_name: this.nickname,
+            email: this.email,
+            gender: String(this.gender.state)
+          })
           .then(res => {
             if (res.data.status == "OK") {
               router.push({
