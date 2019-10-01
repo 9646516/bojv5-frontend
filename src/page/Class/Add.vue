@@ -54,12 +54,12 @@ export default {
         this.axios
           .post(
             "http://10.105.242.94:23336/v1/sugar/class/group/",
-            "name=" +
-              String(this.title) +
-              "&description=" +
-              String(this.content) +
-              "&owner_id=" +
-              String(this.owner),
+            {
+              name: String(this.title),
+              description: String(this.content),
+              owner_id: String(this.owner)
+            },
+
             {
               headers: {
                 Authorization: "Bearer " + this.$store.getters.Token

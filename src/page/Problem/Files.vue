@@ -26,7 +26,13 @@
       <v-container>
         <v-row>
           <v-col>
-            <v-text-field v-model="spj" clearable label="Special Judge Name" type="text" />
+            <v-text-field
+              v-model="spj"
+              prepend-icon="mdi-paperclip"
+              clearable
+              label="Special Judge Name"
+              type="text"
+            />
           </v-col>
           <v-col>
             <v-switch
@@ -35,6 +41,20 @@
             ></v-switch>
           </v-col>
         </v-row>
+        <v-file-input
+          v-model="files"
+          counter
+          chips
+          label="File input"
+          color="deep-purple accent-4"
+          multiple
+          placeholder="Select your files"
+          prepend-icon="mdi-paperclip"
+          :show-size="1000"
+        />
+        <v-btn large color="primary" @click="upload2">
+          <v-icon left>mdi-book</v-icon>Upload Files
+        </v-btn>
       </v-container>
     </v-card>
     <v-card style="margin-bottom:2em;">
@@ -97,6 +117,7 @@ export default {
   },
   methods: {
     save() {},
+    upload2() {},
     remove(name) {
       this.axios
         .delete(

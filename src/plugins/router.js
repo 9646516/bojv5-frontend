@@ -32,33 +32,51 @@ import EditContest from '@/page/Contest/Edit'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: '/addcontest',
       name: 'AddContest',
       component: AddContest,
+      meta: {
+        NeedStaff: true
+      }
     },
     {
       path: '/editcontest/:id',
       name: 'EditContest',
       component: EditContest,
-    }, {
+      meta: {
+        NeedLogin: true
+      }
+    },
+    {
       path: '/files/:id',
       name: 'Files',
       component: Files,
+      meta: {
+        NeedLogin: true
+      }
     },
     {
       path: '/addannouncement',
       name: 'AddAnnouncement',
       component: AddAnnouncement,
+      meta: {
+        NeedStaff: true
+      }
     }, {
       path: '/addclass',
       name: 'AddClass',
       component: AddClass,
+      meta: {
+        NeedStaff: true
+      }
     }, {
       path: '/classaddmember/:id',
       name: 'ClassAddMember',
       component: ClassAddMember,
+      meta: {
+        NeedStaff: true
+      }
     }, {
       path: '/classdetails/:id',
       name: 'ClassDetails',
@@ -67,10 +85,16 @@ export default new Router({
       path: '/editclass/:id',
       name: 'EditClass',
       component: EditClass,
+      meta: {
+        NeedLogin: true
+      }
     }, {
       path: '/editannouncement/:id',
       name: 'EditAnnouncement',
       component: EditAnnouncement,
+      meta: {
+        NeedStaff: true
+      }
     }, {
       path: '/dev',
       name: 'Dev',
@@ -159,10 +183,16 @@ export default new Router({
       path: '/contests/',
       name: 'Contests',
       component: Contests,
+      meta: {
+        NeedLogin: true
+      }
     }, {
       path: '/contest/:id',
       name: 'Contest',
       component: Contest,
+      meta: {
+        NeedLogin: true
+      }
     }, {
       path: '/ranklist/',
       name: 'Ranklist',

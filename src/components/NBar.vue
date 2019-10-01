@@ -183,6 +183,7 @@ export default {
         this.axios
           .post("http://10.105.242.94:23336/v1/user/login", form)
           .then(res => {
+            console.log(res);
             if (res.data.code == 0) {
               Store.dispatch("initState", res.data).then(() => {
                 router.push("/");

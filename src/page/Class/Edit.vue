@@ -2,9 +2,17 @@
   <v-card>
     <v-container>
       <v-text-field v-model="title" clearable label="Title" type="text" />
-      <v-textarea v-model="content" v-if="!preview" auto-grow clearable rows="10" label="Content" />
+      <v-text-field v-model="owner" clearable label="Owner" type="text" />
+      <v-textarea
+        v-model="content"
+        v-if="!preview"
+        auto-grow
+        clearable
+        rows="10"
+        label="Description"
+      />
       <MdLoader v-if="preview" :text="content"></MdLoader>
-      <v-toolbar height="48">
+      <v-toolbar height="48" flat>
         <v-col>
           <v-switch v-model="preview" :label="`Preview: ${preview.toString()}`"></v-switch>
         </v-col>
@@ -33,6 +41,7 @@ export default {
   data: () => ({
     title: "",
     content: "",
+    owner: "",
     message: "",
     loading: false,
     preview: false
@@ -40,27 +49,20 @@ export default {
   mounted() {
     this.axios
       .get(
-        "http://10.105.242.94:23336/v1/announcement/" +
+        "http://10.105.242.94:23336/v1/sugar/class/group/" +
           String(this.$route.params.id) +
-          "/"
+          "/",
+        {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.Token
+          }
+        }
       )
       .then(res => {
-        console.log(res);
-        this.title = res.data.announcement.title;
-        this.content = res.data.announcement.content;
-        this.done = true;
-        if (res.data.code != 0) {
-          Router.push({
-            name: "Error",
-            params: { text: "404 Not Found" }
-          });
-        }
-      })
-      .catch(res => {
-        Router.push({
-          name: "Error",
-          params: { text: res }
-        });
+        console.log(res.data);
+        this.title = res.data.name;
+        this.content = res.data.description;
+        this.owner = res.data.owner.username;
       });
   },
   methods: {
@@ -70,10 +72,14 @@ export default {
         this.message = "Waiting for it...";
         this.axios
           .put(
-            "http://10.105.242.94:23336/v1/announcement/" +
+            "http://10.105.242.94:23336/v1/sugar/class/group/" +
               String(this.$route.params.id) +
               "/",
-            "title=" + String(this.title) + "&content=" + String(this.content),
+            {
+              name: String(this.title),
+              description: String(this.content),
+              owner_id: String(this.owner)
+            },
             {
               headers: {
                 Authorization: "Bearer " + this.$store.getters.Token
@@ -81,6 +87,7 @@ export default {
             }
           )
           .then(res => {
+            console.log(res);
             this.loading = false;
             this.message = res.data;
           });

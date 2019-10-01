@@ -55,6 +55,7 @@
       </v-card-text>
       <v-divider />
       <v-progress-circular v-if="!done" indeterminate color="blue" />
+      <v-card-title v-if="!mp.hasOwnProperty()">There is Nothing Here</v-card-title>
       <template v-for="(stat,index) in mp">
         <v-chip
           :key="index"
@@ -111,7 +112,6 @@ export default {
         self.tried = res.data.tried_problems;
         self.solved = res.data.success_problems;
         self.user_name = res.data.user_name;
-        console.log(self.data);
         self.avatar =
           "https://secure.gravatar.com/avatar/" +
           md5(self.email.toLowerCase()) +
