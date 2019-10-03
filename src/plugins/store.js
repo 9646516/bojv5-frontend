@@ -5,13 +5,13 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    username: sessionStorage.getItem("username") ? sessionStorage.getItem("username") : null,
-    email: sessionStorage.getItem("email") ? sessionStorage.getItem("email") : "",
-    IsStaff: sessionStorage.getItem("IsStaff") == "true" ? true : false,
-    IsTeacher: sessionStorage.getItem("IsTeacher") == "true" ? true : false,
-    uid: sessionStorage.getItem("uid") ? sessionStorage.getItem("uid") : "",
-    token: sessionStorage.getItem("token") ? sessionStorage.getItem("token") : null,
-    refresh_token: sessionStorage.getItem("refresh_token") ? sessionStorage.getItem("refresh_token") : null,
+    username: localStorage.getItem("username") ? localStorage.getItem("username") : null,
+    email: localStorage.getItem("email") ? localStorage.getItem("email") : "",
+    IsStaff: localStorage.getItem("IsStaff") == "true" ? true : false,
+    IsTeacher: localStorage.getItem("IsTeacher") == "true" ? true : false,
+    uid: localStorage.getItem("uid") ? localStorage.getItem("uid") : "",
+    token: localStorage.getItem("token") ? localStorage.getItem("token") : null,
+    refresh_token: localStorage.getItem("refresh_token") ? localStorage.getItem("refresh_token") : null,
   },
   getters: {
     username: function (state) {
@@ -45,32 +45,32 @@ const store = new Vuex.Store({
   mutations: {
     del_token(state) {
       state.token = null;
-      sessionStorage.setItem("token", "");
+      localStorage.setItem("token", "");
     },
     userStatus(state, user) {
       if (user) {
         state.username = user;
-        sessionStorage.setItem("username", user);
+        localStorage.setItem("username", user);
       } else if (user == "") {
         state.username = null;
         state.email = "";
         state.IsStaff = false;
         state.IsTeacher = false;
         state.uid = "";
-        state.token = "";
-        state.refresh_token = "";
-        sessionStorage.setItem("username", "");
-        sessionStorage.setItem("email", "");
-        sessionStorage.setItem("IsStaff", "false");
-        sessionStorage.setItem("IsTeacher", "false");
-        sessionStorage.setItem("uid", "");
-        sessionStorage.setItem("token", "");
-        sessionStorage.setItem("refresh_token", "");
+        state.token = null;
+        state.refresh_token = null;
+        localStorage.setItem("username", "");
+        localStorage.setItem("email", "");
+        localStorage.setItem("IsStaff", "false");
+        localStorage.setItem("IsTeacher", "false");
+        localStorage.setItem("uid", "");
+        localStorage.setItem("token", "");
+        localStorage.setItem("refresh_token", "");
       }
     },
     userEmail(state, Url) {
       state.email = Url ? Url : "";
-      sessionStorage.setItem("email", Url);
+      localStorage.setItem("email", Url);
     },
     userIsStaff(state, IsStaff) {
       state.IsStaff = IsStaff;
@@ -80,15 +80,15 @@ const store = new Vuex.Store({
     },
     userUid(state, uid) {
       state.uid = uid ? uid : "";
-      sessionStorage.setItem("uid", uid ? uid : "");
+      localStorage.setItem("uid", uid ? uid : "");
     },
     userToken(state, token) {
       state.token = token ? token : "";
-      sessionStorage.setItem("token", token ? token : "");
+      localStorage.setItem("token", token ? token : "");
     },
     userRefreshToken(state, refresh_token) {
       state.refresh_token = refresh_token ? refresh_token : "";
-      sessionStorage.setItem("refresh_token", refresh_token ? refresh_token : "");
+      localStorage.setItem("refresh_token", refresh_token ? refresh_token : "");
     }
   },
   actions: {
@@ -118,8 +118,8 @@ const store = new Vuex.Store({
       commit("userToken", data.token);
       commit("userRefreshToken", data.refresh_token);
 
-      sessionStorage.setItem("IsTeacher", is_teacher ? "true" : "false");
-      sessionStorage.setItem("IsStaff", is_staff ? "true" : "false");
+      localStorage.setItem("IsTeacher", is_teacher ? "true" : "false");
+      localStorage.setItem("IsStaff", is_staff ? "true" : "false");
     },
     Del_Token({
       commit

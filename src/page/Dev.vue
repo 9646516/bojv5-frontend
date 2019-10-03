@@ -1,14 +1,8 @@
-<template>
-  <CodeViewer code="123" />
-</template>
-
+<template></template>
 <script>
-import CodeViewer from "@/components/CodeViewer";
 export default {
-  components: {
-    CodeViewer
-  },
   mounted() {},
-  data: () => ({})
+  data: () => ({}),
+  methods: {}
 };
 </script>

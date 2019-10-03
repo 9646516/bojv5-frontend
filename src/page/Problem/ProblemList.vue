@@ -7,7 +7,7 @@
       :headers="headers"
       :items="desserts"
       loading-text="Loading... Please wait"
-      :items-per-page="12"
+      :items-per-page="20"
       hide-default-footer
       class="elevation-1"
     >

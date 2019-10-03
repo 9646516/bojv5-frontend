@@ -39,7 +39,7 @@ function test() {
 	let token = store.getters.Refresh_Token.split('.')[1];
 	let Decrypted = JSON.parse(window.atob(token)).exp;
 	let CurrentTime = new Date().getTime() / 1000;
-	return Decrypted > CurrentTime;
+	return Decrypted - 600 > CurrentTime;
 }
 function test2() {
 	if (!store.getters.Token) {
@@ -49,7 +49,7 @@ function test2() {
 	let Decrypted = JSON.parse(window.atob(token)).exp;
 	let CurrentTime = new Date().getTime() / 1000;
 	console.log(Decrypted, CurrentTime);
-	return Decrypted > CurrentTime;
+	return Decrypted - 600 > CurrentTime;
 }
 
 axios.interceptors.request.use(

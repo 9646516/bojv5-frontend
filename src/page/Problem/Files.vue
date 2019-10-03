@@ -1,130 +1,215 @@
 <template>
   <v-container>
     <v-card style="margin-bottom:2em;">
-      <v-card-title class="headline">Details</v-card-title>
-      <v-divider />
-      <v-container>
-        <v-row>
-          <v-col>
-            <v-text-field v-model="time" clearable label="Time Limit" type="number" />
-          </v-col>
-          <v-col>
-            <v-text-field v-model="mem" clearable label="Memory Limit" type="number" />
-          </v-col>
-        </v-row>
-        <v-btn large color="primary" @click="save">
-          <v-icon left>mdi-book</v-icon>Save
-        </v-btn>
-      </v-container>
-    </v-card>
-    <v-card style="margin-bottom:2em;">
       <v-card-title class="headline">Special Judge</v-card-title>
       <v-divider />
       <v-card-text
         style="color:red; font-size:larger;"
       >Attention!! If you do not Know What does SPJ Mean,Keep it as Default</v-card-text>
+      {{judge_type}}
+      {{spj}}
       <v-container>
         <v-row>
           <v-col>
-            <v-text-field
-              v-model="spj"
-              prepend-icon="mdi-paperclip"
-              clearable
-              label="Special Judge Name"
-              type="text"
+            <v-select
+              v-model="judge_type"
+              :items="judge_list"
+              item-text="abbr"
+              item-value="status"
+              label="Select Judge Type"
+              return-object
             />
           </v-col>
           <v-col>
-            <v-switch
-              v-model="interactive"
-              :label="`InterActive Problem: ${interactive.toString()}`"
-            ></v-switch>
+            <v-select v-model="type" :items="type_list" label="Select Contest Type" />
           </v-col>
         </v-row>
         <v-file-input
-          v-model="files"
+          v-if="judge_type.state!==0"
+          v-model="spj_source"
           counter
           chips
           label="File input"
           color="deep-purple accent-4"
-          multiple
           placeholder="Select your files"
           prepend-icon="mdi-paperclip"
           :show-size="1000"
         />
-        <v-btn large color="primary" @click="upload2">
+        <v-btn
+          large
+          color="primary"
+          @click="upload([spj_source],'/spj/');spj='/spj/'+spj_source.name;spj_source=[];"
+          v-if="judge_type.state!==0"
+        >
           <v-icon left>mdi-book</v-icon>Upload Files
+        </v-btn>
+        <v-btn large color="primary" @click="save">
+          <v-icon left>mdi-book</v-icon>Save
         </v-btn>
       </v-container>
     </v-card>
-    <v-card style="margin-bottom:2em;">
-      <v-card-title class="headline">Upload TestCase</v-card-title>
-      <v-divider />
+
+    <v-card>
       <v-container>
-        <v-file-input
-          v-model="files"
-          counter
-          chips
-          label="File input"
-          color="deep-purple accent-4"
-          multiple
-          placeholder="Select your files"
-          prepend-icon="mdi-paperclip"
-          outlined
-          :show-size="1000"
-        />
-        <v-btn large color="primary" @click="upload">
-          <v-icon left>mdi-book</v-icon>Upload Files
-        </v-btn>
+        <v-container>
+          <v-toolbar light>
+            <v-btn absolute dark fab top left color="pink" @click="add">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+            <v-tabs v-model="tabs" centered>
+              <v-tab v-for="i in TabList" :key="i">{{i}}</v-tab>
+            </v-tabs>
+          </v-toolbar>
+        </v-container>
+
+        <v-tabs-items v-model="tabs">
+          <v-container>
+            <v-tab-item v-for="i in task.length" :key="i">
+              <v-btn large color="warning" @click="Delete(i)">
+                <v-icon left>mdi-delete</v-icon>Delete
+              </v-btn>
+              <v-card style="margin-bottom:2em;">
+                <v-card-title class="headline">Details</v-card-title>
+                <v-divider />
+                <v-container>
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                        v-model="task[i-1]['time-limit']"
+                        clearable
+                        label="Time Limit"
+                        type="number"
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model="task[i-1]['memory-limit']"
+                        clearable
+                        label="Memory Limit"
+                        type="number"
+                      />
+                    </v-col>
+                    <v-col>
+                      <v-text-field
+                        v-model="task[i-1]['score']"
+                        clearable
+                        label="Score"
+                        type="number"
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-btn large color="primary" @click="save">
+                    <v-icon left>mdi-book</v-icon>Save
+                  </v-btn>
+                </v-container>
+              </v-card>
+              <v-card style="margin-bottom:2em;">
+                <v-card-title class="headline">Upload TestCase</v-card-title>
+                <v-divider />
+                <v-container>
+                  <v-file-input
+                    v-model="files[i-1]"
+                    counter
+                    chips
+                    label="File input"
+                    color="deep-purple accent-4"
+                    multiple
+                    placeholder="Select your files"
+                    prepend-icon="mdi-paperclip"
+                    outlined
+                    :show-size="1000"
+                  />
+                  <v-btn
+                    large
+                    color="primary"
+                    @click="upload(files[i-1],'/'+String(i)+'/');files[i-1]=[];"
+                  >
+                    <v-icon left>mdi-book</v-icon>Upload Files
+                  </v-btn>
+                </v-container>
+              </v-card>
+              <v-card style="margin-bottom:2em;">
+                <v-card-title class="headline">TestCases</v-card-title>
+                <v-divider />
+                <div v-for="j in has[i-1]" :key="j.name">
+                  <v-row>
+                    <v-col>
+                      <v-card-text>{{j.name}}</v-card-text>
+                    </v-col>
+                    <v-col>
+                      <v-btn large color="error" @click="remove('/'+String(i)+'/'+j.name)">
+                        <v-icon left>mdi-delete</v-icon>Delete
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                  <v-divider />
+                </div>
+              </v-card>
+            </v-tab-item>
+          </v-container>
+        </v-tabs-items>
       </v-container>
     </v-card>
-    <v-card style="margin-bottom:2em;">
-      <v-card-title class="headline">TestCases</v-card-title>
-      <v-divider />
-      <div v-for="i in has" :key="i.name">
-        <v-row>
-          <v-col>
-            <v-card-text>{{i.name}}</v-card-text>
-          </v-col>
-          <v-col>
-            <v-btn large color="error" @click="remove(i.name)">
-              <v-icon left>mdi-delete</v-icon>Delete
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-divider />
-      </div>
-    </v-card>
+
+    <h5>{{task}}</h5>
+    <h5>{{type}}</h5>
+    <h5>{{has}}</h5>
   </v-container>
 </template>
 <script>
-import MdLoader from "@/components/MdLoader";
-import Store from "@/plugins/store.js";
 export default {
-  components: {
-    MdLoader
-  },
+  components: {},
   data: () => ({
-    time: 1,
-    mem: 1,
-    interactive: false,
-    spj: "Default",
-    files: [],
-    has: []
+    type: "acm",
+    type_list: ["acm", "oi"],
+
+    judge_type: { state: 0, abbr: "Normail Judge" },
+    judge_list: [
+      { state: 0, abbr: "Normail Judge" },
+      { state: 1, abbr: "Special Judge" },
+      { state: 2, abbr: "Interactive Judge" }
+    ],
+    spj_source: [],
+    spj: "",
+
+    tabs: null,
+    TabList: [],
+    task: [],
+
+    has: [1],
+    files: []
   }),
   mounted() {
-    this.update();
+    this.get_config();
+  },
+  watch: {
+    has: {
+      handler(val, oldVal) {
+        console.log("from", oldVal);
+        console.log("to", val);
+      },
+      immediate: true
+    }
   },
   methods: {
-    save() {},
-    upload2() {},
-    remove(name) {
+    save() {
       this.axios
-        .delete(
+        .put(
           "http://10.105.242.94:23336/v1/problem/" +
             String(this.$route.params.id) +
-            "/problemfs/rm?path=/test/" +
-            String(name),
+            "/problemfs/config",
+          {
+            config: {
+              judge: {
+                "judge-type": this.type,
+                tasks: this.task
+              },
+              "special-judge": {
+                enable: this.judge_type.state,
+                "file-path": this.spj
+              }
+            }
+          },
           {
             headers: {
               Authorization: "Bearer " + this.$store.getters.Token
@@ -132,17 +217,29 @@ export default {
           }
         )
         .then(res => {
-          this.has = res.data.result;
-          console.log(res.data.result);
-          this.update();
+          this.get_config();
         });
     },
-    update() {
+    add() {
+      this.TabList.push("TASK" + String(this.TabList.length + 1));
+      this.task.push({
+        "time-limit": 1000000000,
+        "memory-limit": 65536,
+        score: 100,
+        "input-path":
+          "/" + this.$route.params.id + "/" + String(this.TabList.length),
+        "output-path":
+          "/" + this.$route.params.id + "/" + String(this.TabList.length)
+      });
+      this.has.length = this.TabList.length;
+      this.files.length = this.TabList.length;
+    },
+    get_config() {
       this.axios
         .get(
           "http://10.105.242.94:23336/v1/problem/" +
             String(this.$route.params.id) +
-            "/problemfs/ls?path=/test",
+            "/problemfs/config",
           {
             headers: {
               Authorization: "Bearer " + this.$store.getters.Token
@@ -150,20 +247,72 @@ export default {
           }
         )
         .then(res => {
-          this.has = res.data.result;
-          console.log(res.data.result);
+          this.type = res.data.config.judge["judge-type"];
+          this.judge_type = this.judge_list[
+            res.data.config["special-judge"].enable
+          ];
+          this.task = res.data.config.judge.tasks;
+          for (var i in this.task) {
+            this.TabList.push("TASK" + String(Number(i) + 1));
+          }
+          this.has.length = this.TabList.length;
+          this.files.length = this.TabList.length;
+          this.update_test();
         });
     },
-    upload() {
+    Delete(i) {},
+    remove(path) {
+      console.log(path);
+      this.axios
+        .delete(
+          "http://10.105.242.94:23336/v1/problem/" +
+            String(this.$route.params.id) +
+            "/problemfs/rm?path=/" +
+            String(path),
+          {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
+            }
+          }
+        )
+        .then(res => {
+          this.update_test();
+        });
+    },
+    update_single_test(i) {
+      this.axios
+        .get(
+          "http://10.105.242.94:23336/v1/problem/" +
+            String(this.$route.params.id) +
+            "/problemfs/ls?path=/" +
+            String(i + 1) +
+            "/",
+          {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
+            }
+          }
+        )
+        .then(res => {
+          this.$set(this.has, i, res.data.result);
+        });
+    },
+    update_test() {
+      for (var i in this.TabList) {
+        this.update_single_test(Number(i));
+      }
+    },
+    upload(files, path) {
       var formData = new FormData();
-      this.files.forEach(function(file) {
+      files.forEach(function(file) {
         formData.append("upload", file, file.name);
       });
+      formData.append("path", path);
       this.axios
         .post(
           "http://10.105.242.94:23336/v1/problem/" +
             String(this.$route.params.id) +
-            "/problemfs/writes/testcase",
+            "/problemfs/writes",
           formData,
           {
             headers: {
@@ -172,8 +321,7 @@ export default {
           }
         )
         .then(res => {
-          console.log(res.data);
-          this.update();
+          this.update_test();
         });
     }
   }
