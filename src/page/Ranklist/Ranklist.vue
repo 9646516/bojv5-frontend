@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       page: 1,
-      data: [[{}, {}]],
+      data: [[]],
       maxlen: 10,
       search: ""
     };

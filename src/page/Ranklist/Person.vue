@@ -55,7 +55,7 @@
       </v-card-text>
       <v-divider />
       <v-progress-circular v-if="!done" indeterminate color="blue" />
-      <v-card-title v-if="!mp.hasOwnProperty()">There is Nothing Here</v-card-title>
+      <v-card-title v-if="JSON.stringify(mp) == '{}'">There is Nothing Here</v-card-title>
       <template v-for="(stat,index) in mp">
         <v-chip
           :key="index"

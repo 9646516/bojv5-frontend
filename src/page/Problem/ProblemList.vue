@@ -3,6 +3,7 @@
     <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addproblem">
       <v-icon left>mdi-delete</v-icon>Add
     </v-btn>
+    <v-text-field v-model="search" label="Search"></v-text-field>
     <v-data-table
       :headers="headers"
       :items="desserts"
@@ -71,7 +72,7 @@ export default {
       max_page: 11,
       headers: [
         { text: "UID", align: "left", sortable: false, value: "uid" },
-        { text: "Name", sortable: false, value: "name" },
+        { text: "Name", sortable: false, value: "name" }
       ],
       desserts: []
     };

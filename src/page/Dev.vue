@@ -1,8 +1,13 @@
-<template></template>
+<template>
+  <Pie />
+</template>
+
 <script>
+import Pie from "@/components/Pie";
+
 export default {
-  mounted() {},
-  data: () => ({}),
-  methods: {}
+  components: {
+    Pie
+  }
 };
 </script>

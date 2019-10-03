@@ -57,7 +57,7 @@ export default {
             {
               name: String(this.title),
               description: String(this.content),
-              owner_id: String(this.owner)
+              owner_name: String(this.owner)
             },
 
             {

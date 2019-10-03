@@ -122,7 +122,7 @@ export default {
             String(this.$route.params.id) +
             "/submission/",
           {
-            language: this.$refs.edit.SelMode.abbr,
+            language: this.$refs.edit.SelMode.idx,
             code: this.$refs.edit.code,
             info: "",
             shared: this.shared ? 1 : 0

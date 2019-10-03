@@ -62,15 +62,13 @@ export default {
     codemirror
   },
   data: () => ({
-    SelMode: { state: "text/x-c++src", abbr: "G++" },
+    SelMode: { state: "text/x-c++src", abbr: "G++", idx: 1 },
     ModeList: [
-      { state: "text/x-csrc", abbr: "GNU" },
-      { state: "text/x-c++src", abbr: "G++" },
-      { state: "text/x-java", abbr: "JAVA" },
-      { state: "text/x-go", abbr: "Go" },
-      { state: "text/x-python", abbr: "Python" },
-      { state: "text/x-cython", abbr: "Cython" },
-      { state: "text/x-rustsrc", abbr: "Rust" }
+      { state: "text/x-csrc", abbr: "GCC", idx: 0 },
+      { state: "text/x-c++src", abbr: "G++", idx: 1 },
+      { state: "text/x-java", abbr: "JAVA", idx: 4 },
+      { state: "text/x-python", abbr: "Python", idx: 6 },
+      { state: "text/x-rustsrc", abbr: "Rust", idx: 7 }
     ],
     SelTheme: "monokai",
     ThemeList: ["monokai", "idea", "eclipse", "neo", "twilight"],

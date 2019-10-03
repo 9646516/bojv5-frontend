@@ -6,8 +6,6 @@
       <v-card-text
         style="color:red; font-size:larger;"
       >Attention!! If you do not Know What does SPJ Mean,Keep it as Default</v-card-text>
-      {{judge_type}}
-      {{spj}}
       <v-container>
         <v-row>
           <v-col>
@@ -150,7 +148,6 @@
         </v-tabs-items>
       </v-container>
     </v-card>
-    {{task}}
   </v-container>
 </template>
 <script>

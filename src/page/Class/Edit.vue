@@ -62,7 +62,7 @@ export default {
         console.log(res.data);
         this.title = res.data.name;
         this.content = res.data.description;
-        this.owner = res.data.owner.username;
+        this.owner = res.data.owner.user_name;
       });
   },
   methods: {
@@ -78,7 +78,7 @@ export default {
             {
               name: String(this.title),
               description: String(this.content),
-              owner_id: String(this.owner)
+              owner_name: String(this.owner)
             },
             {
               headers: {

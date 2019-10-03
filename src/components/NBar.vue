@@ -131,11 +131,6 @@ export default {
           router: "/status"
         },
         {
-          text: "Dev",
-          image: "mdi-beta",
-          router: "/dev"
-        },
-        {
           text: "Contest",
           image: "mdi-beta",
           router: "/contests"
