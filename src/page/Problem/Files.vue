@@ -38,7 +38,7 @@
         <v-btn
           large
           color="primary"
-          @click="upload([spj_source],'/spj/');spj='/spj/'+spj_source.name;spj_source=[];"
+          @click="upload([spj_source],'/spj/');spj='/spj/'+spj_source.name;spj_source=[];save();"
           v-if="judge_type.state!==0"
         >
           <v-icon left>mdi-book</v-icon>Upload Files
@@ -65,7 +65,7 @@
         <v-tabs-items v-model="tabs">
           <v-container>
             <v-tab-item v-for="i in task.length" :key="i">
-              <v-btn large color="warning" @click="Delete(i)">
+              <v-btn large color="warning" @click="Delete(i-1)" v-if="task.length>1">
                 <v-icon left>mdi-delete</v-icon>Delete
               </v-btn>
               <v-card style="margin-bottom:2em;">
@@ -122,7 +122,7 @@
                   <v-btn
                     large
                     color="primary"
-                    @click="upload(files[i-1],'/'+String(i)+'/');files[i-1]=[];"
+                    @click="upload(files[i-1],'/'+task[i-1]['input-path']+'/');files[i-1]=[];"
                   >
                     <v-icon left>mdi-book</v-icon>Upload Files
                   </v-btn>
@@ -150,10 +150,7 @@
         </v-tabs-items>
       </v-container>
     </v-card>
-
-    <h5>{{task}}</h5>
-    <h5>{{type}}</h5>
-    <h5>{{has}}</h5>
+    {{task}}
   </v-container>
 </template>
 <script>
@@ -223,16 +220,17 @@ export default {
     add() {
       this.TabList.push("TASK" + String(this.TabList.length + 1));
       this.task.push({
-        "time-limit": 1000000000,
+        "time-limit": 1000,
         "memory-limit": 65536,
         score: 100,
         "input-path":
-          "/" + this.$route.params.id + "/" + String(this.TabList.length),
+          "/" + this.$route.params.id + "/" + String(new Date().getTime()),
         "output-path":
-          "/" + this.$route.params.id + "/" + String(this.TabList.length)
+          "/" + this.$route.params.id + "/" + String(new Date().getTime())
       });
       this.has.length = this.TabList.length;
       this.files.length = this.TabList.length;
+      this.save();
     },
     get_config() {
       this.axios
@@ -252,6 +250,7 @@ export default {
             res.data.config["special-judge"].enable
           ];
           this.task = res.data.config.judge.tasks;
+          this.TabList = [];
           for (var i in this.task) {
             this.TabList.push("TASK" + String(Number(i) + 1));
           }
@@ -260,7 +259,12 @@ export default {
           this.update_test();
         });
     },
-    Delete(i) {},
+    Delete(i) {
+      let jb = this.task[i]["input-path"];
+      this.remove(jb);
+      this.task.splice(i, 1);
+      this.save();
+    },
     remove(path) {
       console.log(path);
       this.axios
@@ -285,7 +289,7 @@ export default {
           "http://10.105.242.94:23336/v1/problem/" +
             String(this.$route.params.id) +
             "/problemfs/ls?path=/" +
-            String(i + 1) +
+            this.task[i]["input-path"] +
             "/",
           {
             headers: {
@@ -303,6 +307,9 @@ export default {
       }
     },
     upload(files, path) {
+      if (files.length == 0) {
+        return;
+      }
       var formData = new FormData();
       files.forEach(function(file) {
         formData.append("upload", file, file.name);
