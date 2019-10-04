@@ -1,6 +1,6 @@
 <template>
   <v-hover v-slot:default="{ hover }">
-    <v-img :src="src" height="250px" width="250px">
+    <v-img v-bind:src="src" height="250px" width="250px">
       <v-expand-transition>
         <div
           v-if="hover"

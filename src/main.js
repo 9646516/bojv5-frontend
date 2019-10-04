@@ -55,6 +55,7 @@ var BASE_URL = "http://10.105.242.94:23336/"
 axios.interceptors.response.use(
 	function (config) {
 		config.url = BASE_URL + config.url
+		return config;
 	}
 )
 axios.interceptors.request.use(

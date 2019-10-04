@@ -15,7 +15,7 @@
       </v-btn>
     </v-toolbar>
     <v-list>
-      <v-dialog v-if="!this.$store.getters.isLogin" v-model="dialog" persistent max-width="500px">
+      <v-dialog v-if="!this.$store.getters.isLogin" v-model="dialog" max-width="500px">
         <template v-slot:activator="{ on }">
           <v-list-item v-on="on">
             <v-layout>
@@ -62,6 +62,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
       <v-list-item v-for="i in Active" :key="i.text" :to="i.router">
         <v-layout>
           <v-list-item-action>
@@ -175,19 +176,20 @@ export default {
           escape(this.username) +
           "&password=" +
           escape(this.password);
-        this.axios
-          .post("v1/user/login", form)
-          .then(res => {
-            console.log(res);
-            if (res.data.code == 0) {
-              Store.dispatch("initState", res.data).then(() => {
+        this.axios.post("v1/user/login", form).then(res => {
+          console.log(res);
+          if (res.data.code == 0) {
+            Store.dispatch("initState", res.data).then(() => {
+              let dir = router.history.current.path;
+              if (dir != null && dir != "/") {
                 router.push("/");
-                this.dialog = false;
-              });
-            } else {
-              this.error = "Wrong Password or Username";
-            }
-          });
+              }
+              this.dialog = false;
+            });
+          } else {
+            this.error = "Wrong Password or Username";
+          }
+        });
       }
     },
     check() {

@@ -88,16 +88,11 @@ export default {
   },
   mounted() {
     this.axios
-      .get(
-        "v1/problem/" +
-          String(this.$route.params.id) +
-          "/",
-        {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.Token
-          }
+      .get("v1/problem/" + String(this.$route.params.id), {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Token
         }
-      )
+      })
       .then(res => {
         console.log(res.data);
         this.data = res.data.problem;
@@ -118,9 +113,7 @@ export default {
       console.log(this.$refs.edit.SelMode.abbr);
       this.axios
         .post(
-          "v1/problem/" +
-            String(this.$route.params.id) +
-            "/submission/",
+          "v1/problem/" + String(this.$route.params.id) + "/submission",
           {
             language: this.$refs.edit.SelMode.idx,
             code: this.$refs.edit.code,
@@ -143,16 +136,11 @@ export default {
     },
     Delete() {
       this.axios
-        .delete(
-          "v1/problem/" +
-            String(this.$route.params.id) +
-            "/",
-          {
-            headers: {
-              Authorization: "Bearer " + this.$store.getters.Token
-            }
+        .delete("v1/problem/" + String(this.$route.params.id) , {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.Token
           }
-        )
+        })
         .then(res => {
           if (res.data.code == 0) {
             Router.push("/");

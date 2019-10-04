@@ -8,7 +8,7 @@ export default {
   mounted() {
     var d = new Date(0).toGMTString();
     window.document.cookie = "csrftoken=0;path=/;expires=" + d;
-    Store.dispatch("logout").then(router.push("home"));
+    Store.dispatch("logout").then(router.push("/"));
   }
 };
 </script>

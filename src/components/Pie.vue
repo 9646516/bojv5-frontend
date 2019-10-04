@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <div id="__sbwyxdsmjb__" :style="'width: '+String(width)+'px;height: '+String(height)+'px;'" />
-  </div>
+  <div id="__sbwyxdsmjb__" :style="'width: '+String(width)+'px;height: '+String(height)+'px;'" />
 </template>
  
 <script>
@@ -9,7 +7,11 @@ var echarts = require("echarts");
 
 export default {
   props: {
-    data1: {
+    data: {
+      type: Array,
+      default: () => {}
+    },
+    color: {
       type: Array,
       default: () => {}
     },
@@ -19,62 +21,51 @@ export default {
     },
     width: {
       type: Number,
-      default: 400
+      default: 500
     },
     height: {
       type: Number,
-      default: 400
+      default: 500
     }
   },
-  data: () => ({
-    data: [
-      {
-        value: 335,
-        name: "直接访问"
-      },
-      {
-        value: 310,
-        name: "邮件营销"
-      },
-      {
-        value: 234,
-        name: "联盟广告"
-      },
-      {
-        value: 135,
-        name: "视频广告"
-      },
-      {
-        value: 1548,
-        name: "搜索引擎"
-      }
-    ]
-  }),
   mounted() {
     var myChart = echarts.init(document.getElementById("__sbwyxdsmjb__"));
+
     myChart.setOption({
       tooltip: {
         trigger: "item",
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
+        formatter: "{a} <br/>{b}: {c} ({d}%)",
+        textStyle: {
+          fontSize: "16"
+        }
       },
-
+      color: this.color,
       series: [
         {
           name: this.name,
           type: "pie",
           selectedMode: "single",
           selectedOffset: 10,
-          radius: ["40%", "60%"],
-          avoidLabelOverlap: true,
+          radius: ["40%", "57%"],
+          center: "50%",
+          avoidLabelOverlap: false,
           itemStyle: {
             normal: {
-              borderWidth: 4,
+              borderWidth: 3,
               borderColor: "#ffffff"
-            },
-            emphasis: {
-              shadowBlur: 6,
-              shadowOffsetX: 0,
-              shadowColor: "rgba(0, 0, 0, 0.5)"
+            }
+          },
+          label: {
+            textStyle: {
+              fontSize: "18",
+              fontFamily: "monospace"
+            }
+          },
+          labelLine: {
+            normal: {
+              lineStyle: {
+                width: 2
+              }
             }
           },
           data: this.data

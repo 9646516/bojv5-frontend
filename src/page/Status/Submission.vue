@@ -29,7 +29,7 @@
     </v-card>
     <v-card style="margin-block-end: 2em;">
       <v-card-title class="headline">Code</v-card-title>
-      <v-divider/>
+      <v-divider />
       <CodeViewer :code="code"></CodeViewer>
     </v-card>
   </v-flex>
@@ -45,32 +45,22 @@ export default {
   },
   mounted() {
     this.axios
-      .get(
-        "v1/submission/" +
-          +String(this.$route.params.id) +
-          "/content",
-        {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.Token
-          }
+      .get("v1/submission/" + +String(this.$route.params.id) + "/content", {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Token
         }
-      )
+      })
       .then(res => {
         console.log(res.data);
         this.code = String(res.data);
       });
 
     this.axios
-      .get(
-        "v1/submission/" +
-          +String(this.$route.params.id) +
-          "/",
-        {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.Token
-          }
+      .get("v1/submission/" + +String(this.$route.params.id), {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Token
         }
-      )
+      })
       .then(res => {
         console.log(res.data.submission);
         this.data = res.data.submission;

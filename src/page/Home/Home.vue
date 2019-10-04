@@ -3,7 +3,7 @@
     <v-layout class="curtain" align-center justify-center>
       <div class="text-xs-center">
         <v-img
-          src="https://userpic.codeforces.com/418179/title/417a566cb97fc802.jpg"
+          src="@/assets/img/HomeLogo.jpg"
           aspect-ratio="1"
           max-width="500"
           max-height="500"
@@ -59,6 +59,7 @@ export default {
         "v1/announcement-list?page=1&page-size=114514"
       )
       .then(r => {
+        console.log(r);
         this.data = r.data.announcements;
         this.done = true;
         console.log(r);
