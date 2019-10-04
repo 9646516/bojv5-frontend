@@ -61,7 +61,7 @@ export default {
     submit() {
       if (this.check()) {
         this.axios
-          .post("http://10.105.242.94:23336/v1/user/register", {
+          .post("v1/user/register", {
             user_name: this.username,
             password: this.password,
             nick_name: this.nickname,

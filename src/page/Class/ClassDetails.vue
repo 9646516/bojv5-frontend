@@ -55,7 +55,7 @@ export default {
       handler(val, oldVal) {
         this.axios
           .get(
-            "http://10.105.242.94:23336/v1/sugar/class/group/" +
+            "v1/sugar/class/group/" +
               String(this.$route.params.id) +
               "/user-list?page-size=20&page=" +
               String(this.page),
@@ -76,7 +76,7 @@ export default {
   created() {
     this.axios
       .get(
-        "http://10.105.242.94:23336/v1/sugar/class/group/" +
+        "v1/sugar/class/group/" +
           String(this.$route.params.id) +
           "/",
         {

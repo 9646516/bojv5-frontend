@@ -35,11 +35,7 @@ export default {
       handler(val, oldVal) {
         var self = this;
         this.axios
-          .get(
-            "http://10.105.242.94:23336/v1/user-list?page=" +
-              String(val) +
-              "&page-size=20"
-          )
+          .get("v1/user-list?page=" + String(val) + "&page-size=20")
           .then(res => {
             console.log(res.data.users);
             self.data = [];
@@ -64,9 +60,9 @@ export default {
     }
   },
   created() {
-    var self=this;
+    var self = this;
     this.axios
-      .get("http://10.105.242.94:23336/v1/user-count", {
+      .get("v1/user-count", {
         headers: {
           Authorization: "Bearer " + self.$store.getters.Token
         }
@@ -78,7 +74,7 @@ export default {
   data() {
     return {
       page: 1,
-      data: [[]],
+      data: [],
       maxlen: 10,
       search: ""
     };

@@ -56,7 +56,7 @@ export default {
   mounted() {
     this.axios
       .get(
-        "http://10.105.242.94:23336/v1/announcement-list?page=1&page-size=114514"
+        "v1/announcement-list?page=1&page-size=114514"
       )
       .then(r => {
         this.data = r.data.announcements;

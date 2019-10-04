@@ -176,7 +176,7 @@ export default {
           "&password=" +
           escape(this.password);
         this.axios
-          .post("http://10.105.242.94:23336/v1/user/login", form)
+          .post("v1/user/login", form)
           .then(res => {
             console.log(res);
             if (res.data.code == 0) {

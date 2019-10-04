@@ -103,7 +103,7 @@ export default {
           self.data[i].password = self.rand_text();
         }
         self.axios
-          .post("http://10.105.242.94:23336/v1/user/register", {
+          .post("v1/user/register", {
             user_name: self.data[i].username,
             password: self.data[i].password,
             nick_name: self.data[i].username,

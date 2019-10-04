@@ -62,7 +62,7 @@ export default {
   mounted() {
     this.axios
       .get(
-        "http://10.105.242.94:23336/v1/announcement/" +
+        "v1/announcement/" +
           String(this.$route.params.id) +
           "/"
       )
@@ -96,7 +96,7 @@ export default {
     Delete() {
       this.axios
         .delete(
-          "http://10.105.242.94:23336/v1/announcement/" +
+          "v1/announcement/" +
             String(this.$route.params.id) +
             "/",
           {

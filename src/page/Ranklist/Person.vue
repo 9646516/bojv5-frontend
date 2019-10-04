@@ -79,7 +79,7 @@ export default {
     var self = this;
     this.axios
       .get(
-        "http://10.105.242.94:23336/v1/user/" +
+        "v1/user/" +
           String(self.$route.params.id) +
           "/details",
         {

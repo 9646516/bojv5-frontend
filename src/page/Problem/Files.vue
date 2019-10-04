@@ -189,7 +189,7 @@ export default {
     save() {
       this.axios
         .put(
-          "http://10.105.242.94:23336/v1/problem/" +
+          "v1/problem/" +
             String(this.$route.params.id) +
             "/problemfs/config",
           {
@@ -232,7 +232,7 @@ export default {
     get_config() {
       this.axios
         .get(
-          "http://10.105.242.94:23336/v1/problem/" +
+          "v1/problem/" +
             String(this.$route.params.id) +
             "/problemfs/config",
           {
@@ -266,7 +266,7 @@ export default {
       console.log(path);
       this.axios
         .delete(
-          "http://10.105.242.94:23336/v1/problem/" +
+          "v1/problem/" +
             String(this.$route.params.id) +
             "/problemfs/rm?path=/" +
             String(path),
@@ -283,7 +283,7 @@ export default {
     update_single_test(i) {
       this.axios
         .get(
-          "http://10.105.242.94:23336/v1/problem/" +
+          "v1/problem/" +
             String(this.$route.params.id) +
             "/problemfs/ls?path=/" +
             this.task[i]["input-path"] +
@@ -314,7 +314,7 @@ export default {
       formData.append("path", path);
       this.axios
         .post(
-          "http://10.105.242.94:23336/v1/problem/" +
+          "v1/problem/" +
             String(this.$route.params.id) +
             "/problemfs/writes",
           formData,

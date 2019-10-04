@@ -90,7 +90,7 @@ export default {
       var sb = function(i) {
         self.axios
           .post(
-            "http://10.105.242.94:23336/v1/sugar/class/group/" +
+            "v1/sugar/class/group/" +
               String(self.$route.params.id) +
               "/user/",
             "user_name=" + self.data[i].username,

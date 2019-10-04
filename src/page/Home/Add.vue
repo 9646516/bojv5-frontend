@@ -44,7 +44,7 @@ export default {
         this.message = "Waiting for it...";
         this.axios
           .post(
-            "http://10.105.242.94:23336/v1/announcement/",
+            "v1/announcement/",
             "title=" + String(this.title) + "&content=" + String(this.content),
             {
               headers: {

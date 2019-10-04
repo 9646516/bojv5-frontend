@@ -51,9 +51,15 @@ function test2() {
 	console.log(Decrypted, CurrentTime);
 	return Decrypted - 600 > CurrentTime;
 }
-
+var BASE_URL = "http://10.105.242.94:23336/"
+axios.interceptors.response.use(
+	function (config) {
+		config.url = BASE_URL + config.url
+	}
+)
 axios.interceptors.request.use(
 	function (config) {
+		config.url = BASE_URL + config.url
 		if (!test()) {
 			router.push({
 				name: 'Error',
@@ -63,7 +69,7 @@ axios.interceptors.request.use(
 		else if (!test2()) {
 			store.dispatch("Del_Token");
 			axios.get(
-				"http://10.105.242.94:23336/v1/user-token",
+				"v1/user-token",
 				{
 					headers: {
 						Authorization: "Bearer " + store.getters.Refresh_Token
@@ -91,7 +97,6 @@ new Vue({
 	store,
 	render: h => h(App)
 }).$mount('#app')
-// axios.defaults.baseURL="http://10.105.242.94:23336"
 Vue.prototype.$ajax = axios;
 Vue.prototype.$axios = axios
 import "highlight.js/styles/xcode.css"

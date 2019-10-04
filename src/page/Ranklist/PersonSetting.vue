@@ -134,7 +134,7 @@ export default {
     var self = this;
     this.axios
       .get(
-        "http://10.105.242.94:23336/v1/user/" +
+        "v1/user/" +
           String(self.$route.params.id) +
           "/details",
         {
@@ -230,7 +230,7 @@ export default {
         var self = this;
         this.axios
           .put(
-            "http://10.105.242.94:23336/v1/user/" + String(self.uid) + "/",
+            "v1/user/" + String(self.uid) + "/",
             JSON.stringify({
               gender: this.gender.state,
               nick_name: String(this.nickname),
@@ -272,7 +272,7 @@ export default {
         var self = this;
         this.axios
           .put(
-            "http://10.105.242.94:23336/v1/user/" +
+            "v1/user/" +
               String(self.uid) +
               "/password",
             "old-password=" +
