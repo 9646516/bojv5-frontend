@@ -27,22 +27,21 @@
           <v-card-text>
             <v-card-title style="font-size:250%">BOJv5 Developping Team</v-card-title>
             <v-divider />
-            <v-row class="justify-center">
-              <v-col>
+            <v-row style="margin-left:1.3em;">
+              <div class="flex-col">
                 <Developer
                   :src="require('@/assets/img/9646516.jpg')"
                   text="9646516"
                   url="https://github.com/9646516"
                 />
-              </v-col>
-
-              <v-col>
+              </div>
+              <div class="flex-col ml-4">
                 <Developer
                   :src="require('@/assets/img/myriad.jpg')"
                   text="Myriad-Dreamin"
                   url="https://github.com/Myriad-Dreamin"
                 />
-              </v-col>
+              </div>
             </v-row>
           </v-card-text>
         </v-parallax>

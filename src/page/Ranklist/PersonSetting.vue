@@ -133,16 +133,11 @@ export default {
   created() {
     var self = this;
     this.axios
-      .get(
-        "v1/user/" +
-          String(self.$route.params.id) +
-          "/details",
-        {
-          headers: {
-            Authorization: "Bearer " + self.$store.getters.Token
-          }
+      .get("v1/user/" + String(self.$route.params.id) + "/details", {
+        headers: {
+          Authorization: "Bearer " + self.$store.getters.Token
         }
-      )
+      })
       .then(res => {
         console.log(res);
         var is_staff = false;
@@ -230,7 +225,7 @@ export default {
         var self = this;
         this.axios
           .put(
-            "v1/user/" + String(self.uid) + "/",
+            "v1/user/" + String(self.uid),
             JSON.stringify({
               gender: this.gender.state,
               nick_name: String(this.nickname),
@@ -272,13 +267,11 @@ export default {
         var self = this;
         this.axios
           .put(
-            "v1/user/" +
-              String(self.uid) +
-              "/password",
-            "old-password=" +
-              String(this.password0) +
-              "&new-password=" +
-              String(this.password1),
+            "v1/user/" + String(self.uid) + "/password",
+            {
+              "old-password": String(this.password0),
+              "new-password": String(this.password1)
+            },
             {
               headers: {
                 Authorization: "Bearer " + self.$store.getters.Token
