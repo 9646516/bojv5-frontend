@@ -10,8 +10,8 @@
           <v-card-text>username:{{user_name}}</v-card-text>
           <v-card-text>nickname:{{nick_name}}</v-card-text>
           <v-card-text>gender:{{gender}}</v-card-text>
-          <v-card-text>Problems solved:{{tried.length}}</v-card-text>
-          <v-card-text>Problems tried:{{solved.length}}</v-card-text>
+          <v-card-text>Problems solved:{{tried}}</v-card-text>
+          <v-card-text>Problems tried:{{solved}}</v-card-text>
           <v-card-text>motto:{{motto}}</v-card-text>
           <v-card-text>email:{{email}}</v-card-text>
           <v-card-text>avatar:{{avatar}}</v-card-text>
@@ -78,16 +78,11 @@ export default {
   created() {
     var self = this;
     this.axios
-      .get(
-        "v1/user/" +
-          String(self.$route.params.id) +
-          "/details",
-        {
-          headers: {
-            Authorization: "Bearer " + self.$store.getters.Token
-          }
+      .get("v1/user/" + String(self.$route.params.id) + "/details", {
+        headers: {
+          Authorization: "Bearer " + self.$store.getters.Token
         }
-      )
+      })
       .then(res => {
         var is_staff = false;
         var is_teacher = false;
@@ -100,7 +95,6 @@ export default {
             }
           }
         }
-        console.log(res);
         self.isStaff = is_staff;
         self.isTeacher = is_teacher;
         self.pk = res.data.id;
@@ -109,19 +103,20 @@ export default {
         self.last_login = res.data.last_login;
         self.motto = res.data.motto;
         self.nick_name = res.data.nick_name;
-        self.tried = res.data.tried_problems;
-        self.solved = res.data.success_problems;
         self.user_name = res.data.user_name;
         self.avatar =
           "https://secure.gravatar.com/avatar/" +
           md5(self.email.toLowerCase()) +
           "?s=512";
-        for (var i = 0; i < self.solved.length; i++) {
-          self.mp[self.solved[i]] = 1;
+        this.tried = res.data.tried_problems.length;
+        this.solved = res.data.success_problems.length;
+        for (var i of res.data.success_problems) {
+          self.mp[i] = 0;
         }
-        for (var i = 0; i < self.tried.length; i++) {
-          self.mp[self.tried[i]] = 0;
+        for (var i of res.data.tried_problems) {
+          self.mp[i] = 1;
         }
+        console.log(res);
         self.done = true;
       })
       .catch(function(error) {
@@ -139,10 +134,10 @@ export default {
       gender: "1",
       last_login: "",
       motto: "",
+      tried: 0,
+      solved: 0,
       nick_name: "",
       user_name: "",
-      solved: [],
-      tried: [],
       mp: {}
     };
   },

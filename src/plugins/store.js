@@ -15,7 +15,7 @@ const store = new Vuex.Store({
   },
   getters: {
     username: function (state) {
-      return state.username ? state.username : "PassersBy";
+      return state.username ? state.username : "";
     },
     uid: function (state) {
       return state.uid;

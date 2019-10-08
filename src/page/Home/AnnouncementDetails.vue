@@ -61,11 +61,7 @@ export default {
   },
   mounted() {
     this.axios
-      .get(
-        "v1/announcement/" +
-          String(this.$route.params.id) +
-          "/"
-      )
+      .get("v1/announcement/" + String(this.$route.params.id))
       .then(res => {
         console.log(res);
         this.data = res.data.announcement;
@@ -95,16 +91,11 @@ export default {
     edit() {},
     Delete() {
       this.axios
-        .delete(
-          "v1/announcement/" +
-            String(this.$route.params.id) +
-            "/",
-          {
-            headers: {
-              Authorization: "Bearer " + this.$store.getters.Token
-            }
+        .delete("v1/announcement/" + String(this.$route.params.id), {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.Token
           }
-        )
+        })
         .then(res => {
           if (res.data.code == 0) {
             Router.push("/");

@@ -70,7 +70,7 @@ export default {
     Pie
   },
   data: () => ({
-    color: ["#3366ff", "#9900ff", "#669999", "#33cc33", "#ff33cc"],
+    color: ["#3366ff", "#9900ff", "#4FC3F7", "#33cc33", "#1A237E"],
 
     data: [
       {

@@ -39,11 +39,7 @@ export default {
   }),
   mounted() {
     this.axios
-      .get(
-        "v1/announcement/" +
-          String(this.$route.params.id) +
-          "/"
-      )
+      .get("v1/announcement/" + String(this.$route.params.id))
       .then(res => {
         console.log(res);
         this.title = res.data.announcement.title;
@@ -70,10 +66,11 @@ export default {
         this.message = "Waiting for it...";
         this.axios
           .put(
-            "v1/announcement/" +
-              String(this.$route.params.id) +
-              "/",
-            "title=" + String(this.title) + "&content=" + String(this.content),
+            "v1/announcement/" + String(this.$route.params.id),
+            {
+              title: String(this.title),
+              content: String(this.content)
+            },
             {
               headers: {
                 Authorization: "Bearer " + this.$store.getters.Token
