@@ -1,9 +1,9 @@
-import About from '@/page/Ohers/About'
-import Logout from '@/page/Ohers/Logout'
-import Error from '@/page/Ohers/Error'
-import Register from '@/page/Ohers/Register'
-import AddUser from '@/page/Ohers/AddUser'
-import Dev from '@/page/Ohers/Dev'
+import About from '@/page/Others/About'
+import Logout from '@/page/Others/Logout'
+import Error from '@/page/Others/Error'
+import Register from '@/page/Others/Register'
+import AddUser from '@/page/Others/AddUser'
+import Dev from '@/page/Others/Dev'
 
 
 const Router = [

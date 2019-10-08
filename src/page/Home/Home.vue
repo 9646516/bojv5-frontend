@@ -17,36 +17,34 @@
         </div>
       </v-layout>
     </v-card>
-    <v-card>
-      <div class="headline">Announcement</div>
-      <v-divider />
-      <v-btn large color="primary" v-if="this.$store.getters.IsStaff" to="/addannouncement">
-        <v-icon left>mdi-delete</v-icon>Add
-      </v-btn>
-      <v-progress-circular v-if="!done" indeterminate />
-      <v-card v-for="i in data" :key="i.pk" class="mb-4">
-        <router-link
-          :to="{'name': 'Announcement', params: {'id': i.id}}"
-          :style="{cursor: 'pointer'}"
-          tag="div"
-        >
-          <v-container>
-            <v-flex>
-              <v-layout>
-                <v-card-text class="headline">{{i.title}}</v-card-text>
-                <v-icon class="mdi-18px" v-if="i.is_sticky">vertical_align_top</v-icon>
-              </v-layout>
-            </v-flex>
-            <v-divider />
-            <v-card-text>{{i.content.slice(0,Math.min(30,i.content.length))}}</v-card-text>
-            <v-divider />
-            <v-card-text>
-              <div>Author:{{i.author}}</div>
-              <div>Update:{{i.updated_at}}</div>
-            </v-card-text>
-          </v-container>
-        </router-link>
-      </v-card>
+    <div class="headline">Announcement</div>
+    <v-divider />
+    <v-btn large color="primary" v-if="this.$store.getters.IsStaff" to="/addannouncement">
+      <v-icon left>mdi-delete</v-icon>Add
+    </v-btn>
+    <v-progress-circular v-if="!done" indeterminate />
+    <v-card v-for="i in data" :key="i.pk" class="mb-6">
+      <router-link
+        :to="{'name': 'Announcement', params: {'id': i.id}}"
+        :style="{cursor: 'pointer'}"
+        tag="div"
+      >
+        <v-container>
+          <v-flex>
+            <v-layout>
+              <v-card-text class="headline">{{i.title}}</v-card-text>
+              <v-icon class="mdi-18px" v-if="i.is_sticky">vertical_align_top</v-icon>
+            </v-layout>
+          </v-flex>
+          <v-divider />
+          <v-card-text>{{i.content.slice(0,Math.min(30,i.content.length))}}</v-card-text>
+          <v-divider />
+          <v-card-text>
+            <div>Author:{{i.author}}</div>
+            <div>Update:{{i.updated_at}}</div>
+          </v-card-text>
+        </v-container>
+      </router-link>
     </v-card>
   </div>
 </template>

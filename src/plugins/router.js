@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Class from '@/page/Class/router.js'
 import Contest from '@/page/Contest/router.js'
 import Home from '@/page/Home/router.js'
-import Ohers from '@/page/Ohers/router.js'
+import Others from '@/page/Others/router.js'
 import Problem from '@/page/Problem/router.js'
 import Ranklist from '@/page/Ranklist/router.js'
 import Status from '@/page/Status/router.js'
@@ -16,7 +16,7 @@ export default new Router({
     ...Class,
     ...Contest,
     ...Home,
-    ...Ohers,
+    ...Others,
     ...Problem,
     ...Ranklist,
     ...Status,

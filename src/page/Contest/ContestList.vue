@@ -28,24 +28,32 @@
     <div class="text-xs-center pt-2">
       <v-pagination v-model="page" :length="max_page"></v-pagination>
     </div>
+    <ContestCard
+      v-for="i in desserts"
+      v-bind:key="Number(i.id)"
+      :name="i.title"
+      :uid="i.id"
+      :len="i.end_duration"
+      :date="new Date(i.start_at)"
+    />
   </div>
 </template>
 <script>
+import ContestCard from "@/components/ContestCard";
+
 export default {
+  components: {
+    ContestCard
+  },
   watch: {
     page: {
       handler(val, oldVal) {
         this.axios
-          .get(
-            "v1/contest-list?page=" +
-              String(val) +
-              "&page-size=20",
-            {
-              headers: {
-                Authorization: "Bearer " + this.$store.getters.Token
-              }
+          .get("v1/contest-list?page=" + String(val) + "&page-size=20", {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
             }
-          )
+          })
           .then(res => {
             console.log(res.data);
             this.desserts = res.data.contests;
