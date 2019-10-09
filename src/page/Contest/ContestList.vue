@@ -3,31 +3,6 @@
     <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addcontest">
       <v-icon left>mdi-delete</v-icon>Add
     </v-btn>
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      loading-text="Loading... Please wait"
-      :items-per-page="12"
-      hide-default-footer
-      class="elevation-1"
-    >
-      <template v-slot:item="{ item }">
-        <router-link
-          :to="{'name': 'Contest', params: {'id': item.id}}"
-          :style="{'cursor': 'pointer'}"
-          tag="tr"
-        >
-          <td>{{ item.id }}</td>
-          <td>{{ item.title }}</td>
-          <td>{{ item.author }}</td>
-          <td>{{ item.start_at }}</td>
-          <td>{{ item.end_duration }}</td>
-        </router-link>
-      </template>
-    </v-data-table>
-    <div class="text-xs-center pt-2">
-      <v-pagination v-model="page" :length="max_page"></v-pagination>
-    </div>
     <ContestCard
       v-for="i in desserts"
       v-bind:key="Number(i.id)"
@@ -35,7 +10,11 @@
       :uid="i.id"
       :len="i.end_duration"
       :date="new Date(i.start_at)"
+      :author="i.author.username"
     />
+    <div class="text-xs-center pt-2">
+      <v-pagination v-model="page" :length="max_page"></v-pagination>
+    </div>
   </div>
 </template>
 <script>

@@ -16,7 +16,9 @@ router.beforeEach((to, from, next) => {
 		} else {
 			next({
 				name: 'Error',
-				params: { text: "Please Login First" }
+				params: {
+					text: "Please Login First"
+				}
 			})
 		}
 	} else if (to.matched.some(res => res.meta.NeedStaff)) {
@@ -25,13 +27,16 @@ router.beforeEach((to, from, next) => {
 		} else {
 			next({
 				name: 'Error',
-				params: { text: "You Are Not Staff" }
+				params: {
+					text: "You Are Not Staff"
+				}
 			})
 		}
 	} else {
 		next()
 	}
 });
+
 function test() {
 	if (!store.getters.Refresh_Token) {
 		return true;
@@ -41,6 +46,7 @@ function test() {
 	let CurrentTime = new Date().getTime() / 1000;
 	return Decrypted - 600 > CurrentTime;
 }
+
 function test2() {
 	if (!store.getters.Token) {
 		return true;
@@ -64,14 +70,14 @@ axios.interceptors.request.use(
 		if (!test()) {
 			router.push({
 				name: 'Error',
-				params: { text: "Please ReLogin" }
+				params: {
+					text: "Please ReLogin"
+				}
 			})
-		}
-		else if (!test2()) {
+		} else if (!test2()) {
 			store.dispatch("Del_Token");
 			axios.get(
-				"v1/user-token",
-				{
+				"v1/user-token", {
 					headers: {
 						Authorization: "Bearer " + store.getters.Refresh_Token
 					}
@@ -83,7 +89,9 @@ axios.interceptors.request.use(
 				} else {
 					router.push({
 						name: 'Error',
-						params: { text: "ERR" }
+						params: {
+							text: "ERR"
+						}
 					})
 				}
 			});
@@ -101,3 +109,5 @@ new Vue({
 Vue.prototype.$ajax = axios;
 Vue.prototype.$axios = axios
 import "highlight.js/styles/xcode.css"
+import animated from 'animate.css'
+Vue.use(animated)

@@ -1,5 +1,10 @@
 <template>
-  <v-card :to="{'name': 'Contest', params: {'id': uid}}" style="width: 90%" class="mb-6">
+  <v-card
+    :to="{'name': 'Contest', params: {'id': uid}}"
+    style="width: 90%;"
+    class="mb-6 animated fadeInLeft"
+    @mouseenter="gao($event)"
+  >
     <v-row class="ml-6">
       <div class="flex-row">
         <div style="color:#ABABAB;">
@@ -11,7 +16,7 @@
         <v-card-text class="text-left">
           <div style="font-size:40px;">{{name}}</div>
         </v-card-text>
-        <v-card-text>len: {{len}}</v-card-text>
+        <v-card-text>Len: {{len}} Author: {{author}}</v-card-text>
       </div>
     </v-row>
   </v-card>
@@ -33,7 +38,7 @@ export default {
     // },
     date: {
       type: Date,
-      default:null
+      default: null
     },
     name: {
       type: String,
@@ -46,6 +51,10 @@ export default {
     len: {
       type: Number,
       default: 1
+    },
+    author: {
+      type: String,
+      default: "jwbi"
     }
   },
   data: () => ({
@@ -68,9 +77,19 @@ export default {
     go(e) {
       window.location.href = e;
     },
-    get_color() {
-      var idx = Math.round(Math.random() * 11);
-      return this.color[idx];
+    gao(event) {
+      console.log(event.target);
+      console.log(event.target.classList);
+      // event.target.classList.remove("fadeInLeft");
+      // event.target.classList.add("bounce");
+      // event.target.classList.add("infinite");
+      // event.target.addEventListener(
+      //   "animationend",
+      //   function handleAnimationEnd() {
+      //     event.target.classList.remove("infinite");
+      //     event.target.classList.remove("bounce");
+      //   }
+      // );
     }
   }
 };
