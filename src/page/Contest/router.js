@@ -2,6 +2,7 @@ import Contest from '@/page/Contest/ContestDetails'
 import Contests from '@/page/Contest/ContestList'
 import AddContest from '@/page/Contest/Add'
 import EditContest from '@/page/Contest/Edit'
+import Cover from '@/page/Contest/Details/Cover'
 const Router = [
     {
         path: '/addcontest',
@@ -26,12 +27,9 @@ const Router = [
             NeedLogin: true
         }
     }, {
-        path: '/contest/:id',
+        path: '/contest/:id/cover',
         name: 'Contest',
-        component: Contest,
-        meta: {
-            NeedLogin: true
-        }
+        component: Cover,
     },
 ];
 

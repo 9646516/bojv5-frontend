@@ -3,7 +3,9 @@
     :to="{'name': 'Contest', params: {'id': uid}}"
     style="width: 90%;"
     class="mb-6 animated fadeInLeft"
-    @mouseenter="gao($event)"
+    ref="card"
+    @mouseenter="gao()"
+    @mouseleave="gao2()"
   >
     <v-row class="ml-6">
       <div class="flex-row">
@@ -38,7 +40,7 @@ export default {
     // },
     date: {
       type: Date,
-      default: null
+      default: () => new Date()
     },
     name: {
       type: String,
@@ -73,23 +75,17 @@ export default {
       "Dec"
     ]
   }),
+  mounted() {},
   methods: {
     go(e) {
       window.location.href = e;
     },
-    gao(event) {
-      console.log(event.target);
-      console.log(event.target.classList);
-      // event.target.classList.remove("fadeInLeft");
-      // event.target.classList.add("bounce");
-      // event.target.classList.add("infinite");
-      // event.target.addEventListener(
-      //   "animationend",
-      //   function handleAnimationEnd() {
-      //     event.target.classList.remove("infinite");
-      //     event.target.classList.remove("bounce");
-      //   }
-      // );
+    gao() {
+      this.$refs.card.$el.classList.remove("animated", "fadeInLeft");
+      this.$refs.card.$el.classList.add("animated", "bounce");
+    },
+    gao2() {
+      this.$refs.card.$el.classList.remove("animated", "bounce");
     }
   }
 };
