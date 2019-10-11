@@ -1,11 +1,9 @@
 <template>
   <v-card
-    :to="{'name': 'Contest', params: {'id': uid}}"
+    :to="{'name': 'contest_cover', params: {'id': uid}}"
     style="width: 90%;"
     class="mb-6 animated fadeInLeft"
     ref="card"
-    @mouseenter="gao()"
-    @mouseleave="gao2()"
   >
     <v-row class="ml-6">
       <div class="flex-row">
@@ -80,13 +78,13 @@ export default {
     go(e) {
       window.location.href = e;
     },
-    gao() {
-      this.$refs.card.$el.classList.remove("animated", "fadeInLeft");
-      this.$refs.card.$el.classList.add("animated", "bounce");
-    },
-    gao2() {
-      this.$refs.card.$el.classList.remove("animated", "bounce");
-    }
+    // gao() {
+    //   this.$refs.card.$el.classList.remove("animated", "fadeInLeft");
+    //   this.$refs.card.$el.classList.add("animated", "bounce");
+    // },
+    // gao2() {
+    //   this.$refs.card.$el.classList.remove("animated", "bounce");
+    // }
   }
 };
 </script>

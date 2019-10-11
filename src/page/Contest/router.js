@@ -6,7 +6,8 @@ import Cover from '@/page/Contest/Details/Cover'
 import Dash from '@/page/Contest/Details/Dash'
 import Submission from '@/page/Contest/Details/Submission'
 import Rank from '@/page/Contest/Details/Rank'
-import Clari from '@/page/Contest/Details/Clari'
+import ProblemDetails from '@/page/Contest/Details/ProblemDetails'
+import SubmissionDetails from '@/page/Contest/Details/SubmissionDetails'
 const Router = [
     {
         path: '/addcontest',
@@ -50,7 +51,14 @@ const Router = [
         path: '/contest/:id/clari',
         name: 'contest_clari',
         component: Clari,
+    },{
+        path: '/contest/:id/problem/:uid',
+        name: 'contest_problem',
+        component: ProblemDetails,
+    },{
+        path: '/contest/:id/clari/:uid',
+        name: 'contest_submission',
+        component: SubmissionDetails,
     },
-];
-
+]
 export default Router;

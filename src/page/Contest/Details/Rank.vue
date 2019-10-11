@@ -9,13 +9,25 @@
         <v-btn text :to="'/contest/'+$route.params.id+'/clari'">Clarification</v-btn>
       </v-toolbar-items>
     </v-toolbar>
+    <v-data-table disable-sort :headers="headers" :items="data" hide-default-footer></v-data-table>
   </v-card>
 </template>
 <script>
 export default {
   data() {
     return {
-      name: "123"
+      name: "123",
+      headers: [
+        { text: "Rank", value: "Rank" },
+        { text: "Name", value: "Name" },
+        { text: "Score", value: "Score" },
+        { text: "Penalty", value: "Penalty" },
+        { text: "A", value: "A" },
+        { text: "B", value: "B" },
+        { text: "C", value: "C" },
+        { text: "D", value: "D" }
+      ],
+      data: [{ Name: "234", A: "A", B: "B", C: "C", D: "D" }]
     };
   },
   computed: {},
