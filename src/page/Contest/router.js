@@ -1,4 +1,3 @@
-import Contest from '@/page/Contest/ContestDetails'
 import Contests from '@/page/Contest/ContestList'
 import AddContest from '@/page/Contest/Add'
 import EditContest from '@/page/Contest/Edit'
@@ -8,6 +7,7 @@ import Submission from '@/page/Contest/Details/Submission'
 import Rank from '@/page/Contest/Details/Rank'
 import ProblemDetails from '@/page/Contest/Details/ProblemDetails'
 import SubmissionDetails from '@/page/Contest/Details/SubmissionDetails'
+import Clari from '@/page/Contest/Details/Clari'
 const Router = [
     {
         path: '/addcontest',

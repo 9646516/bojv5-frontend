@@ -78,10 +78,10 @@ axios.interceptors.request.use(
 			store.dispatch("Del_Token");
 			axios.get(
 				"v1/user-token", {
-					headers: {
-						Authorization: "Bearer " + store.getters.Refresh_Token
-					}
+				headers: {
+					Authorization: "Bearer " + store.getters.Refresh_Token
 				}
+			}
 			).then(res => {
 				console.log(res);
 				if (res.data.code === 0) {

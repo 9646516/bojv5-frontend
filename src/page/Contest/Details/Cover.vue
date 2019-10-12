@@ -21,7 +21,17 @@
         </v-card>
       </div>
       <div class="flex-col ml-10" style="width:25%">
-        <TimeDash :endDate="start" :url="'/contest/'+String(this.$route.params.id)+'/dash'" />
+        <TimeDash :start="start" :end="end" />
+        <div align="center" justify="center">
+          <v-btn
+            :disabled="!started"
+            color="info"
+            :to="'/contest/'+String(this.$route.params.id)+'/dash'"
+            icon
+          >
+            <v-chip :color="started?'green':'grey'">Enter</v-chip>
+          </v-btn>
+        </div>
       </div>
     </v-row>
   </div>
@@ -38,14 +48,19 @@ export default {
   data() {
     return {
       name: "123",
-      start: new Date("Thu Oct 11 2019 00:22:51 GMT+0800 (中国标准时间)"),
+      start: new Date("Sun Oct 13 2019 00:47:11 GMT+0800 (中国标准时间)"),
+      end: new Date("Sun Oct 13 2019 00:47:11 GMT+0800 (中国标准时间)"),
       number: 1,
       problem: 13,
       type: "ACM",
       description: "dfbnoiwerfniorn"
     };
   },
-  computed: {},
+  computed: {
+    started() {
+      return new Date() > this.start;
+    }
+  },
   methods: {}
 };
 </script>

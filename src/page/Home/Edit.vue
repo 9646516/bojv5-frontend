@@ -2,17 +2,11 @@
   <v-card>
     <v-container>
       <v-text-field v-model="title" clearable label="Title" type="text" />
-      <v-textarea v-model="content" v-if="!preview" auto-grow clearable rows="10" label="Content" />
-      <MdLoader v-if="preview" :text="content"></MdLoader>
-      <v-toolbar height="48">
-        <v-col>
-          <v-switch v-model="preview" :label="`Preview: ${preview.toString()}`"></v-switch>
-        </v-col>
-        <v-col>
-          <v-btn large color="primary" @click="submit">
-            <v-icon left>mdi-target</v-icon>Submit
-          </v-btn>
-        </v-col>
+      <MarkdownWriter ref="md" />
+      <v-toolbar height="48" flat>
+        <v-btn large color="primary" @click="submit">
+          <v-icon left>mdi-target</v-icon>Submit
+        </v-btn>
       </v-toolbar>
       <h2 style="color:red;">
         {{message}}
@@ -24,18 +18,17 @@
   </v-card>
 </template>
 <script>
-import MdLoader from "@/components/MdLoader";
+import MarkdownWriter from "@/components/MarkdownWriter";
 import Store from "@/plugins/store.js";
 export default {
   components: {
-    MdLoader
+    MarkdownWriter
   },
   data: () => ({
     title: "",
     content: "",
-    message: "",
+    message:"",
     loading: false,
-    preview: false
   }),
   mounted() {
     this.axios
@@ -43,7 +36,7 @@ export default {
       .then(res => {
         console.log(res);
         this.title = res.data.announcement.title;
-        this.content = res.data.announcement.content;
+        this.$refs.md.doc = res.data.announcement.content;
         this.done = true;
         if (res.data.code != 0) {
           Router.push({
@@ -69,7 +62,7 @@ export default {
             "v1/announcement/" + String(this.$route.params.id),
             {
               title: String(this.title),
-              content: String(this.content)
+              content: String(this.$refs.md.doc)
             },
             {
               headers: {
@@ -87,7 +80,7 @@ export default {
       if (this.title == "") {
         this.message = "Title cannot be empty";
         return false;
-      } else if (this.content == "") {
+      } else if (this.$refs.md.doc == "") {
         this.message = "Content cannot be empty";
         return false;
       } else {

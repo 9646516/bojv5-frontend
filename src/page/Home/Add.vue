@@ -2,17 +2,11 @@
   <v-card>
     <v-container>
       <v-text-field v-model="title" clearable label="Title" type="text" />
-      <v-textarea v-model="content" v-if="!preview" auto-grow clearable rows="10" label="Content" />
-      <MdLoader v-if="preview" :text="content"></MdLoader>
+      <MarkdownWriter ref="md" />
       <v-toolbar height="48" flat>
-        <v-col>
-          <v-switch v-model="preview" :label="`Preview: ${preview.toString()}`"></v-switch>
-        </v-col>
-        <v-col>
-          <v-btn large color="primary" @click="submit">
-            <v-icon left>mdi-target</v-icon>Submit
-          </v-btn>
-        </v-col>
+        <v-btn large color="primary" @click="submit">
+          <v-icon left>mdi-target</v-icon>Submit
+        </v-btn>
       </v-toolbar>
       <h2 style="color:red;">
         {{message}}
@@ -24,28 +18,31 @@
   </v-card>
 </template>
 <script>
-import MdLoader from "@/components/MdLoader";
 import Store from "@/plugins/store.js";
+import MarkdownWriter from "@/components/MarkdownWriter";
+
 export default {
   components: {
-    MdLoader
+    MarkdownWriter
   },
   data: () => ({
     title: "",
-    content: "",
     message: "",
-    loading: false,
-    preview: false
+    loading: false
   }),
   methods: {
     submit() {
+      console.log(this.$refs);
       if (this.check()) {
         this.loading = true;
         this.message = "Waiting for it...";
         this.axios
           .post(
-            "v1/announcement/",
-            "title=" + String(this.title) + "&content=" + String(this.content),
+            "v1/announcement",
+            {
+              title: String(this.title),
+              content: String(this.$refs.md.doc)
+            },
             {
               headers: {
                 Authorization: "Bearer " + this.$store.getters.Token

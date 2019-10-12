@@ -61,7 +61,6 @@
         </v-container>
 
         <v-tabs-items v-model="tabs">
-          <v-container>
             <v-tab-item v-for="i in task.length" :key="i">
               <v-btn large color="warning" @click="Delete(i-1)" v-if="task.length>1">
                 <v-icon left>mdi-delete</v-icon>Delete
@@ -144,7 +143,6 @@
                 </div>
               </v-card>
             </v-tab-item>
-          </v-container>
         </v-tabs-items>
       </v-container>
     </v-card>

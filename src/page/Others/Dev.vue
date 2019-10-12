@@ -1,13 +1,13 @@
 <template>
-  <Pie />
+  <MarkdownWriter />
 </template>
 
 <script>
-import Pie from "@/components/Pie";
+import MarkdownWriter from "@/components/MarkdownWriter";
 
 export default {
   components: {
-    Pie
+    MarkdownWriter
   }
 };
 </script>

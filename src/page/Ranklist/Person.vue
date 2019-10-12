@@ -108,13 +108,21 @@ export default {
           "https://secure.gravatar.com/avatar/" +
           md5(self.email.toLowerCase()) +
           "?s=512";
-        this.tried = res.data.tried_problems.length;
-        this.solved = res.data.success_problems.length;
-        for (var i of res.data.success_problems) {
-          self.mp[i] = 0;
+        this.tried = res.data.tried_problems
+          ? res.data.tried_problems.length
+          : 0;
+        this.solved = res.data.success_problems
+          ? res.data.success_problems.length
+          : 0;
+        if (res.data.success_problems) {
+          for (var i of res.data.success_problems) {
+            self.mp[i] = 0;
+          }
         }
-        for (var i of res.data.tried_problems) {
-          self.mp[i] = 1;
+        if (res.data.tried_problems) {
+          for (var i of res.data.tried_problems) {
+            self.mp[i] = 1;
+          }
         }
         console.log(res);
         self.done = true;

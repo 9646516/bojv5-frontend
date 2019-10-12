@@ -5,8 +5,8 @@
       <v-toolbar-items>
         <v-btn text :to="'/contest/'+$route.params.id+'/dash'">Problems</v-btn>
         <v-btn text :to="'/contest/'+$route.params.id+'/submission'">My Submission</v-btn>
-        <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
         <v-btn text :to="'/contest/'+$route.params.id+'/clari'">Clarification</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <v-data-table disable-sort :headers="headers" :items="data" hide-default-footer></v-data-table>

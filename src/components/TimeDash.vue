@@ -1,37 +1,61 @@
 <template>
   <v-card style="padding-bottom:15%">
-    <v-card-text class="headline" style="text-align:center;">Before Contest</v-card-text>
+    <v-card-text class="headline" style="text-align:center;">Contest Status</v-card-text>
     <div style="text-align:center;">
+      <h2>{{showStatus}}</h2>
       <h2>{{showTimeLeft}}</h2>
     </div>
-    <v-row align="center" justify="center" class="mt-6">
-      <v-btn color="info" :disabled="!started" :to="url"></v-btn>
-    </v-row>
   </v-card>
 </template>
 <script>
 export default {
   name: "timeCountDown",
   props: {
-    endDate: Date,
-    url: String
+    start: Date,
+    end: Date
   },
   data() {
     return {
-      timeLeft: 0,
+      time: new Date(),
       bundleIntervalEvent: ""
     };
   },
   computed: {
-    showTimeLeft() {
-      if (this.timeLeft <= 0) {
-        this.$emit("handle-done", true);
-        return "Started";
+    showStatus() {
+      if (this.time >= this.end) {
+        return "Ended";
+      } else if (this.time <= this.end && this.time >= this.start) {
+        return "Running";
       } else {
-        let day = Math.floor(this.timeLeft / 86400);
-        let hour = Math.floor((this.timeLeft % 86400) / 3600);
-        let min = Math.floor(((this.timeLeft % 86400) % 3600) / 60);
-        let sec = Math.floor(((this.timeLeft % 86400) % 3600) % 60);
+        return "Before";
+      }
+    },
+    showTimeLeft() {
+      if (this.time >= this.end) {
+        return "";
+      } else if (this.time <= this.end && this.time >= this.start) {
+        let timeLeft = (this.end.getTime() - this.time.getTime()) / 1000;
+        let day = Math.floor(timeLeft / 86400);
+        let hour = Math.floor((timeLeft % 86400) / 3600);
+        let min = Math.floor(((timeLeft % 86400) % 3600) / 60);
+        let sec = Math.floor(((timeLeft % 86400) % 3600) % 60);
+        return (
+          (day > 0 ? day + "Days " : "") +
+          (hour < 10 ? "0" : "") +
+          hour +
+          ": " +
+          (min < 10 ? "0" : "") +
+          min +
+          ": " +
+          (sec < 10 ? "0" : "") +
+          sec
+        );
+      } else {
+        let timeLeft = (this.start.getTime() - this.time.getTime()) / 1000;
+        let day = Math.floor(timeLeft / 86400);
+        let hour = Math.floor((timeLeft % 86400) / 3600);
+        let min = Math.floor(((timeLeft % 86400) % 3600) / 60);
+        let sec = Math.floor(((timeLeft % 86400) % 3600) % 60);
         return (
           (day > 0 ? day + "Days " : "") +
           (hour < 10 ? "0" : "") +
@@ -50,27 +74,16 @@ export default {
     }
   },
   methods: {
-    initSecondsLeft() {
-      let currentDate = new Date();
-      let toEndDate = this.endDate;
-      if (toEndDate > currentDate) {
-        this.timeLeft = Math.floor(
-          (toEndDate.getTime() - currentDate.getTime()) / 1000
-        );
-      } else {
-        this.timeLeft = 0;
-      }
-    },
     intervalEvent() {
-      if (this.timeLeft > 0) {
-        this.timeLeft--;
-      } else {
+      let t = new Date();
+      if (this.end < t) {
         clearInterval(this.bundleIntervalEvent);
+      } else {
+        this.time = t;
       }
     }
   },
   created() {
-    this.initSecondsLeft();
     this.bundleIntervalEvent = setInterval(this.intervalEvent, 1000);
   },
   beforeDestroy() {
