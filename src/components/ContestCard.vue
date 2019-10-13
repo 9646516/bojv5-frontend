@@ -2,7 +2,7 @@
   <v-card
     :to="{'name': 'contest_cover', params: {'id': uid}}"
     style="width: 90%;"
-    class="mb-6 animated fadeInLeft"
+    class="mb-6"
     ref="card"
   >
     <v-row class="ml-6">

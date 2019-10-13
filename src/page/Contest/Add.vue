@@ -53,7 +53,7 @@ export default {
         this.message = "Waiting for it...";
         this.axios
           .post(
-            "v1/sugar/class/group/",
+            "v1/sugar/class/group",
             {
               name: String(this.title),
               description: String(this.content),

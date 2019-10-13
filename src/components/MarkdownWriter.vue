@@ -1,29 +1,23 @@
 <template>
-  <mavon-editor ref="md" v-model="doc" @imgAdd="$imgAdd"></mavon-editor>
+  <editor v-model="doc" previewStyle="vertical" mode="markdown" :options="conf" height="600px" />
 </template>
 <script>
-import { mavonEditor } from "mavon-editor";
-import "mavon-editor/dist/css/index.css";
+import "tui-editor/dist/tui-editor.css";
+import "tui-editor/dist/tui-editor-contents.css";
+import "codemirror/lib/codemirror.css";
+import { Editor } from "@toast-ui/vue-editor";
 export default {
-  components: { mavonEditor },
+  components: {
+    editor: Editor
+  },
   data() {
     return {
-      doc: ""
+      doc: "",
+      conf: {
+        language: "zh_CN",
+        previewDelayTime: "50"
+      }
     };
-  },
-  methods: {
-    $imgAdd(pos, $file) {
-      var formdata = new FormData();
-      formdata.append("image", $file);
-      axios({
-        url: "server url",
-        method: "post",
-        data: formdata,
-        headers: { "Content-Type": "multipart/form-data" }
-      }).then(url => {
-        $vm.$img2Url(pos, url);
-      });
-    }
   }
 };
 </script>

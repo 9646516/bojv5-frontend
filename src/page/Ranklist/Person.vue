@@ -1,21 +1,22 @@
 <template>
   <v-container>
-    <v-card style="margin-bottom:3em;">
+    <v-card class="mb-3">
       <v-card-text class="headlines">
-        <h1>Profile</h1>
+        <h1>{{user_name}}</h1>
       </v-card-text>
       <v-divider />
-      <v-layout class="curtain" align-center justify-center>
-        <v-flex style="margin-left:5em;margin-top:2em;">
-          <v-card-text>username:{{user_name}}</v-card-text>
-          <v-card-text>nickname:{{nick_name}}</v-card-text>
-          <v-card-text>gender:{{gender}}</v-card-text>
-          <v-card-text>Problems solved:{{tried}}</v-card-text>
-          <v-card-text>Problems tried:{{solved}}</v-card-text>
-          <v-card-text>motto:{{motto}}</v-card-text>
-          <v-card-text>email:{{email}}</v-card-text>
-          <v-card-text>avatar:{{avatar}}</v-card-text>
-          <v-card-text>last_login:{{last_login}}</v-card-text>
+      <v-row class="curtain ml-4">
+        <v-col>
+          <v-card-text>
+            <div>nickname:{{nick_name}}</div>
+            <div>gender:{{gender}}</div>
+            <div>Problems solved:{{tried.length}}</div>
+            <div>Problems tried:{{solved.length}}</div>
+            <div>email:{{email}}</div>
+            <div>avatar:{{avatar}}</div>
+            <div>last_login:{{last_login}}</div>
+            <div>motto:{{motto}}</div>
+          </v-card-text>
           <v-btn
             large
             color="primary"
@@ -24,8 +25,8 @@
           >
             <v-icon left>mdi-github-circle</v-icon>Edit
           </v-btn>
-        </v-flex>
-        <v-flex style="margin-top:2em;">
+        </v-col>
+        <v-col>
           <v-badge :color="done?'blue':'white'" overlap>
             <v-img :src="avatar" height="256" width="256">
               <template v-slot:placeholder>
@@ -37,34 +38,40 @@
             <template v-slot:badge>
               <div v-if="isStaff">
                 <b>Admin</b>
-                <v-icon dark>mdi-check</v-icon>
-                <v-icon dark>mdi-check</v-icon>
               </div>
-              <div v-if="isTeacher">
+              <div v-if="!isStaff&&isTeacher">
                 <b>Teacher</b>
-                <v-icon dark>mdi-check</v-icon>
               </div>
             </template>
           </v-badge>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-card>
-    <v-card>
+    <v-card class="mb-4">
       <v-card-text class="headlines">
-        <h1>Problems Solving</h1>
+        <h1>Problems Solved</h1>
       </v-card-text>
       <v-divider />
       <v-progress-circular v-if="!done" indeterminate color="blue" />
-      <v-card-title v-if="JSON.stringify(mp) == '{}'">There is Nothing Here</v-card-title>
-      <template v-for="(stat,index) in mp">
+      <template v-for="i in solved">
+        <v-chip :key="i" class="ma-2" color="green" label outlined :to="'/problem/'+String(i)">{{i}}</v-chip>
+      </template>
+    </v-card>
+    <v-card>
+      <v-card-text class="headlines">
+        <h1>Problems Tried</h1>
+      </v-card-text>
+      <v-divider />
+      <v-progress-circular v-if="!done" indeterminate color="blue" />
+      <template v-for="i in tried">
         <v-chip
-          :key="index"
+          :key="i"
           class="ma-2"
-          :color="stat==0?'orange':'green'"
+          color="orange"
           label
           outlined
-          :to="'/problem/'+String(index)"
-        >{{index}}</v-chip>
+          :to="'/problem/'+String(i)"
+        >{{i}}</v-chip>
       </template>
     </v-card>
   </v-container>
@@ -108,23 +115,10 @@ export default {
           "https://secure.gravatar.com/avatar/" +
           md5(self.email.toLowerCase()) +
           "?s=512";
-        this.tried = res.data.tried_problems
-          ? res.data.tried_problems.length
-          : 0;
+        this.tried = res.data.tried_problems ? res.data.tried_problems : [];
         this.solved = res.data.success_problems
-          ? res.data.success_problems.length
-          : 0;
-        if (res.data.success_problems) {
-          for (var i of res.data.success_problems) {
-            self.mp[i] = 0;
-          }
-        }
-        if (res.data.tried_problems) {
-          for (var i of res.data.tried_problems) {
-            self.mp[i] = 1;
-          }
-        }
-        console.log(res);
+          ? res.data.success_problems
+          : [];
         self.done = true;
       })
       .catch(function(error) {
@@ -142,11 +136,10 @@ export default {
       gender: "1",
       last_login: "",
       motto: "",
-      tried: 0,
-      solved: 0,
+      tried: [0],
+      solved: [0],
       nick_name: "",
-      user_name: "",
-      mp: {}
+      user_name: ""
     };
   },
   methods: {

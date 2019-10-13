@@ -216,6 +216,9 @@ export default {
       } else if (this.gender == "") {
         this.error = "gender is not valid";
         return false;
+      }else if (this.motto.length >50) {
+        this.error = "motto too long";
+        return false;
       } else {
         return true;
       }
@@ -255,7 +258,7 @@ export default {
       } else if (this.password1 != this.password2) {
         this.error = "Confirmation mismatched";
         return false;
-      } else if (this.username.password1 < 6) {
+      } else if (this.password1.length < 6) {
         this.error = "new password should at least 6 characters";
         return false;
       } else {

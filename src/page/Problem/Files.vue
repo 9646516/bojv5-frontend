@@ -33,11 +33,29 @@
           prepend-icon="mdi-paperclip"
           :show-size="1000"
         />
+        <v-card style="margin-bottom:2em;">
+          <v-card-title class="headline">SPJ</v-card-title>
+          <v-divider />
+          <div v-for="j in spj_has" :key="j.name">
+            <v-row>
+              <v-col>
+                <v-card-text>{{j.name}}</v-card-text>
+              </v-col>
+              <v-col>
+                <v-btn large color="error" @click="remove('/spj/'+j.name)">
+                  <v-icon left>mdi-delete</v-icon>Delete
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-divider />
+          </div>
+        </v-card>
         <v-btn
           large
           color="primary"
           @click="upload([spj_source],'/spj/');spj='/spj/'+spj_source.name;spj_source=[];save();"
           v-if="judge_type.state!==0"
+          :disabled="spj_source.length===0"
         >
           <v-icon left>mdi-book</v-icon>Upload Files
         </v-btn>
@@ -61,88 +79,89 @@
         </v-container>
 
         <v-tabs-items v-model="tabs">
-            <v-tab-item v-for="i in task.length" :key="i">
-              <v-btn large color="warning" @click="Delete(i-1)" v-if="task.length>1">
-                <v-icon left>mdi-delete</v-icon>Delete
-              </v-btn>
-              <v-card style="margin-bottom:2em;">
-                <v-card-title class="headline">Details</v-card-title>
+          <v-tab-item v-for="i in task.length" :key="i">
+            <v-btn large color="warning" @click="Delete(i-1)" v-if="task.length>1">
+              <v-icon left>mdi-delete</v-icon>Delete
+            </v-btn>
+            <v-card style="margin-bottom:2em;">
+              <v-card-title class="headline">Details</v-card-title>
+              <v-divider />
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      v-model="task[i-1]['time-limit']"
+                      clearable
+                      label="Time Limit"
+                      type="number"
+                    />
+                  </v-col>
+                  <v-col>
+                    <v-text-field
+                      v-model="task[i-1]['memory-limit']"
+                      clearable
+                      label="Memory Limit"
+                      type="number"
+                    />
+                  </v-col>
+                  <v-col>
+                    <v-text-field
+                      v-model="task[i-1]['score']"
+                      clearable
+                      label="Score"
+                      type="number"
+                    />
+                  </v-col>
+                </v-row>
+                <v-btn large color="primary" @click="save">
+                  <v-icon left>mdi-book</v-icon>Save
+                </v-btn>
+              </v-container>
+            </v-card>
+            <v-card style="margin-bottom:2em;">
+              <v-card-title class="headline">Upload TestCase</v-card-title>
+              <v-divider />
+              <v-container>
+                <v-file-input
+                  v-model="files[i-1]"
+                  counter
+                  chips
+                  label="File input"
+                  color="deep-purple accent-4"
+                  multiple
+                  placeholder="Select your files"
+                  prepend-icon="mdi-paperclip"
+                  outlined
+                  :show-size="1000"
+                />
+                <v-btn
+                  large
+                  color="primary"
+                  @click="upload(files[i-1],'/'+task[i-1]['input-path']+'/');files[i-1]=[];"
+                  :disabled="!files[i-1]||files[i-1].length===0"
+                >
+                  <v-icon left>mdi-book</v-icon>Upload Files
+                </v-btn>
+              </v-container>
+            </v-card>
+            <v-card style="margin-bottom:2em;">
+              <v-card-title class="headline">TestCases</v-card-title>
+              <v-divider />
+              <div v-for="j in has[i-1]" :key="j.name">
+                <v-row>
+                  <v-col>
+                    <v-card-text>{{j.name}}</v-card-text>
+                  </v-col>
+                  <v-col>
+                    <v-btn large color="error" @click="remove('/'+String(i)+'/'+j.name)">
+                      <v-icon left>mdi-delete</v-icon>Delete
+                    </v-btn>
+                  </v-col>
+                </v-row>
                 <v-divider />
-                <v-container>
-                  <v-row>
-                    <v-col>
-                      <v-text-field
-                        v-model="task[i-1]['time-limit']"
-                        clearable
-                        label="Time Limit"
-                        type="number"
-                      />
-                    </v-col>
-                    <v-col>
-                      <v-text-field
-                        v-model="task[i-1]['memory-limit']"
-                        clearable
-                        label="Memory Limit"
-                        type="number"
-                      />
-                    </v-col>
-                    <v-col>
-                      <v-text-field
-                        v-model="task[i-1]['score']"
-                        clearable
-                        label="Score"
-                        type="number"
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-btn large color="primary" @click="save">
-                    <v-icon left>mdi-book</v-icon>Save
-                  </v-btn>
-                </v-container>
-              </v-card>
-              <v-card style="margin-bottom:2em;">
-                <v-card-title class="headline">Upload TestCase</v-card-title>
-                <v-divider />
-                <v-container>
-                  <v-file-input
-                    v-model="files[i-1]"
-                    counter
-                    chips
-                    label="File input"
-                    color="deep-purple accent-4"
-                    multiple
-                    placeholder="Select your files"
-                    prepend-icon="mdi-paperclip"
-                    outlined
-                    :show-size="1000"
-                  />
-                  <v-btn
-                    large
-                    color="primary"
-                    @click="upload(files[i-1],'/'+task[i-1]['input-path']+'/');files[i-1]=[];"
-                  >
-                    <v-icon left>mdi-book</v-icon>Upload Files
-                  </v-btn>
-                </v-container>
-              </v-card>
-              <v-card style="margin-bottom:2em;">
-                <v-card-title class="headline">TestCases</v-card-title>
-                <v-divider />
-                <div v-for="j in has[i-1]" :key="j.name">
-                  <v-row>
-                    <v-col>
-                      <v-card-text>{{j.name}}</v-card-text>
-                    </v-col>
-                    <v-col>
-                      <v-btn large color="error" @click="remove('/'+String(i)+'/'+j.name)">
-                        <v-icon left>mdi-delete</v-icon>Delete
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                  <v-divider />
-                </div>
-              </v-card>
-            </v-tab-item>
+              </div>
+            </v-card>
+          </v-tab-item>
         </v-tabs-items>
       </v-container>
     </v-card>
@@ -163,6 +182,7 @@ export default {
     ],
     spj_source: [],
     spj: "",
+    spj_has: [],
 
     tabs: null,
     TabList: [],
@@ -187,9 +207,7 @@ export default {
     save() {
       this.axios
         .put(
-          "v1/problem/" +
-            String(this.$route.params.id) +
-            "/problemfs/config",
+          "v1/problem/" + String(this.$route.params.id) + "/problemfs/config",
           {
             config: {
               judge: {
@@ -230,9 +248,7 @@ export default {
     get_config() {
       this.axios
         .get(
-          "v1/problem/" +
-            String(this.$route.params.id) +
-            "/problemfs/config",
+          "v1/problem/" + String(this.$route.params.id) + "/problemfs/config",
           {
             headers: {
               Authorization: "Bearer " + this.$store.getters.Token
@@ -275,6 +291,7 @@ export default {
           }
         )
         .then(res => {
+          this.update_spj();
           this.update_test();
         });
     },
@@ -284,8 +301,7 @@ export default {
           "v1/problem/" +
             String(this.$route.params.id) +
             "/problemfs/ls?path=/" +
-            this.task[i]["input-path"] +
-            "/",
+            this.task[i]["input-path"],
           {
             headers: {
               Authorization: "Bearer " + this.$store.getters.Token
@@ -294,6 +310,22 @@ export default {
         )
         .then(res => {
           this.$set(this.has, i, res.data.result);
+        });
+    },
+    update_spj() {
+      this.axios
+        .get(
+          "v1/problem/" +
+            String(this.$route.params.id) +
+            "/problemfs/ls?path=/spj",
+          {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
+            }
+          }
+        )
+        .then(res => {
+          this.spj_has = res.data.result;
         });
     },
     update_test() {
@@ -312,9 +344,7 @@ export default {
       formData.append("path", path);
       this.axios
         .post(
-          "v1/problem/" +
-            String(this.$route.params.id) +
-            "/problemfs/writes",
+          "v1/problem/" + String(this.$route.params.id) + "/problemfs/writes",
           formData,
           {
             headers: {
@@ -324,6 +354,7 @@ export default {
         )
         .then(res => {
           this.update_test();
+          this.update_spj();
         });
     }
   }

@@ -6,6 +6,7 @@
       loading-text="Loading... Please wait"
       :items-per-page="12"
       hide-default-footer
+      loading=true
       class="elevation-1"
     >
       <template v-slot:item="{ item }">

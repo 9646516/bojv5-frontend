@@ -10,9 +10,6 @@
         <img v-bind:src="this.$store.getters.gravatar(512)" @click.stop="enlarge" />
       </v-avatar>
       <v-card-text>{{this.$store.getters.username}}</v-card-text>
-      <v-btn icon text @click.stop="decay">
-        <v-icon>mdi-windows</v-icon>
-      </v-btn>
     </v-toolbar>
     <v-list>
       <v-dialog v-if="!this.$store.getters.isLogin" v-model="dialog" max-width="500px">
@@ -163,12 +160,6 @@ export default {
     }
   },
   methods: {
-    enlarge() {
-      this.width = 250;
-    },
-    decay() {
-      this.width = 70;
-    },
     login() {
       if (this.check()) {
         var form =

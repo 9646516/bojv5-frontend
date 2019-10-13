@@ -2,17 +2,11 @@
   <v-card>
     <v-container>
       <v-text-field v-model="title" clearable label="Title" type="text" />
-      <v-textarea v-model="content" v-if="!preview" auto-grow clearable rows="10" label="Content" />
-      <MdLoader v-if="preview" :text="content"></MdLoader>
-      <v-toolbar height="48">
-        <v-col>
-          <v-switch v-model="preview" :label="`Preview: ${preview.toString()}`"></v-switch>
-        </v-col>
-        <v-col>
-          <v-btn large color="primary" @click="submit">
-            <v-icon left>mdi-target</v-icon>Submit
-          </v-btn>
-        </v-col>
+      <MarkdownWriter ref="md" />
+      <v-toolbar height="48" flat>
+        <v-btn large color="primary" @click="submit">
+          <v-icon left>mdi-target</v-icon>Submit
+        </v-btn>
       </v-toolbar>
       <h2 style="color:red;">
         {{message}}
@@ -24,35 +18,29 @@
   </v-card>
 </template>
 <script>
-import MdLoader from "@/components/MdLoader";
 import Store from "@/plugins/store.js";
+import MarkdownWriter from "@/components/MarkdownWriter";
+
 export default {
   components: {
-    MdLoader
+    MarkdownWriter
   },
   data: () => ({
     title: "",
-    content: "",
     message: "",
-    loading: false,
-    preview: false
+    loading: false
   }),
   mounted() {
     this.axios
-      .get(
-        "v1/problem/" +
-          String(this.$route.params.id) +
-          "/",
-        {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.Token
-          }
+      .get("v1/problem/" + String(this.$route.params.id), {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Token
         }
-      )
+      })
       .then(res => {
         console.log(res);
         this.title = res.data.problem.title;
-        this.content = res.data.problem.description;
+        this.$refs.md.doc = res.data.problem.description;
         this.done = true;
         if (res.data.code != 0) {
           Router.push({
@@ -75,12 +63,10 @@ export default {
         this.message = "Waiting for it...";
         this.axios
           .put(
-            "v1/problem/" +
-              String(this.$route.params.id) +
-              "/",
+            "v1/problem/" + String(this.$route.params.id),
             {
               title: this.title,
-              description: this.content
+              description: this.$refs.md.doc
             },
             {
               headers: {
@@ -98,7 +84,7 @@ export default {
       if (this.title == "") {
         this.message = "Title cannot be empty";
         return false;
-      } else if (this.content == "") {
+      } else if (this.$refs.md.doc == "") {
         this.message = "Content cannot be empty";
         return false;
       } else {
@@ -110,3 +96,5 @@ export default {
 </script>
 <style>
 </style>
+
+  

@@ -22,14 +22,14 @@
       </div>
       <div class="flex-col ml-10" style="width:25%">
         <TimeDash :start="start" :end="end" />
-        <div align="center" justify="center">
+        <div align="center" justify="center" class="mt-6">
           <v-btn
             :disabled="!started"
             color="info"
             :to="'/contest/'+String(this.$route.params.id)+'/dash'"
-            icon
+            
           >
-            <v-chip :color="started?'green':'grey'">Enter</v-chip>
+            Enter
           </v-btn>
         </div>
       </div>

@@ -2,41 +2,33 @@
   <v-card>
     <v-container>
       <v-text-field v-model="title" clearable label="Title" type="text" />
-      <v-textarea
-        v-model="content"
-        v-if="!preview"
-        auto-grow
-        clearable
-        rows="10"
-        label="Description"
-      />
-      <MdLoader v-if="preview" :text="content"></MdLoader>
+      <MarkdownWriter ref="md" />
       <v-toolbar height="48" flat>
-        <v-col>
-          <v-switch v-model="preview" :label="`Preview: ${preview.toString()}`"></v-switch>
-        </v-col>
-        <v-col>
-          <v-btn large color="primary" @click="submit">
-            <v-icon left>mdi-target</v-icon>Submit
-          </v-btn>
-        </v-col>
+        <v-btn large color="primary" @click="submit">
+          <v-icon left>mdi-target</v-icon>Submit
+        </v-btn>
       </v-toolbar>
-      <h2 style="color:red;">{{message}}</h2>
+      <h2 style="color:red;">
+        {{message}}
+        <v-fade-transition>
+          <v-progress-circular v-if="loading" size="24" color="info" indeterminate></v-progress-circular>
+        </v-fade-transition>
+      </h2>
     </v-container>
   </v-card>
 </template>
 <script>
-import MdLoader from "@/components/MdLoader";
 import Store from "@/plugins/store.js";
+import MarkdownWriter from "@/components/MarkdownWriter";
+
 export default {
   components: {
-    MdLoader
+    MarkdownWriter
   },
   data: () => ({
     title: "",
-    content: "",
     message: "",
-    preview: false
+    loading: false
   }),
   methods: {
     submit() {
@@ -45,10 +37,10 @@ export default {
         this.message = "Waiting for it...";
         this.axios
           .post(
-            "v1/problem/",
+            "v1/problem",
             {
               title: String(this.title),
-              description: String(this.content)
+              description: String(this.$refs.md.doc)
             },
             {
               headers: {
@@ -66,7 +58,7 @@ export default {
       if (this.title == "") {
         this.message = "Title cannot be empty";
         return false;
-      } else if (this.content == "") {
+      } else if (this.$refs.md.doc == "") {
         this.message = "Content cannot be empty";
         return false;
       } else {
