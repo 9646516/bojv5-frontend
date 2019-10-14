@@ -5,17 +5,41 @@
         <h1>{{user_name}}</h1>
       </v-card-text>
       <v-divider />
-      <v-row class="curtain ml-4">
+      <v-row class="curtain ml-2">
         <v-col>
           <v-card-text>
-            <div>nickname:{{nick_name}}</div>
-            <div>gender:{{gender}}</div>
-            <div>Problems solved:{{tried.length}}</div>
-            <div>Problems tried:{{solved.length}}</div>
-            <div>email:{{email}}</div>
-            <div>avatar:{{avatar}}</div>
-            <div>last_login:{{last_login}}</div>
-            <div>motto:{{motto}}</div>
+            <tr>
+              <td>NickName:</td>
+              <td align="right">{{nick_name}}</td>
+            </tr>
+            <tr>
+              <td>Gender:</td>
+              <td align="right">{{gender}}</td>
+            </tr>
+            <tr>
+              <td>Solved:</td>
+              <td align="right">{{tried.length}}</td>
+            </tr>
+            <tr>
+              <td>Tried:</td>
+              <td align="right">{{solved.length}}</td>
+            </tr>
+            <tr>
+              <td>Last Seen:</td>
+              <td align="right">{{last_login}}</td>
+            </tr>
+            <tr>
+              <td>Email:</td>
+              <td align="right">{{email}}</td>
+            </tr>
+            <tr>
+              <td>Avatar:</td>
+              <td align="right">{{avatar}}</td>
+            </tr>
+            <tr>
+              <td>Motto:</td>
+              <td align="right">{{motto}}</td>
+            </tr>
           </v-card-text>
           <v-btn
             large
@@ -52,27 +76,32 @@
         <h1>Problems Solved</h1>
       </v-card-text>
       <v-divider />
-      <v-progress-circular v-if="!done" indeterminate color="blue" />
-      <template v-for="i in solved">
-        <v-chip :key="i" class="ma-2" color="green" label outlined :to="'/problem/'+String(i)">{{i}}</v-chip>
-      </template>
+      <v-progress-circular v-if="!done" indeterminate color="green" class="mt-4 ml-4 mb-4" />
+      <v-chip
+        v-for="i in solved"
+        :key="i"
+        class="ma-2"
+        color="green"
+        label
+        outlined
+        :to="'/problem/'+i"
+      >{{i}}</v-chip>
     </v-card>
     <v-card>
       <v-card-text class="headlines">
         <h1>Problems Tried</h1>
       </v-card-text>
       <v-divider />
-      <v-progress-circular v-if="!done" indeterminate color="blue" />
-      <template v-for="i in tried">
-        <v-chip
-          :key="i"
-          class="ma-2"
-          color="orange"
-          label
-          outlined
-          :to="'/problem/'+String(i)"
-        >{{i}}</v-chip>
-      </template>
+      <v-progress-circular v-if="!done" indeterminate color="purple" class="mt-4 ml-4 mb-4" />
+      <v-chip
+        v-for="i in tried"
+        :key="i"
+        class="ma-2"
+        color="orange"
+        label
+        outlined
+        :to="'/problem/'+i"
+      >{{i}}</v-chip>
     </v-card>
   </v-container>
 </template>
@@ -115,10 +144,10 @@ export default {
           "https://secure.gravatar.com/avatar/" +
           md5(self.email.toLowerCase()) +
           "?s=512";
-        this.tried = res.data.tried_problems ? res.data.tried_problems : [];
-        this.solved = res.data.success_problems
-          ? res.data.success_problems
-          : [];
+        this.tried =
+          res.data.tried_problems === null ? [] : res.data.tried_problems;
+        this.solved =
+          res.data.success_problems === null ? [] : res.data.success_problems;
         self.done = true;
       })
       .catch(function(error) {
@@ -136,8 +165,8 @@ export default {
       gender: "1",
       last_login: "",
       motto: "",
-      tried: [0],
-      solved: [0],
+      tried: [],
+      solved: [],
       nick_name: "",
       user_name: ""
     };

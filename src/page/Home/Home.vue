@@ -3,7 +3,7 @@
     <v-card class="mb-4">
       <v-layout class="curtain" align-center justify-center>
         <div class="text-xs-center">
-          <v-img src="@/assets/img/HomeLogo.jpg" aspect-ratio="1" max-width="500" max-height="500">
+          <v-img src="@/assets/img/HomeLogo.jpg" aspect-ratio="1" width="250" height="250">
             <template v-slot:placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
                 <v-progress-circular indeterminate color="blue"></v-progress-circular>
@@ -12,8 +12,8 @@
           </v-img>
           <v-divider color="white" class="mt-4 mb-4" />
           <div class="headline">Welcome to</div>
-          <div class="headline">Excited Online Judge</div>
-          <div class="headline">欢迎使用Excited OJ</div>
+          <div class="headline">YY Online Judge</div>
+          <div class="headline">欢迎使用YY OJ</div>
         </div>
       </v-layout>
     </v-card>

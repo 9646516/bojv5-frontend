@@ -5,6 +5,7 @@
       :headers="headers"
       :items="data"
       loading-text="Loading... Please wait"
+      loading="true"
       :items-per-page="20"
       hide-default-footer
       disable-sort
@@ -19,7 +20,13 @@
           <td>{{ item.rank }}</td>
           <td class="text-xs-center">
             <v-avatar>
-              <img :src="'https://secure.gravatar.com/avatar/' +item.emailmd5 +'?s=512'" />
+              <v-img :src="'https://secure.gravatar.com/avatar/' +item.emailmd5 +'?s=512'">
+                <template v-slot:placeholder>
+                  <v-row class="fill-height ma-0" align="center" justify="center">
+                    <v-progress-circular indeterminate :color="get_color2()"></v-progress-circular>
+                  </v-row>
+                </template>
+              </v-img>
             </v-avatar>
             <span
               class="ml-2 font-weight-medium"
@@ -41,7 +48,6 @@
 <script>
 import Router from "@/plugins/router";
 import md5 from "js-md5";
-import UserCard from "@/components/UserCard";
 export default {
   components: {},
   watch: {
@@ -78,6 +84,20 @@ export default {
   },
   data() {
     return {
+      color: [
+        "red",
+        "pink",
+        "purple",
+        "indigo",
+        "blue",
+        "cyan",
+        "teal",
+        "green",
+        "lime",
+        "yellow darken-4",
+        "amber",
+        "orange"
+      ],
       page: 1,
       data: [],
       maxlen: 10,
@@ -92,6 +112,10 @@ export default {
     };
   },
   methods: {
+    get_color2() {
+      var idx = Math.round(Math.random() * 11);
+      return this.color[idx];
+    },
     get_color(rank) {
       if (rank <= 20) {
         return "red";

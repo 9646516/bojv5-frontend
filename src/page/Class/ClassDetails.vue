@@ -5,33 +5,51 @@
         <h1>Details</h1>
       </v-card-text>
       <v-divider />
-      <v-layout class="curtain" align-center justify-center>
-        <v-flex style="margin-left:5em;margin-top:2em;">
-          <v-card-text>CreatedAt:{{data.create_at}}</v-card-text>
-          <v-card-text>Description:{{data.description}}</v-card-text>
-          <v-card-text>ID:{{data.id}}</v-card-text>
-          <v-card-text>UpdatedAt:{{data.updated_at}}</v-card-text>
-          <v-card-text>name:{{data.name}}</v-card-text>
-          <v-card-text>owner:{{data.owner}}</v-card-text>
-          <v-btn
-            large
-            color="primary"
-            :to="{'name': 'EditClass', params: {'id': data.id}}"
-            v-if="(this.$store.getters.IsStaff)||(this.$store.getters.uid==data.owner_id)"
-          >
-            <v-icon left>mdi-github-circle</v-icon>Edit
-          </v-btn>
+      <v-card-text>
+        <tr>
+          <td style="width:20%">CreatedAt:</td>
+          <td>{{data.create_at}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">Description:</td>
+          <td>{{data.description}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">ID:</td>
+          <td>{{data.id}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">UpdatedAt:</td>
+          <td>{{data.updated_at}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">name:</td>
+          <td>{{data.name}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">owner:</td>
+          <td>{{data.owner}}</td>
+        </tr>
+      </v-card-text>
+      <div class="ml-4 mb-4 mt-4">
+        <v-btn
+          large
+          color="primary"
+          :to="{'name': 'EditClass', params: {'id': data.id}}"
+          v-if="(this.$store.getters.IsStaff)||(this.$store.getters.uid==data.owner_id)"
+        >
+          <v-icon left>mdi-github-circle</v-icon>Edit
+        </v-btn>
 
-          <v-btn
-            large
-            color="primary"
-            :to="{'name': 'ClassAddMember', params: {'id': data.id}}"
-            v-if="(this.$store.getters.IsStaff)||(this.$store.getters.uid==data.owner_id)"
-          >
-            <v-icon left>mdi-github-circle</v-icon>Add Members
-          </v-btn>
-        </v-flex>
-      </v-layout>
+        <v-btn
+          large
+          color="primary"
+          :to="{'name': 'ClassAddMember', params: {'id': data.id}}"
+          v-if="(this.$store.getters.IsStaff)||(this.$store.getters.uid==data.owner_id)"
+        >
+          <v-icon left>mdi-github-circle</v-icon>Add Members
+        </v-btn>
+      </div>
     </v-card>
     <v-card>
       <v-card-text class="headlines">
@@ -75,16 +93,11 @@ export default {
   },
   created() {
     this.axios
-      .get(
-        "v1/sugar/class/group/" +
-          String(this.$route.params.id) +
-          "/",
-        {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.Token
-          }
+      .get("v1/sugar/class/group/" + String(this.$route.params.id), {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Token
         }
-      )
+      })
       .then(res => {
         console.log(res.data);
         this.data = res.data;

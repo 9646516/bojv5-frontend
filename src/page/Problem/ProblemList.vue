@@ -33,43 +33,36 @@ export default {
   watch: {
     page: {
       handler(val, oldVal) {
-        this.axios
-          .get(
-            "v1/problem-list?page=" +
-              String(val) +
-              "&page-size=20",
-            {
-              headers: {
-                Authorization: "Bearer " + this.$store.getters.Token
-              }
-            }
-          )
-          .then(res => {
-            console.log(res.data);
-            this.desserts = res.data.problems;
-          });
+        this.upd(val);
+      },
+      immediate: true
+    },
+    search: {
+      handler(val, oldVal) {
+        this.upd(this.page);
       },
       immediate: true
     }
   },
   created() {
-    // var self=this;
-    // this.axios
-    //   .get("v1/user-count", {
-    //     headers: {
-    //       Authorization: "Bearer " + self.$store.getters.Token
-    //     }
-    //   })
-    //   .then(res => {
-    //     this.maxlen = Math.ceil(res.data.count / 20);
-    //   });
+    var self = this;
+    this.axios
+      .get("v1/problem-count", {
+        headers: {
+          Authorization: "Bearer " + self.$store.getters.Token
+        }
+      })
+      .then(res => {
+        console.log("JBBBBB", res);
+        this.max_page = Math.ceil(res.data.count / 20);
+      });
   },
   data() {
     return {
       done: true,
       search: "",
       page: 1,
-      max_page: 11,
+      max_page: 12,
       headers: [
         { text: "UID", align: "left", sortable: false, value: "uid" },
         { text: "Name", sortable: false, value: "name" }
@@ -78,6 +71,37 @@ export default {
     };
   },
   computed: {},
-  methods: {}
+  methods: {
+    upd(val) {
+      if (this.search === "") {
+        this.axios
+          .get("v1/problem-list?page=" + String(val) + "&page-size=20", {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
+            }
+          })
+          .then(res => {
+            console.log(res.data);
+            this.desserts = res.data.problems;
+          });
+      } else {
+        this.axios
+          .get("v1/problem-list-title-like", {
+            params: {
+              "page-size": 20,
+              page: val,
+              title: this.search
+            },
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
+            }
+          })
+          .then(res => {
+            console.log(res.data);
+            this.desserts = res.data.problems;
+          });
+      }
+    }
+  }
 };
 </script>

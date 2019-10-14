@@ -1,13 +1,13 @@
 <template>
-  <MarkdownWriter />
+  <ProblemComplete />
 </template>
 
 <script>
-import MarkdownWriter from "@/components/MarkdownWriter";
+import ProblemComplete from "@/components/ProblemComplete";
 
 export default {
   components: {
-    MarkdownWriter
+    ProblemComplete
   }
 };
 </script>

@@ -7,6 +7,7 @@ import Submission from '@/page/Contest/Details/Submission'
 import Rank from '@/page/Contest/Details/Rank'
 import ProblemDetails from '@/page/Contest/Details/ProblemDetails'
 import SubmissionDetails from '@/page/Contest/Details/SubmissionDetails'
+import Reg from '@/page/Contest/Details/Reg'
 import Clari from '@/page/Contest/Details/Clari'
 const Router = [
     {
@@ -51,14 +52,18 @@ const Router = [
         path: '/contest/:id/clari',
         name: 'contest_clari',
         component: Clari,
-    },{
+    }, {
         path: '/contest/:id/problem/:uid',
         name: 'contest_problem',
         component: ProblemDetails,
-    },{
+    }, {
         path: '/contest/:id/clari/:uid',
-        name: 'contest_submission',
+        name: 'contest_submission_detail',
         component: SubmissionDetails,
+    }, {
+        path: '/contest/:id/reg',
+        name: 'contest_reg',
+        component: Reg,
     },
 ]
 export default Router;

@@ -3,18 +3,32 @@
     <v-progress-circular v-if="!done" indeterminate />
     <v-card style="margin-block-end: 2em;">
       <v-card-title class="headline">Details</v-card-title>
+      <v-divider/>
       <v-card-text>
-        is_sticky:{{data.is_sticky}}
-        <v-divider />
-        update_time:{{data.updated_time}}
-        <v-divider />
-        author:{{data.author}}
-        <v-divider />
-        last_update_user:{{data.last_update_user}}
-        <v-divider />
-        created_at:{{data.created_at}}
-        <v-divider />
-        id:{{data.id}}
+        <tr>
+          <td style="width:40%">Sticky:</td>
+          <td>{{data.is_sticky}}</td>
+        </tr>
+        <tr>
+          <td style="width:40%">Update Time:</td>
+          <td>{{data.updated_at}}</td>
+        </tr>
+        <tr>
+          <td style="width:40%">Author:</td>
+          <td>{{data.author}}</td>
+        </tr>
+        <tr>
+          <td style="width:40%">Last Update User:</td>
+          <td>{{data.last_update_user}}</td>
+        </tr>
+        <tr>
+          <td style="width:40%">Created At:</td>
+          <td>{{data.created_at}}</td>
+        </tr>
+        <tr>
+          <td style="width:40%">UID:</td>
+          <td>{{data.id}}</td>
+        </tr>
       </v-card-text>
     </v-card>
     <v-card style="margin-block-end: 2em;">

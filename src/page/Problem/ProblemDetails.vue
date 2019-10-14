@@ -3,28 +3,49 @@
     <v-progress-circular v-if="!done" indeterminate />
     <v-card style="margin-block-end: 2em;">
       <v-card-title class="headline">Details</v-card-title>
+      <v-divider />
       <v-card-text>
-        id:{{data.id}}
-        <v-divider />
-        title:{{data.title}}
-        <v-divider />
-        is_spj:{{data.is_spj}}
-        <v-divider />
-        time_limit:{{data.time_limit}}
-        <v-divider />
-        memory_limit:{{data.memory_limit}}
-        <v-divider />
-        code_length_limit:{{data.code_length_limit}}
-        <v-divider />
-        create_at:{{data.create_at}}
-        <v-divider />
-        delete_at:{{data.delete_at}}
-        <v-divider />
-        author:{{data.author}}
+        <tr>
+          <td style="width:20%">UID:</td>
+          <td>{{data.id}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">Title:</td>
+          <td>{{data.title}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">Special Judge:</td>
+          <td>{{data.is_spj}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">Time Limit:</td>
+          <td>{{data.time_limit}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">Memory Limit:</td>
+          <td>{{data.memory_limit}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">Code Length Limit:</td>
+          <td>{{data.code_length_limit}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">Create At:</td>
+          <td>{{data.create_at}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">Delete At:</td>
+          <td>{{data.delete_at}}</td>
+        </tr>
+        <tr>
+          <td style="width:20%">Author:</td>
+          <td>{{data.author}}</td>
+        </tr>
       </v-card-text>
     </v-card>
     <v-card style="margin-block-end: 2em;">
       <v-card-title class="headline">Description</v-card-title>
+      <v-divider />
       <MdLoader v-if="done" :text="data.description" html></MdLoader>
     </v-card>
 
@@ -136,7 +157,7 @@ export default {
     },
     Delete() {
       this.axios
-        .delete("v1/problem/" + String(this.$route.params.id) , {
+        .delete("v1/problem/" + String(this.$route.params.id), {
           headers: {
             Authorization: "Bearer " + this.$store.getters.Token
           }

@@ -6,9 +6,11 @@
       loading-text="Loading... Please wait"
       :items-per-page="12"
       hide-default-footer
-      loading=true
+      loading="true"
       class="elevation-1"
     >
+      <!-- <template v-slot:header.problem="{ header }">{{ header}}</template> -->
+
       <template v-slot:item="{ item }">
         <router-link
           :to="{'name': 'Submission', params: {'id': item.id}}"
@@ -37,16 +39,11 @@ export default {
     page: {
       handler(val, oldVal) {
         this.axios
-          .get(
-            "v1/submission-list?page=" +
-              String(val) +
-              "&page-size=20",
-            {
-              headers: {
-                Authorization: "Bearer " + this.$store.getters.Token
-              }
+          .get("v1/submission-list?page=" + String(val) + "&page-size=20", {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
             }
-          )
+          })
           .then(res => {
             console.log(res.data);
             this.desserts = res.data.submissions;
@@ -56,21 +53,25 @@ export default {
     }
   },
   created() {
-    // var self=this;
-    // this.axios
-    //   .get("v1/user-count", {
-    //     headers: {
-    //       Authorization: "Bearer " + self.$store.getters.Token
-    //     }
-    //   })
-    //   .then(res => {
-    //     this.maxlen = Math.ceil(res.data.count / 20);
-    //   });
+    var self = this;
+    this.axios
+      .get("v1/submission-count", {
+        headers: {
+          Authorization: "Bearer " + self.$store.getters.Token
+        }
+      })
+      .then(res => {
+        console.log("JBBBBB", res);
+        this.max_page = Math.ceil(res.data.count / 20);
+      });
   },
   data() {
     return {
       done: true,
-      search: "",
+      search_name: "",
+      search_user: "",
+      search_lang: "",
+      search_verdict: "",
       page: 1,
       max_page: 11,
       headers: [
@@ -81,7 +82,7 @@ export default {
         { text: "Status", sortable: false, value: "status" },
         { text: "User", sortable: false, value: "user" },
         { text: "Lang", sortable: false, value: "language" },
-        { text: "Submit Time", sortable: false, value: "submittime" },
+        { text: "Submit Time", sortable: false, value: "submittime" }
       ],
       desserts: []
     };
