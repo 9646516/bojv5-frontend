@@ -95,15 +95,30 @@
           </v-list-item>
         </template>
       </v-select>
-      <div>
-        <v-btn @click="problemList.push('')" color="primary" class="ml-2"></v-btn>
-        <v-row v-for="i in problemList.length" :key="i">
-          <v-list-item>
-            <v-btn @click="problemList.splice(i-1,1)" color="error" class="ml-2"></v-btn>
-            <v-text-field v-model="problemList[i-1]" class="ml-2" />
-          </v-list-item>
-        </v-row>
-      </div>
+      <div class="title">选择题目</div>
+      <v-list-item>
+        <v-btn @click="problemList.push(['',0])" color="primary" class="ml-2" icon>
+          <v-icon>mdi-note-plus</v-icon>
+        </v-btn>
+      </v-list-item>
+      <v-list-item v-for="i in problemList.length" :key="i">
+        <v-btn @click="problemList.splice(i-1,1)" color="error" class="ml-2" icon>
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+        <v-text-field v-model="problemList[i-1][0]" class="ml-2" @change="gao($event,i-1)" />
+        <v-list-item v-if="problemList[i-1][1]==0">
+          <v-icon>mdi-emoticon-happy</v-icon>
+          <v-list-item-title>{{problemList[i-1][2]}} </v-list-item-title>
+        </v-list-item>
+        <v-list-item v-if="problemList[i-1][1]==1">
+          <v-progress-circular color="green" indeterminate />
+        </v-list-item>
+        <v-list-item v-if="problemList[i-1][1]==2">
+          <v-icon>mdi-emoticon-sad</v-icon>
+          <v-list-item-title>No Such Problem</v-list-item-title>
+        </v-list-item>
+      </v-list-item>
+
       <v-toolbar height="48" flat>
         <v-btn large color="primary" @click="submit">
           <v-icon left>mdi-target</v-icon>Submit
@@ -153,10 +168,30 @@ export default {
     message: "",
     loading: false,
     fruits: ["G++", "GCC", "CLANG", "CLANG++", "PYTHON2", "PYTHON3", "RUST"],
-    selectedFruits: [],
-    problemList: [""]
+    selectedFruits: ["G++"],
+    problemList: [["", 0, "123"]]
   }),
   methods: {
+    /// 0=> OK
+    /// 1=> Searching....
+    /// 2=> not found
+    gao(a, idx) {
+      this.problemList[idx][1] = 1;
+      this.axios
+        .get("/v1/problem/" + String(a), {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.Token
+          }
+        })
+        .then(res => {
+          if (res.data.code === 0) {
+            this.problemList[idx][1] = 0;
+            this.problemList[idx][2] = res.data.title;
+          } else {
+            this.problemList[idx][1] = 2;
+          }
+        });
+    },
     toggle() {
       this.$nextTick(() => {
         if (this.likesAllFruit) {
