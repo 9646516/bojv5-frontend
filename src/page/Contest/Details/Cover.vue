@@ -55,6 +55,7 @@
           <v-card-text class="headline">Global Announcement</v-card-text>
           <MdLoader :text="description" html></MdLoader>
         </v-card>
+        <v-btn color="info" :to="'/editcontest/'+String(this.$route.params.id)">Edit</v-btn>
       </div>
       <div class="flex-col ml-10" style="width:25%">
         <TimeDash :start="start" :end="end" />

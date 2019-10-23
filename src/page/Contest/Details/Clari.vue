@@ -23,6 +23,17 @@ export default {
   components: {
     TimeDash
   },
+  mounted() {
+    this.axios
+      .get("v1/contest/" + String(this.$route.params.id), {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Refresh_Token
+        }
+      })
+      .then(res => {
+        this.name = res.data.name;
+      });
+  },
   data() {
     return {
       start: new Date("Sun Oct 13 2019 00:47:11 GMT+0800 (中国标准时间)"),

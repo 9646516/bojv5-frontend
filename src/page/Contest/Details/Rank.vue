@@ -14,6 +14,17 @@
 </template>
 <script>
 export default {
+    mounted() {
+    this.axios
+      .get("v1/contest/" + String(this.$route.params.id), {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Refresh_Token
+        }
+      })
+      .then(res => {
+        this.name = res.data.name;
+      });
+  },
   data() {
     return {
       name: "123",

@@ -27,10 +27,8 @@
           >{{i.title}}</router-link>
         </v-card-text>
         <v-toolbar-items>
-          <v-card-text>Time:{{i.time_limit}}ms</v-card-text>
-
-          <v-card-text>Memory:{{i.memory_limit}}Mbytes</v-card-text>
-          <v-card-text>{{i.id}}</v-card-text>
+          <v-card-text>{{i.time_limit}}ms</v-card-text>
+          <v-card-text>{{i.memory_limit}}KB</v-card-text>
           <v-card-text>{{i.tried}}/{{i.solved}}</v-card-text>
         </v-toolbar-items>
       </v-toolbar>
@@ -44,7 +42,7 @@
 import MdLoader from "@/components/MdLoader";
 import TimeDash from "@/components/TimeDash";
 
-export default { 
+export default {
   components: {
     MdLoader,
     TimeDash
@@ -57,7 +55,17 @@ export default {
         }
       })
       .then(res => {
-        this.problems=res.data;
+        this.problems = res.data;
+      });
+
+    this.axios
+      .get("v1/contest/" + String(this.$route.params.id), {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Refresh_Token
+        }
+      })
+      .then(res => {
+        this.name = res.data.name;
       });
   },
   data() {

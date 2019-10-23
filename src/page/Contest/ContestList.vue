@@ -28,7 +28,7 @@ export default {
     page: {
       handler(val, oldVal) {
         this.axios
-          .get("v1/contest-list?page=" + String(val) + "&page-size=20", {
+          .get("v1/contest-list?page=" + String(val) + "&page-size=8", {
             headers: {
               Authorization: "Bearer " + this.$store.getters.Token
             }
@@ -42,16 +42,16 @@ export default {
     }
   },
   created() {
-    // var self=this;
-    // this.axios
-    //   .get("v1/user-count", {
-    //     headers: {
-    //       Authorization: "Bearer " + self.$store.getters.Token
-    //     }
-    //   })
-    //   .then(res => {
-    //     this.maxlen = Math.ceil(res.data.count / 20);
-    //   });
+    var self=this;
+    this.axios
+      .get("v1/contest-count", {
+        headers: {
+          Authorization: "Bearer " + self.$store.getters.Token
+        }
+      })
+      .then(res => {
+        this.max_page = Math.ceil(res.data.count / 8);
+      });
   },
   data() {
     return {

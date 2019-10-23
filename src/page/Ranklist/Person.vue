@@ -59,7 +59,7 @@
                 </v-row>
               </template>
             </v-img>
-            <template v-slot:badge>
+            <template v-slot:badge v-if="isStaff||isTeacher">
               <div v-if="isStaff">
                 <b>Admin</b>
               </div>

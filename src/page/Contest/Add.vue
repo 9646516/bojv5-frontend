@@ -36,7 +36,7 @@
               <v-date-picker v-model="StartDate"></v-date-picker>
             </div>
             <div class="flex-col mt-4">
-              <v-time-picker v-model="StartTime"></v-time-picker>
+              <v-time-picker use-seconds v-model="StartTime"></v-time-picker>
             </div>
           </v-row>
 
@@ -54,7 +54,7 @@
               <v-date-picker v-model="EndDate"></v-date-picker>
             </div>
             <div class="flex-col mt-4">
-              <v-time-picker v-model="EndTime"></v-time-picker>
+              <v-time-picker use-seconds v-model="EndTime"></v-time-picker>
             </div>
           </v-row>
 
@@ -69,10 +69,10 @@
         <v-card>
           <v-row align="center" justify="space-around">
             <div class="flex-col mt-4">
-              <v-date-picker v-model="EndDate"></v-date-picker>
+              <v-date-picker v-model="FrozenDate"></v-date-picker>
             </div>
             <div class="flex-col mt-4">
-              <v-time-picker v-model="EndTime"></v-time-picker>
+              <v-time-picker use-seconds v-model="FrozenTime"></v-time-picker>
             </div>
           </v-row>
 
@@ -106,9 +106,10 @@
           <v-icon>mdi-delete</v-icon>
         </v-btn>
         <v-text-field v-model="problemList[i-1][0]" class="ml-2" @change="gao($event,i-1)" />
+
         <v-list-item v-if="problemList[i-1][1]==0">
           <v-icon>mdi-emoticon-happy</v-icon>
-          <v-list-item-title>{{problemList[i-1][2]}} </v-list-item-title>
+          <v-list-item-title>{{problemList[i-1][2]}}</v-list-item-title>
         </v-list-item>
         <v-list-item v-if="problemList[i-1][1]==1">
           <v-progress-circular color="green" indeterminate />
@@ -117,6 +118,8 @@
           <v-icon>mdi-emoticon-sad</v-icon>
           <v-list-item-title>No Such Problem</v-list-item-title>
         </v-list-item>
+
+        <v-list-item-title>{{problemList[i-1][3]}}</v-list-item-title>
       </v-list-item>
 
       <v-toolbar height="48" flat>
@@ -126,9 +129,7 @@
       </v-toolbar>
       <h2 style="color:red;">
         {{message}}
-        <v-fade-transition>
-          <v-progress-circular v-if="loading" size="24" color="info" indeterminate></v-progress-circular>
-        </v-fade-transition>
+        <v-progress-circular v-if="loading" size="24" color="info" indeterminate></v-progress-circular>
       </h2>
     </v-container>
   </v-card>
@@ -152,16 +153,25 @@ export default {
       if (this.likesAllFruit) return "mdi-close-box";
       if (this.likesSomeFruit) return "mdi-minus-box";
       return "mdi-checkbox-blank-outline";
+    },
+    getStartDate() {
+      return new Date(this.StartDate + " " + this.StartTime);
+    },
+    getEndDate() {
+      return new Date(this.EndDate + " " + this.EndTime);
+    },
+    getFrozenDate() {
+      return new Date(this.FrozenDate + " " + this.FrozenTime);
     }
   },
   data: () => ({
     title: "",
     StartDate: new Date().toISOString().substr(0, 10),
-    StartTime: "00:00",
+    StartTime: "00:00:00",
     EndDate: new Date().toISOString().substr(0, 10),
-    EndTime: "00:00",
+    EndTime: "00:00:00",
     FrozenDate: new Date().toISOString().substr(0, 10),
-    FrozenTime: "00:00",
+    FrozenTime: "00:00:00",
     dialog1: false,
     dialog2: false,
     dialog3: false,
@@ -169,7 +179,8 @@ export default {
     loading: false,
     fruits: ["G++", "GCC", "CLANG", "CLANG++", "PYTHON2", "PYTHON3", "RUST"],
     selectedFruits: ["G++"],
-    problemList: [["", 0, "123"]]
+    problemList: [["", 0, "", ""]]
+    /// uid , status , title ,info
   }),
   methods: {
     /// 0=> OK
@@ -184,11 +195,13 @@ export default {
           }
         })
         .then(res => {
+          console.log(res.data);
           if (res.data.code === 0) {
-            this.problemList[idx][1] = 0;
-            this.problemList[idx][2] = res.data.title;
+            this.problemList[idx][2] = res.data.problem.title;
+            this.$set(this.problemList[idx], 1, 0);
           } else {
-            this.problemList[idx][1] = 2;
+            this.problemList[idx][2] = "";
+            this.$set(this.problemList[idx], 1, 2);
           }
         });
     },
@@ -207,11 +220,15 @@ export default {
         this.message = "Waiting for it...";
         this.axios
           .post(
-            "v1/sugar/class/group",
+            "/v1/contest",
             {
-              name: String(this.title),
-              description: String(this.content),
-              owner_id: String(this.owner)
+              title: String(this.title),
+              description: String(this.$refs.md.doc),
+              "start-at": this.getStartDate,
+              "end-duration":
+                this.getEndDate.getTime() - this.getStartDate.getTime(),
+              "board-frozen-duration":
+                this.getFrozenDate.getTime() - this.getStartDate.getTime()
             },
             {
               headers: {
@@ -222,6 +239,32 @@ export default {
           .then(res => {
             this.loading = false;
             this.message = res.data;
+            if (res.data.code === 0) {
+              for (var i in this.problemList) {
+                this.upload(i, res.data.id);
+              }
+            }
+          });
+      }
+    },
+    upload(uid, cid) {
+      let id = this.problemList[uid][0];
+      if (id === null || id === "") {
+        return;
+      } else {
+        this.axios
+          .post(
+            "/v1/contest/" + String(cid) + "/problem/" + String(id),
+            {},
+            {
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.Token
+              }
+            }
+          )
+          .then(res => {
+            console.log(res);
+            this.$set(this.problemList[uid], 3, res.data);
           });
       }
     },
@@ -231,6 +274,12 @@ export default {
         return false;
       } else if (this.$refs.md.doc == "") {
         this.message = "Content cannot be empty";
+        return false;
+      } else if (this.getStartDate.getTime() >= this.getEndDate.getTime()) {
+        this.message = "EndTime is illegal";
+        return false;
+      } else if (this.getStartDate.getTime() >= this.getFrozenDate.getTime()) {
+        this.message = "FrozenTime is illegal";
         return false;
       } else {
         return true;
