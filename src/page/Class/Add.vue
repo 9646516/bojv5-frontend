@@ -33,7 +33,6 @@
 </template>
 <script>
 import MdLoader from "@/components/MdLoader";
-import Store from "@/plugins/store.js";
 export default {
   components: {
     MdLoader

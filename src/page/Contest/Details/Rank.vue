@@ -14,7 +14,7 @@
       :items="rank"
       loading-text="Loading... Please wait"
       class="elevation-1 text-center"
-      items-per-page="200"
+      items-per-page="15"
     >
       <template v-slot:item="{ item }">
         <tr class="text-xs-center">
