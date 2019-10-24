@@ -47,15 +47,15 @@ export default {
       .get("v1/contest/" + String(this.$route.params.id) + "/submission-list", {
         params: {
           page: 1,
-          "page-size": 1111111111111111
+          "page-size": 1111111111111
         },
         headers: {
           Authorization: "Bearer " + this.$store.getters.Refresh_Token
         }
       })
       .then(res => {
-        //#TODO add data
         console.log(res.data);
+        this.desserts=res.data.submissions
       });
   },
   data() {

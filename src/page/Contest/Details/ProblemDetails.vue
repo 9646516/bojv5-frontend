@@ -53,7 +53,7 @@
       large
       color="primary"
       v-if="this.$store.getters.IsStaff"
-      :to="'/editproblem/'+this.$route.params.id"
+      :to="'/editproblem/'+this.$route.params.uid"
     >
       <v-icon left>mdi-book</v-icon>Edit
     </v-btn>
@@ -61,7 +61,7 @@
       large
       color="primary"
       v-if="this.$store.getters.IsStaff"
-      :to="'/files/'+this.$route.params.id"
+      :to="'/files/'+this.$route.params.uid"
     >
       <v-icon left>mdi-book</v-icon>Change Test Case
     </v-btn>
@@ -109,15 +109,21 @@ export default {
   },
   mounted() {
     this.axios
-      .get("v1/problem/" + String(this.$route.params.id), {
-        headers: {
-          Authorization: "Bearer " + this.$store.getters.Token
+      .get(
+        "v1/contest/" +
+          String(this.$route.params.id) +
+          "/problem/" +
+          String(this.$route.params.uid),
+        {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.Token
+          }
         }
-      })
+      )
       .then(res => {
         console.log(res.data);
+        this.done = true;
         this.data = res.data.problem;
-        this.done = 1;
       });
   },
   data() {
@@ -134,7 +140,11 @@ export default {
       console.log(this.$refs.edit.SelMode.abbr);
       this.axios
         .post(
-          "v1/problem/" + String(this.$route.params.id) + "/submission",
+          "v1/contest/" +
+            String(this.$route.params.id) +
+            "/problem/" +
+            String(this.$route.params.uid) +
+            "/submission",
           {
             language: this.$refs.edit.SelMode.idx,
             code: this.$refs.edit.code,
@@ -157,11 +167,17 @@ export default {
     },
     Delete() {
       this.axios
-        .delete("v1/problem/" + String(this.$route.params.id), {
-          headers: {
-            Authorization: "Bearer " + this.$store.getters.Token
+        .delete(
+          "v1/contest/" +
+            String(this.$route.params.id) +
+            "/problem/" +
+            String(this.$route.params.uid),
+          {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.Token
+            }
           }
-        })
+        )
         .then(res => {
           if (res.data.code == 0) {
             Router.push("/");

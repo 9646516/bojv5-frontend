@@ -9,7 +9,11 @@
         <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
       </v-toolbar-items>
     </v-toolbar>
-    <v-toolbar v-for="i in problems" v-bind:key="i.id">
+    <v-toolbar
+      v-for="i in problems"
+      v-bind:key="i.id"
+      :style="'background:'+my[i.id]===2?'#fff3e0':my[i.id]===1?'#b0ffb0':none"
+    >
       <v-card-text>
         <router-link
           class="title"
@@ -20,7 +24,8 @@
       <v-toolbar-items>
         <v-card-text>{{i.time_limit}}ms</v-card-text>
         <v-card-text>{{i.memory_limit}}KB</v-card-text>
-        <v-card-text>{{i.tried}}/{{i.solved}}</v-card-text>
+        <v-card-text>{{i.id}}</v-card-text>
+        <v-card-text>{{tried[i.id]}}/{{solved[i.id]}}</v-card-text>
       </v-toolbar-items>
     </v-toolbar>
   </v-card>
@@ -36,6 +41,7 @@ export default {
         }
       })
       .then(res => {
+        console.log(res.data);
         this.problems = res.data;
       });
 
@@ -60,13 +66,38 @@ export default {
         }
       })
       .then(res => {
-        //#TODO add statistic
-        console.log(res.data);
+        console.log(res);
+        for (var _i of this.problems) {
+          this.$set(this.tried, _i.id, 0);
+          this.$set(this.solved, _i.id, 0);
+          this.$set(this.my, _i.id, 0);
+        }
+        for (var i of res.data.submissions) {
+          this.$set(this.tried, i.problem_id, this.tried[i.problem_id] + 1);
+          this.$set(
+            this.solved,
+            i.problem_id,
+            this.tried[i.problem_id] + (i.status === 0)
+          );
+
+          if (this.user_id === this.$store.getters.uid) {
+            if (i.status === 0) {
+              this.$set(this.my, i.problem_id, 1);
+            } else if (this.my[i.problem_id] === 0) {
+              this.$set(this.my, i.problem_id, 2);
+            }
+          }
+        }
+        // for (var _ of this.problems) {
+        //   console.log(_);
+        // }
       });
   },
   data() {
     return {
-      color: ["green", "orange"],
+      tried: {},
+      solved: {},
+      my: {},
       hint: ["Solved", "Tried"],
       name: "123",
       start: new Date("Sun Oct 13 2019 00:47:11 GMT+0800 (中国标准时间)"),
