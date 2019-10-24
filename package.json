@@ -62,7 +62,7 @@
     },
     "extends": [
       "plugin:vue/essential",
-      "eslint:warn"
+      "eslint:recommended"
     ],
     "rules": {
       "no-console": "off"

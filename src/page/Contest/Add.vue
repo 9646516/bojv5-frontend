@@ -135,7 +135,6 @@
   </v-card>
 </template>
 <script>
-import Store from "@/plugins/store.js";
 import MarkdownWriter from "@/components/MarkdownWriter";
 
 export default {
@@ -226,9 +225,11 @@ export default {
               description: String(this.$refs.md.doc),
               "start-at": this.getStartDate,
               "end-duration":
-                this.getEndDate.getTime() - this.getStartDate.getTime(),
+                (this.getEndDate.getTime() - this.getStartDate.getTime()) *
+                1000000,
               "board-frozen-duration":
-                this.getFrozenDate.getTime() - this.getStartDate.getTime()
+                (this.getFrozenDate.getTime() - this.getStartDate.getTime()) *
+                1000000
             },
             {
               headers: {

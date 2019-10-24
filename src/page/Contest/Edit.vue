@@ -135,7 +135,6 @@
   </v-card>
 </template>
 <script>
-import Store from "@/plugins/store.js";
 import MarkdownWriter from "@/components/MarkdownWriter";
 
 export default {
@@ -151,6 +150,41 @@ export default {
       })
       .then(res => {
         console.log(res);
+        let start = new Date(res.data.start_at);
+        this.StartDate =
+          start.getFullYear() + "-" + start.getMonth() + "-" + start.getDate();
+        this.StartTime =
+          start.getHours() +
+          ":" +
+          start.getMinutes() +
+          ":" +
+          start.getSeconds();
+
+        let end = new Date(res.data.end_at);
+        this.EndDate =
+          end.getFullYear() + "-" + end.getMonth() + "-" + end.getDate();
+        this.EndTime =
+          end.getHours() + ":" + end.getMinutes() + ":" + end.getSeconds();
+
+        this.title = res.data.name;
+        this.$refs.md.doc = res.data.description;
+        // this.name = res.data.name;
+        // this.type = res.data.contest_type;
+      });
+
+    this.axios
+      .get("v1/contest/" + String(this.$route.params.id) + "/problem-list", {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Refresh_Token
+        }
+      })
+      .then(res => {
+        console.log(res.data);
+        for (var i in res.data) {
+          this.problemList.push([res.data[i].id, 0, res.data[i].title, ""]);
+        }
+        this.problemList.push(["", 0, "", ""]);
+        //;
       });
   },
   computed: {
@@ -190,7 +224,7 @@ export default {
     loading: false,
     fruits: ["G++", "GCC", "CLANG", "CLANG++", "PYTHON2", "PYTHON3", "RUST"],
     selectedFruits: ["G++"],
-    problemList: [["", 0, "", ""]]
+    problemList: []
     /// uid , status , title ,info
   }),
   methods: {
@@ -230,16 +264,18 @@ export default {
         this.loading = true;
         this.message = "Waiting for it...";
         this.axios
-          .post(
-            "/v1/contest",
+          .put(
+            "/v1/contest/" + String(this.$route.params.id),
             {
               title: String(this.title),
               description: String(this.$refs.md.doc),
               "start-at": this.getStartDate,
               "end-duration":
-                this.getEndDate.getTime() - this.getStartDate.getTime(),
+                (this.getEndDate.getTime() - this.getStartDate.getTime()) *
+                1000000,
               "board-frozen-duration":
-                this.getFrozenDate.getTime() - this.getStartDate.getTime()
+                (this.getFrozenDate.getTime() - this.getStartDate.getTime()) *
+                1000000
             },
             {
               headers: {
@@ -287,7 +323,7 @@ export default {
         this.message = "Content cannot be empty";
         return false;
       } else if (this.getStartDate.getTime() >= this.getEndDate.getTime()) {
-        this.message = "EndTime is illegal";
+        this.message = this.getEndDate.toISOString() + "EndTime is illegal";
         return false;
       } else if (this.getStartDate.getTime() >= this.getFrozenDate.getTime()) {
         this.message = "FrozenTime is illegal";

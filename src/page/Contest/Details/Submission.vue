@@ -1,52 +1,37 @@
 <template>
-  <v-row>
-    <div class="flex-col" style="width:70%">
-      <v-toolbar>
-        <v-card-text class="headline">{{name}}</v-card-text>
-        <v-toolbar-items>
-          <v-btn text :to="'/contest/'+$route.params.id+'/dash'">Problems</v-btn>
-          <v-btn text :to="'/contest/'+$route.params.id+'/submission'">My Submission</v-btn>
-          <v-btn text :to="'/contest/'+$route.params.id+'/clari'">Clarification</v-btn>
-          <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
-      <v-data-table
-        :headers="headers"
-        :items="desserts"
-        :items-per-page="12"
-        hide-default-footer
-        class="elevation-1"
-      >
-        <template v-slot:item="{ item }">
-          <router-link
-            :to="{'name': 'Submission', params: {'id': item.id}}"
-            :style="{'cursor': 'pointer'}"
-            tag="tr"
-          >
-            <td>{{ item.id }}</td>
-            <td>{{ item.problem_id }}</td>
-            <td>{{ item.running_time }}</td>
-            <td>{{ item.running_memory }}</td>
-            <td>{{ item.status }}</td>
-            <td>{{ item.user_id }}</td>
-            <td>{{ item.language }}</td>
-            <td>{{ item.created_at }}</td>
-          </router-link>
-        </template>
-      </v-data-table>
-    </div>
-    <div class="flex-col ml-4" style="width:25%">
-      <TimeDash :start="start" :end="end" />
-    </div>
-  </v-row>
+  <v-card>
+    <v-toolbar>
+      <v-card-text class="headline">{{name}}</v-card-text>
+      <v-toolbar-items>
+        <v-btn text :to="'/contest/'+$route.params.id+'/dash'">Problems</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/submission'">My Submission</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/clari'">Clarification</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+    <v-data-table :headers="headers" :items="desserts" :items-per-page="15" class="elevation-1">
+      <template v-slot:item="{ item }">
+        <router-link
+          :to="{'name': 'Submission', params: {'id': item.id}}"
+          :style="{'cursor': 'pointer'}"
+          tag="tr"
+        >
+          <td>{{ item.id }}</td>
+          <td>{{ item.problem_id }}</td>
+          <td>{{ item.running_time }}</td>
+          <td>{{ item.running_memory }}</td>
+          <td>{{ item.status }}</td>
+          <td>{{ item.user_id }}</td>
+          <td>{{ item.language }}</td>
+          <td>{{ item.created_at }}</td>
+        </router-link>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 <script>
-import TimeDash from "@/components/TimeDash";
-
 export default {
-  components: {
-    TimeDash
-  },
+  components: {},
   mounted() {
     this.axios
       .get("v1/contest/" + String(this.$route.params.id), {
@@ -56,6 +41,21 @@ export default {
       })
       .then(res => {
         this.name = res.data.name;
+      });
+
+    this.axios
+      .get("v1/contest/" + String(this.$route.params.id) + "/submission-list", {
+        params: {
+          page: 1,
+          "page-size": 1111111111111111
+        },
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Refresh_Token
+        }
+      })
+      .then(res => {
+        //#TODO add data
+        console.log(res.data);
       });
   },
   data() {

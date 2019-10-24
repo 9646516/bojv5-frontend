@@ -14,7 +14,7 @@
       :items="rank"
       loading-text="Loading... Please wait"
       class="elevation-1 text-center"
-      items-per-page="15"
+      :items-per-page="15"
     >
       <template v-slot:item="{ item }">
         <tr class="text-xs-center">
@@ -48,6 +48,34 @@ export default {
         this.name = res.data.name;
         // this.openTime = new Date(res.data.start_at);
       });
+
+    this.axios
+      .get("v1/contest/" + String(this.$route.params.id) + "/problem-list", {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Token
+        }
+      })
+      .then(res => {
+        for(var i in res.data){
+          this.problem[res.data[i].title]=String.fromCharCode(Number('A'.charCodeAt(0))+Number(i));
+        }
+      });
+
+    this.axios
+      .get("v1/contest/" + String(this.$route.params.id) + "/submission-list", {
+        params: {
+          page: 1,
+          "page-size": 1111111111111111
+        },
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Refresh_Token
+        }
+      })
+      .then(res => {
+        //#TODO add data
+        console.log(res.data);
+      });
+
     for (var i in this.problem) {
       this.headers.push({
         text: this.problem[i],
@@ -89,19 +117,19 @@ export default {
   methods: {
     sort() {
       var mp = [];
-      for (var i of JSON.parse(this.contest)) {
+      for (var _i of JSON.parse(this.contest)) {
         if (
-          i.status === "Running" ||
-          i.status === "CE" ||
-          i.status === "Pending"
+          _i.status === "Running" ||
+          _i.status === "CE" ||
+          _i.status === "Pending"
         ) {
           continue;
         }
         mp.push([
-          i.status == "Accepted" ? 0 : i.status == "Unknown" ? 1 : 2,
-          new Date(i.createTime),
-          i.team,
-          i.problemId
+          _i.status == "Accepted" ? 0 : _i.status == "Unknown" ? 1 : 2,
+          new Date(_i.createTime),
+          _i.team,
+          _i.problemId
         ]);
       }
       mp = mp.sort(function(a, b) {
@@ -109,16 +137,16 @@ export default {
       });
       var rank = {};
       for (var i of mp) {
-        if (!rank.hasOwnProperty(i[2])) {
+        if (!rank[i[2]]) {
           rank[i[2]] = { Penalty: 0, Solved: 0, Last: 0 };
         }
         if (i[0] === 0) {
-          if (!rank[i[2]].hasOwnProperty(i[3])) {
+          if (!rank[i[2]][i[3]]) {
             rank[i[2]][i[3]] = [1, 0, i[1].getTime() - this.openTime.getTime()];
             rank[i[2]]["Penalty"] += i[1].getTime() - this.openTime.getTime();
             rank[i[2]]["Solved"] += 1;
             rank[i[2]]["Last"] = i[1].getTime();
-            if (!this.first.hasOwnProperty(i[3])) {
+            if (!this.first[i[3]]) {
               this.first[i[3]] = i[2];
             }
           } else if (rank[i[2]][i[3]][1] === 0) {
@@ -133,12 +161,12 @@ export default {
               this.openTime.getTime() +
               20 * 60 * 1000 * rank[i[2]][i[3]][0];
             rank[i[2]]["Last"] = i[1].getTime();
-            if (!this.first.hasOwnProperty(i[3])) {
+            if (!this.first[i[3]]) {
               this.first[i[3]] = i[2];
             }
           }
         } else if (i[0] === 2) {
-          if (!rank[i[2]].hasOwnProperty(i[3])) {
+          if (!rank[i[2]][i[3]]) {
             rank[i[2]][i[3]] = [1, 2, 0];
           } else if (rank[i[2]][i[3]][1] === 0) {
             continue;
@@ -147,8 +175,8 @@ export default {
             rank[i[2]][i[3]][1] = 2;
           }
         } else {
-          console.log(rank[i[2]][i[3]], rank[i[2]].hasOwnProperty(i[3]));
-          if (!rank[i[2]].hasOwnProperty(i[3])) {
+          console.log(rank[i[2]][i[3]], rank[i[2]][i[3]]);
+          if (!rank[i[2]][i[3]]) {
             rank[i[2]][i[3]] = [1, 1, 0];
           } else if (rank[i[2]][i[3]][1] === 0) {
             continue;

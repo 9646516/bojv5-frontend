@@ -1,28 +1,19 @@
 <template>
-  <v-row>
-    <div class="flex-col" style="width:70%">
-      <v-toolbar>
-        <v-card-text class="headline">{{name}}</v-card-text>
-        <v-toolbar-items>
-          <v-btn text :to="'/contest/'+$route.params.id+'/dash'">Problems</v-btn>
-          <v-btn text :to="'/contest/'+$route.params.id+'/submission'">My Submission</v-btn>
-          <v-btn text :to="'/contest/'+$route.params.id+'/clari'">Clarification</v-btn>
-          <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
-    </div>
-    <div class="flex-col ml-4" style="width:25%">
-      <TimeDash :start="start" :end="end" />
-    </div>
-  </v-row>
+  <v-card>
+    <v-toolbar>
+      <v-card-text class="headline">{{name}}</v-card-text>
+      <v-toolbar-items>
+        <v-btn text :to="'/contest/'+$route.params.id+'/dash'">Problems</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/submission'">My Submission</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/clari'">Clarification</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+  </v-card>
 </template>
 <script>
-import TimeDash from "@/components/TimeDash";
-
 export default {
-  components: {
-    TimeDash
-  },
+  components: {},
   mounted() {
     this.axios
       .get("v1/contest/" + String(this.$route.params.id), {

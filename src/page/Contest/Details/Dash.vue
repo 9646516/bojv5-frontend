@@ -1,52 +1,33 @@
 <template>
-  <v-row>
-    <div class="flex-col" style="width:70%">
-      <v-toolbar>
-        <v-card-text class="headline">{{name}}</v-card-text>
-        <v-toolbar-items>
-          <v-btn text :to="'/contest/'+$route.params.id+'/dash'">Problems</v-btn>
-          <v-btn text :to="'/contest/'+$route.params.id+'/submission'">My Submission</v-btn>
-          <v-btn text :to="'/contest/'+$route.params.id+'/clari'">Clarification</v-btn>
-          <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
-      <v-toolbar v-for="i in problems" v-bind:key="i.id">
-        <div style="width:200px">
-          <v-chip
-            v-if="i.status!==2"
-            class="ma-2 text-center"
-            :color="color[i.status]"
-            text-color="white"
-          >{{hint[i.status]}}</v-chip>
-        </div>
-        <v-card-text>
-          <router-link
-            class="title"
-            :to="'/contest/'+$route.params.id+'/problem/'+String(i.id)"
-            style="text-decoration:none;color:black"
-          >{{i.title}}</router-link>
-        </v-card-text>
-        <v-toolbar-items>
-          <v-card-text>{{i.time_limit}}ms</v-card-text>
-          <v-card-text>{{i.memory_limit}}KB</v-card-text>
-          <v-card-text>{{i.tried}}/{{i.solved}}</v-card-text>
-        </v-toolbar-items>
-      </v-toolbar>
-    </div>
-    <div class="flex-col ml-4" style="width:25%">
-      <TimeDash :start="start" :end="end" />
-    </div>
-  </v-row>
+  <v-card>
+    <v-toolbar>
+      <v-card-text class="headline">{{name}}</v-card-text>
+      <v-toolbar-items>
+        <v-btn text :to="'/contest/'+$route.params.id+'/dash'">Problems</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/submission'">My Submission</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/clari'">Clarification</v-btn>
+        <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+    <v-toolbar v-for="i in problems" v-bind:key="i.id">
+      <v-card-text>
+        <router-link
+          class="title"
+          :to="'/contest/'+$route.params.id+'/problem/'+String(i.id)"
+          style="text-decoration:none;color:black"
+        >{{i.title}}</router-link>
+      </v-card-text>
+      <v-toolbar-items>
+        <v-card-text>{{i.time_limit}}ms</v-card-text>
+        <v-card-text>{{i.memory_limit}}KB</v-card-text>
+        <v-card-text>{{i.tried}}/{{i.solved}}</v-card-text>
+      </v-toolbar-items>
+    </v-toolbar>
+  </v-card>
 </template>
 <script>
-import MdLoader from "@/components/MdLoader";
-import TimeDash from "@/components/TimeDash";
-
 export default {
-  components: {
-    MdLoader,
-    TimeDash
-  },
+  components: {},
   mounted() {
     this.axios
       .get("v1/contest/" + String(this.$route.params.id) + "/problem-list", {
@@ -66,6 +47,21 @@ export default {
       })
       .then(res => {
         this.name = res.data.name;
+      });
+
+    this.axios
+      .get("v1/contest/" + String(this.$route.params.id) + "/submission-list", {
+        params: {
+          page: 1,
+          "page-size": 1111111111111111
+        },
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.Refresh_Token
+        }
+      })
+      .then(res => {
+        //#TODO add statistic
+        console.log(res.data);
       });
   },
   data() {
