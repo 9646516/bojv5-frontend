@@ -37,13 +37,47 @@
 
 <script>
 import CodeViewer from "@/components/CodeViewer";
-import Router from "@/plugins/router";
 export default {
   name: "Problem",
   components: {
     CodeViewer
   },
-  mounted() {},
+  mounted() {
+    this.axios
+      .get(
+        "v1/contest/" +
+          String(this.$route.params.id) +
+          "/submission/" +
+          String(this.$route.params.id) +
+          "/content",
+        {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.Token
+          }
+        }
+      )
+      .then(res => {
+        console.log(res.data);
+        this.code = String(res.data);
+      });
+
+    this.axios
+      .get(
+        "v1/contest/" +
+          String(this.$route.params.id) +
+          "/submission/" +
+          String(this.$route.params.id),
+        {
+          headers: {
+            Authorization: "Bearer " + this.$store.getters.Token
+          }
+        }
+      )
+      .then(res => {
+        console.log(res.data.submission);
+        this.data = res.data.submission;
+      });
+  },
   data() {
     return {
       done: false,

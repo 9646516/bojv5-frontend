@@ -12,7 +12,7 @@
     <v-data-table :headers="headers" :items="desserts" :items-per-page="15" class="elevation-1">
       <template v-slot:item="{ item }">
         <router-link
-          :to="{'name': 'Submission', params: {'id': item.id}}"
+          :to="{'name': 'contest_submission_detail', params: {'id':$route.params.id,'uid': item.id}}"
           :style="{'cursor': 'pointer'}"
           tag="tr"
         >
@@ -55,7 +55,7 @@ export default {
       })
       .then(res => {
         console.log(res.data);
-        this.desserts=res.data.submissions
+        this.desserts = res.data.submissions;
       });
   },
   data() {

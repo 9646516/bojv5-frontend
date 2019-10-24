@@ -9,10 +9,12 @@
         <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
       </v-toolbar-items>
     </v-toolbar>
+    <v-divider/>
     <v-toolbar
       v-for="i in problems"
       v-bind:key="i.id"
-      :style="'background:'+my[i.id]===2?'#fff3e0':my[i.id]===1?'#b0ffb0':none"
+      flat
+      :style="'background:'+(my[i.id]==2?'#fff3e0':my[i.id]==1?'#b0ffb0':'none')"
     >
       <v-card-text>
         <router-link
@@ -22,10 +24,11 @@
         >{{i.title}}</router-link>
       </v-card-text>
       <v-toolbar-items>
+        <v-card-text>{{my[i.id]}}</v-card-text>
         <v-card-text>{{i.time_limit}}ms</v-card-text>
         <v-card-text>{{i.memory_limit}}KB</v-card-text>
         <v-card-text>{{i.id}}</v-card-text>
-        <v-card-text>{{tried[i.id]}}/{{solved[i.id]}}</v-card-text>
+        <v-card-text>{{solved[i.id]}}/{{tried[i.id]}}</v-card-text>
       </v-toolbar-items>
     </v-toolbar>
   </v-card>
@@ -74,13 +77,10 @@ export default {
         }
         for (var i of res.data.submissions) {
           this.$set(this.tried, i.problem_id, this.tried[i.problem_id] + 1);
-          this.$set(
-            this.solved,
-            i.problem_id,
-            this.tried[i.problem_id] + (i.status === 0)
-          );
-
-          if (this.user_id === this.$store.getters.uid) {
+          if (i.status === 0) {
+            this.$set(this.solved, i.problem_id, this.solved[i.problem_id] + 1);
+          }
+          if (i.user_id === this.$store.getters.uid) {
             if (i.status === 0) {
               this.$set(this.my, i.problem_id, 1);
             } else if (this.my[i.problem_id] === 0) {

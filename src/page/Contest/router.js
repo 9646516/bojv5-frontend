@@ -57,7 +57,7 @@ const Router = [
         name: 'contest_problem',
         component: ProblemDetails,
     }, {
-        path: '/contest/:id/clari/:uid',
+        path: '/contest/:id/submiission/:uid',
         name: 'contest_submission_detail',
         component: SubmissionDetails,
     }, {
