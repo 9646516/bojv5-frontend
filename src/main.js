@@ -15,10 +15,7 @@ router.beforeEach((to, from, next) => {
 			next()
 		} else {
 			next({
-				name: 'Error',
-				params: {
-					text: "Please Login First"
-				}
+				name: 'Logout'
 			})
 		}
 	} else if (to.matched.some(res => res.meta.NeedStaff)) {
@@ -78,10 +75,10 @@ axios.interceptors.request.use(
 			store.dispatch("Del_Token");
 			axios.get(
 				"v1/user-token", {
-				headers: {
-					Authorization: "Bearer " + store.getters.Refresh_Token
+					headers: {
+						Authorization: "Bearer " + store.getters.Refresh_Token
+					}
 				}
-			}
 			).then(res => {
 				console.log(res);
 				if (res.data.code === 0) {

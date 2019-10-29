@@ -9,7 +9,7 @@
         <v-btn text :to="'/contest/'+$route.params.id+'/rank'">Ranking</v-btn>
       </v-toolbar-items>
     </v-toolbar>
-    <v-divider/>
+    <v-divider />
     <v-toolbar
       v-for="i in problems"
       v-bind:key="i.id"
@@ -46,6 +46,48 @@ export default {
       .then(res => {
         console.log(res.data);
         this.problems = res.data;
+
+        this.axios
+          .get(
+            "v1/contest/" + String(this.$route.params.id) + "/submission-list",
+            {
+              params: {
+                page: 1,
+                "page-size": 11111111111
+              },
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.Refresh_Token
+              }
+            }
+          )
+          .then(res => {
+            console.log(res);
+            for (var _i of this.problems) {
+              this.$set(this.tried, _i.id, 0);
+              this.$set(this.solved, _i.id, 0);
+              this.$set(this.my, _i.id, 0);
+            }
+            for (var i of res.data.submissions) {
+              this.$set(this.tried, i.problem_id, this.tried[i.problem_id] + 1);
+              if (i.status === 0) {
+                this.$set(
+                  this.solved,
+                  i.problem_id,
+                  this.solved[i.problem_id] + 1
+                );
+              }
+              if (i.user_id === this.$store.getters.uid) {
+                if (i.status === 0) {
+                  this.$set(this.my, i.problem_id, 1);
+                } else if (this.my[i.problem_id] === 0) {
+                  this.$set(this.my, i.problem_id, 2);
+                }
+              }
+            }
+            // for (var _ of this.problems) {
+            //   console.log(_);
+            // }
+          });
       });
 
     this.axios
@@ -56,41 +98,6 @@ export default {
       })
       .then(res => {
         this.name = res.data.name;
-      });
-
-    this.axios
-      .get("v1/contest/" + String(this.$route.params.id) + "/submission-list", {
-        params: {
-          page: 1,
-          "page-size": 1111111111111111
-        },
-        headers: {
-          Authorization: "Bearer " + this.$store.getters.Refresh_Token
-        }
-      })
-      .then(res => {
-        console.log(res);
-        for (var _i of this.problems) {
-          this.$set(this.tried, _i.id, 0);
-          this.$set(this.solved, _i.id, 0);
-          this.$set(this.my, _i.id, 0);
-        }
-        for (var i of res.data.submissions) {
-          this.$set(this.tried, i.problem_id, this.tried[i.problem_id] + 1);
-          if (i.status === 0) {
-            this.$set(this.solved, i.problem_id, this.solved[i.problem_id] + 1);
-          }
-          if (i.user_id === this.$store.getters.uid) {
-            if (i.status === 0) {
-              this.$set(this.my, i.problem_id, 1);
-            } else if (this.my[i.problem_id] === 0) {
-              this.$set(this.my, i.problem_id, 2);
-            }
-          }
-        }
-        // for (var _ of this.problems) {
-        //   console.log(_);
-        // }
       });
   },
   data() {

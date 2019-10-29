@@ -48,7 +48,7 @@ export default {
         "v1/contest/" +
           String(this.$route.params.id) +
           "/submission/" +
-          String(this.$route.params.id) +
+          String(this.$route.params.uid) +
           "/content",
         {
           headers: {
@@ -66,7 +66,7 @@ export default {
         "v1/contest/" +
           String(this.$route.params.id) +
           "/submission/" +
-          String(this.$route.params.id),
+          String(this.$route.params.uid),
         {
           headers: {
             Authorization: "Bearer " + this.$store.getters.Token

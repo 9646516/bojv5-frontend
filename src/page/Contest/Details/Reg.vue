@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn large color="blue" v-if="this.$store.getters.IsStaff" to="/addproblem">
+    <v-btn large color="blue" v-if="this.$store.getters.IsStaff">
       <v-icon left>mdi-delete</v-icon>Add
     </v-btn>
     <v-text-field v-model="search" label="Search"></v-text-field>
@@ -14,15 +14,11 @@
       class="elevation-1"
     >
       <template v-slot:item="{ item }">
-        <router-link
-          :to="{'name': 'Problem', params: {'id': item.id}}"
-          :style="{'cursor': 'pointer'}"
-          tag="tr"
-        >
+        <tr>
           <td>{{ item.id }}</td>
           <td>{{ item.nick_name }}</td>
           <td>{{ item.email }}</td>
-        </router-link>
+        </tr>
       </template>
     </v-data-table>
     <div class="text-xs-center pt-2">
@@ -34,7 +30,7 @@
 export default {
   watch: {
     page: {
-      handler(val, oldVal) {
+      handler(val) {
         this.axios
           .get("v1/contest/" + String(this.$route.params.id) + "/user-list", {
             params: {
